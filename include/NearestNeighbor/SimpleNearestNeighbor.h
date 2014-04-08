@@ -20,9 +20,11 @@ namespace sfa
      * @brief This is a very simple nearest neighbor search. It just
      * 	      iterates over all vertices to find the closest one.
      */
-    class SimpleNearestNeighbor : NearestNeighbor
+    class SimpleNearestNeighbor: NearestNeighbor
     {
-	virtual unsigned int getNearest(unsigned int n, NNMesh const& source, NNMesh const& dest) const;
+	public:
+	    virtual unsigned int getNearest(unsigned int n, NNMesh const& source,
+		    NNMesh const& dest) const;
     };
 }
 

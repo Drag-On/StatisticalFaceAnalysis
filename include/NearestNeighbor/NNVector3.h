@@ -21,20 +21,23 @@ namespace sfa
     class NNVector3
     {
 	public:
-	    virtual ~NNVector3();
-	    virtual double& x() = 0;
-	    virtual double& y() = 0;
-	    virtual double& z() = 0;
-	    virtual double const& x() const = 0;
-	    virtual double const& y() const = 0;
-	    virtual double const& z() const = 0;
+	    NNVector3(double x, double y, double z);
+	    double& x();
+	    double& y();
+	    double& z();
+	    double const& x() const;
+	    double const& y() const;
+	    double const& z() const;
 	    /**
 	     * @brief Computes the square distance between two vectors interpreting
 	     * 	      both as coordinate vectors
 	     * @param other Other vector
 	     * @return The square distance between this and other
 	     */
-	    virtual double getSquaredDistance(NNVector3 const& other) const = 0;
+	    double getSquaredDistance(NNVector3 const& other) const;
+
+	private:
+	    double m_x, m_y, m_z;
     };
 }
 

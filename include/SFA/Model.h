@@ -17,7 +17,7 @@
 #include <Rendering/Mesh.h>
 #include "NearestNeighbor/NNMesh.h"
 #include "NearestNeighbor/NNVertex.h"
-#include "SFA/Vec3.h"
+#include "NearestNeighbor/NNVector3.h"
 
 namespace sfa
 {

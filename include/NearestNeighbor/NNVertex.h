@@ -21,9 +21,9 @@ namespace sfa
     struct NNVertex
     {
 	public:
-	    unsigned int id;
-	    NNVector3 const& coords;
-	    NNVector3 const& normal;
+	    unsigned int id;		// Index
+	    NNVector3 coords;		// Coordinates
+	    NNVector3 normal;		// Normal
     };
 }
 

@@ -8,7 +8,7 @@
 /// it might also begin to hurt your kittens.
 //////////////////////////////////////////////////////////////////////
 
-#include"NearestNeighbor/SimpleNearestNeighbor.h"
+#include "NearestNeighbor/SimpleNearestNeighbor.h"
 
 namespace sfa
 {
@@ -20,8 +20,8 @@ namespace sfa
 	    throw std::invalid_argument("Source and/or destination mesh don't have any vertices!");
 
 	// Start out with "infinite" distance
-	unsigned int minSqDist = std::numeric_limits<unsigned int>::max();
-	unsigned int curIndex;
+	double minSqDist = std::numeric_limits<double>::max();
+	unsigned int curIndex = 0;
 	NNVertex sourceVertex = source.getVertex(n);
 	// Iterate over all destination vertices
 	for(unsigned int i = 0; i < dest.getAmountOfVertices(); i++)

@@ -15,9 +15,9 @@ namespace sfa
 {
     Model::Model()
     {
-	// If no path is specified use a cube. This is just for testing
+	// If no path is specified use a plane. This is just for testing
 	// purposes where we don't want to load a file from HD.
-	m_pMesh = dbgl::Mesh::makeCube(false, false);
+	m_pMesh = dbgl::Mesh::makePlane(false, false);
     }
 
     Model::~Model()
@@ -38,8 +38,8 @@ namespace sfa
 	auto normal = m_pMesh->getNormals()[n];
 
 	NNVertex vert {n,
-	    Vec3(vertex.x(), vertex.y(), vertex.z()),
-	    Vec3(normal.x(), normal.y(), normal.z())};
+	    NNVector3(vertex.x(), vertex.y(), vertex.z()),
+	    NNVector3(normal.x(), normal.y(), normal.z())};
 
 	return vert;
     }
