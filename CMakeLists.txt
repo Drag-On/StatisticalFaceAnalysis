@@ -18,6 +18,7 @@ project (SFA C CXX)
 ### Configure compilation details
 ######################################################################
 
+set (SFA_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include") 														# Path to own headers
 set (EIGEN_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/lib/eigen/") 													# Path to Eigen headers
 set (DBGL_BASE_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/../Dragon-Blaze-Game-Library/DBGL_Base/include")			# Path to DBGL headers
 set (DBGL_BASE_LIB_DIR "${PROJECT_SOURCE_DIR}/../Dragon-Blaze-Game-Library/DBGL_Base/${CMAKE_BUILD_TYPE}")	# Path to DBGL library file
@@ -65,8 +66,11 @@ file(GLOB_RECURSE SFA_SRC
 ######################################################################
 ### Include directories
 ######################################################################
+include_directories(${SFA_INCLUDE_DIR})
 include_directories(${EIGEN_INCLUDE_DIR})
 include_directories(${DBGL_BASE_INCLUDE_DIR})
+include_directories(${GLEW_INCLUDE_DIR})
+include_directories(${GLFW_INCLUDE_DIR})
 
 ######################################################################
 ### Make target
@@ -98,3 +102,9 @@ foreach(file_i ${LIBRARIES2COPY})
                         DEPENDS ${file_i}
                         )
 endforeach(file_i)
+
+######################################################################
+### Compile sub projects
+######################################################################
+add_subdirectory("${PROJECT_SOURCE_DIR}/Test/"
+				 "${PROJECT_BINARY_DIR}/Test/")

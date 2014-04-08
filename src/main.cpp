@@ -11,7 +11,6 @@
 #include <iostream>
 #include <System/Log/Log.h>
 #include <Eigen/Dense>
-#include <Eigen/SVD>
 
 using namespace Eigen;
 using namespace std;
