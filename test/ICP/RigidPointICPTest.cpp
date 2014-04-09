@@ -23,27 +23,29 @@ void testRigidPointICP()
     LOG->info("Starting RigidPointICP test suite...");
 
     // Load models
-    Model src("Resources/Cube_Transformed.obj");
-    Model dest("Resources/Cube.obj");
+//    Model src("Resources/Cube_Transformed.obj");
+//    Model dest("Resources/Cube.obj");
 //    Model src("Resources/Generic_Face_Lowpoly_Transformed.obj");
 //    Model dest("Resources/Generic_Face_Lowpoly.obj");
+    Model src("Resources/Plane_Transformed.obj");
+    Model dest("Resources/Plane.obj");
 
     // Check error
     SimpleNearestNeighbor nn;
     auto startError = nn.computeError(src, dest);
     auto error = startError;
-    LOG->info("Matching error: %f", startError);
+    LOG->info("Matching error: %.20f", startError);
 
     // Do ICP
     RigidPointICP icp;
-    for(unsigned int i = 0; i < 10; i++)
+    for(unsigned int i = 0; i < 3; i++)
     {
 	// Calculate next step
 	icp.calcNextStep(src, dest);
 
 	// Check error
 	error = nn.computeError(src, dest);
-	LOG->info("Matching error: %f", error);
+	LOG->info("Matching error: %.20f", error);
     }
     assert(error < startError);
 }

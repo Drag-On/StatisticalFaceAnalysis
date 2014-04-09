@@ -13,6 +13,7 @@
 
 #include <stdexcept>
 #include <Eigen/Core>
+#include <System/Log/Log.h>
 #include "NNMesh.h"
 
 namespace sfa
