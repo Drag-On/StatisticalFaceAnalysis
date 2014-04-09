@@ -11,7 +11,6 @@
 #include <System/Log/Log.h>
 
 // Prototypes
-void testNNVector3();
 void testSimpleNearestNeighbor();
 
 int main()
@@ -19,7 +18,6 @@ int main()
     LOG->setLogLevel(dbgl::DBG);
     LOG->info("Starting tests...");
 
-    testNNVector3();
     testSimpleNearestNeighbor();
 
     LOG->info("Done!");

@@ -43,8 +43,8 @@ namespace sfa
 	auto normal = m_pMesh->getNormals()[n];
 
 	NNVertex vert {n,
-	    NNVector3(vertex.x(), vertex.y(), vertex.z()),
-	    NNVector3(normal.x(), normal.y(), normal.z())};
+	    Eigen::Vector3d(vertex.x(), vertex.y(), vertex.z()),
+	    Eigen::Vector3d(normal.x(), normal.y(), normal.z())};
 
 	return vert;
     }

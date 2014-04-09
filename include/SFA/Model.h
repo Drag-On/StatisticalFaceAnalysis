@@ -15,10 +15,10 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <Eigen/Core>
 #include <Rendering/Mesh.h>
 #include "NearestNeighbor/NNMesh.h"
 #include "NearestNeighbor/NNVertex.h"
-#include "NearestNeighbor/NNVector3.h"
 
 namespace sfa
 {

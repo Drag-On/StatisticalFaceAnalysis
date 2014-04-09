@@ -11,7 +11,7 @@
 #ifndef NNVERTEX_H_
 #define NNVERTEX_H_
 
-#include"NNVector3.h"
+#include <Eigen/Core>
 
 namespace sfa
 {
@@ -22,8 +22,8 @@ namespace sfa
     {
 	public:
 	    unsigned int id;		// Index
-	    NNVector3 coords;		// Coordinates
-	    NNVector3 normal;		// Normal
+	    Eigen::Vector3d coords;	// Coordinates
+	    Eigen::Vector3d normal;	// Normal
     };
 }
 

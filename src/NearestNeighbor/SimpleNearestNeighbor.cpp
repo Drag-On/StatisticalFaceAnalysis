@@ -27,7 +27,7 @@ namespace sfa
 	for(unsigned int i = 0; i < dest.getAmountOfVertices(); i++)
 	{
 	    NNVertex destVertex = dest.getVertex(i);
-	    double sqDist = sourceVertex.coords.getSquaredDistance(destVertex.coords);
+	    double sqDist = (sourceVertex.coords - destVertex.coords).squaredNorm();
 	    if(sqDist < minSqDist)
 	    {
 		minSqDist = sqDist;

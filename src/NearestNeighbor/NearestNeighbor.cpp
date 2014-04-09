@@ -29,9 +29,10 @@ namespace sfa
 	    unsigned int nearestNum = getNearest(i, source, dest);
 	    auto sourceVert = source.getVertex(i);
 	    auto destVert = dest.getVertex(nearestNum);
-	    NNVector3 const& s = sourceVert.coords;
-	    NNVector3 const& d = destVert.coords;
-	    error += s.getSquaredDistance(d);
+	    auto s = sourceVert.coords;
+	    auto d = destVert.coords;
+	    auto con = s - d;
+	    error += con.squaredNorm();
 	}
 	error /= amount;
 	return error;

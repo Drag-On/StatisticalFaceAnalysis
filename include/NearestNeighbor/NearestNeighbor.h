@@ -12,8 +12,8 @@
 #define NEARESTNEIGHBOR_H_
 
 #include <stdexcept>
-#include"NNMesh.h"
-#include"NNVector3.h"
+#include <Eigen/Core>
+#include "NNMesh.h"
 
 namespace sfa
 {
