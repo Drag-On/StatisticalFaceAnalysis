@@ -20,6 +20,11 @@ namespace sfa
 	m_pMesh = dbgl::Mesh::makePlane(false, false);
     }
 
+    Model::Model(std::string path)
+    {
+	m_pMesh = dbgl::Mesh::load(path, dbgl::Mesh::OBJ, false, false);
+    }
+
     Model::~Model()
     {
 	delete m_pMesh;

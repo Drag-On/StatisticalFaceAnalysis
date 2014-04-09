@@ -69,3 +69,8 @@ foreach(file_i ${LIBRARIES2COPY})
                         DEPENDS ${file_i}
                         )
 endforeach(file_i)
+
+######################################################################
+### Copy common resource folder
+######################################################################
+file(COPY "${PROJECT_SOURCE_DIR}/../Resources" DESTINATION "${PROJECT_BINARY_DIR}")

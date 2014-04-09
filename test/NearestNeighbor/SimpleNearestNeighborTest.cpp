@@ -63,5 +63,20 @@ void testSimpleNearestNeighbor()
     {
 	LOG->info(e.what());
     }
+
+    // Now use meshes from HD
+    Model source2("Resources/Generic_Face_Translated.obj");
+    Model destination2("Resources/Generic_Face.obj");
+
+    // Check for nearest neighbors again
+    // In this case the nearest neighbors are not necessarily the ones with the same index
+    bool alwaysSame = true;
+    for (unsigned int i = 0; i < source2.getAmountOfVertices(); i++)
+    {
+	auto nearest = nn.getNearest(i, source2, destination2);
+	if(nearest != i)
+	    alwaysSame = false;
+    }
+    assert(alwaysSame == false);
 }
 

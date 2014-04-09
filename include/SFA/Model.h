@@ -11,6 +11,7 @@
 #ifndef MODEL_H_
 #define MODEL_H_
 
+#include <string>
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
@@ -29,6 +30,7 @@ namespace sfa
     {
 	public:
 	    Model();
+	    Model(std::string path);
 	    virtual ~Model();
 	    virtual NNVertex getVertex(unsigned int n) const;
 	    virtual unsigned int getAmountOfVertices() const;
