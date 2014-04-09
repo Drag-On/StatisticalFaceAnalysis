@@ -75,4 +75,9 @@ namespace sfa
 	average /= amount;
 	return average;
     }
+
+    dbgl::Mesh* Model::getBasePointer()
+    {
+	return m_pMesh;
+    }
 }

@@ -36,6 +36,7 @@ namespace sfa
 	    void setVertex(unsigned int n, Vertex v) const;
 	    virtual unsigned int getAmountOfVertices() const;
 	    Eigen::Vector3d getAverage() const;
+	    dbgl::Mesh* getBasePointer();
 	private:
 	    dbgl::Mesh* m_pMesh;
     };
