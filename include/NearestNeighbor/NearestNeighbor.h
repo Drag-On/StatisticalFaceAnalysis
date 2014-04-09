@@ -42,7 +42,7 @@ namespace sfa
 	     * @param dest Destination mesh
 	     * @return Error value
 	     */
-	    unsigned int computeError(NNMesh const& source, NNMesh const& dest) const;
+	    double computeError(NNMesh const& source, NNMesh const& dest) const;
 	private:
     };
 }

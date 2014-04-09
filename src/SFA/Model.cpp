@@ -30,7 +30,7 @@ namespace sfa
 	delete m_pMesh;
     }
 
-    NNVertex Model::getVertex(unsigned int n) const
+    Vertex Model::getVertex(unsigned int n) const
     {
 	if(n >= getAmountOfVertices())
 	{
@@ -42,15 +42,37 @@ namespace sfa
 	auto vertex = m_pMesh->getVertices()[n];
 	auto normal = m_pMesh->getNormals()[n];
 
-	NNVertex vert {n,
+	Vertex vert {n,
 	    Eigen::Vector3d(vertex.x(), vertex.y(), vertex.z()),
 	    Eigen::Vector3d(normal.x(), normal.y(), normal.z())};
 
 	return vert;
     }
 
+    void Model::setVertex(unsigned int n, Vertex v) const
+    {
+	m_pMesh->vertices()[n].x() = v.coords.x();
+	m_pMesh->vertices()[n].y() = v.coords.y();
+	m_pMesh->vertices()[n].z() = v.coords.z();
+	m_pMesh->normals()[n].x() = v.normal.x();
+	m_pMesh->normals()[n].y() = v.normal.y();
+	m_pMesh->normals()[n].z() = v.normal.z();
+    }
+
     unsigned int Model::getAmountOfVertices() const
     {
 	return m_pMesh->getVertices().size();
+    }
+
+    Eigen::Vector3d Model::getAverage() const
+    {
+	Eigen::Vector3d average(0, 0, 0);
+	unsigned int amount = getAmountOfVertices();
+	for(unsigned int i = 0; i < amount; i++)
+	{
+	    average += getVertex(i).coords;
+	}
+	average /= amount;
+	return average;
     }
 }

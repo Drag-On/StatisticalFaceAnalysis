@@ -24,6 +24,7 @@ file(GLOB_RECURSE SFA_TEST_SRC_MAIN
     "../include/*.h"
     "../src/NearestNeighbor/*.cpp"
 	"../src/SFA/*.cpp"
+	"../src/ICP/*.cpp"
 )
 
 set (SFA_TEST_SRC

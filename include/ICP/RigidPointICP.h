@@ -8,25 +8,24 @@
 /// it might also begin to hurt your kittens.
 //////////////////////////////////////////////////////////////////////
 
-#ifndef NNVERTEX_H_
-#define NNVERTEX_H_
+#ifndef RIGIDPOINTICP_H_
+#define RIGIDPOINTICP_H_
 
-#include <Eigen/Core>
+#include <Eigen/SVD>
+#include "IterativeClosestPoint.h"
 
 namespace sfa
 {
     /**
-     * @brief Contains all the data of one vertex
+     * @brief Rigid body point-to-point ICP
      */
-    struct NNVertex
+    class RigidPointICP: public IterativeClosestPoint
     {
 	public:
-	    unsigned int id;		// Index
-	    Eigen::Vector3d coords;	// Coordinates
-	    Eigen::Vector3d normal;	// Normal
+	    virtual ~RigidPointICP();
+	    virtual void calcNextStep(Model& source, Model const& dest);
+	private:
     };
 }
 
-
-
-#endif /* NNVERTEX_H_ */
+#endif /* RIGIDPOINTICP_H_ */

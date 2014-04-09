@@ -18,7 +18,7 @@
 #include <Eigen/Core>
 #include <Rendering/Mesh.h>
 #include "NearestNeighbor/NNMesh.h"
-#include "NearestNeighbor/NNVertex.h"
+#include "SFA/Vertex.h"
 
 namespace sfa
 {
@@ -32,8 +32,10 @@ namespace sfa
 	    Model();
 	    Model(std::string path);
 	    virtual ~Model();
-	    virtual NNVertex getVertex(unsigned int n) const;
+	    virtual Vertex getVertex(unsigned int n) const;
+	    void setVertex(unsigned int n, Vertex v) const;
 	    virtual unsigned int getAmountOfVertices() const;
+	    Eigen::Vector3d getAverage() const;
 	private:
 	    dbgl::Mesh* m_pMesh;
     };

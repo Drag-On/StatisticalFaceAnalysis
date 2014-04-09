@@ -22,11 +22,11 @@ namespace sfa
 	// Start out with "infinite" distance
 	double minSqDist = std::numeric_limits<double>::max();
 	unsigned int curIndex = 0;
-	NNVertex sourceVertex = source.getVertex(n);
+	Vertex sourceVertex = source.getVertex(n);
 	// Iterate over all destination vertices
 	for(unsigned int i = 0; i < dest.getAmountOfVertices(); i++)
 	{
-	    NNVertex destVertex = dest.getVertex(i);
+	    Vertex destVertex = dest.getVertex(i);
 	    double sqDist = (sourceVertex.coords - destVertex.coords).squaredNorm();
 	    if(sqDist < minSqDist)
 	    {

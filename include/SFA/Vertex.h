@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-/// Statistical Face Analysis
+/// Statistical Shape Analysis
 ///
 /// Copyright (c) 2014 by Jan Moeller
 ///
@@ -8,21 +8,25 @@
 /// it might also begin to hurt your kittens.
 //////////////////////////////////////////////////////////////////////
 
-#include <System/Log/Log.h>
+#ifndef VERTEX_H_
+#define VERTEX_H_
 
-// Prototypes
-void testSimpleNearestNeighbor();
-void testRigidPointICP();
+#include <Eigen/Core>
 
-int main()
+namespace sfa
 {
-    LOG->setLogLevel(dbgl::DBG);
-    LOG->info("Starting tests...");
-
-    testSimpleNearestNeighbor();
-    testRigidPointICP();
-
-    LOG->info("Done!");
-    return 0;
+    /**
+     * @brief Contains all the data of one vertex
+     */
+    struct Vertex
+    {
+	public:
+	    unsigned int id;		// Index
+	    Eigen::Vector3d coords;	// Coordinates
+	    Eigen::Vector3d normal;	// Normal
+    };
 }
 
+
+
+#endif /* VERTEX_H_ */

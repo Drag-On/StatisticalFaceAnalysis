@@ -50,6 +50,9 @@ void testSimpleNearestNeighbor()
 	assert(nearest == i);
     }
 
+    // Check alignment error
+    assert(nn.computeError(source, destination) == 0);
+
     // Check if it throws correctly
     try
     {
@@ -65,8 +68,11 @@ void testSimpleNearestNeighbor()
     }
 
     // Now use meshes from HD
-    Model source2("Resources/Generic_Face_Translated.obj");
-    Model destination2("Resources/Generic_Face.obj");
+    Model source2("Resources/Cube_Transformed.obj");
+    Model destination2("Resources/Cube.obj");
+
+    // Check alignment error
+    assert(nn.computeError(source2, destination2) > 0);
 
     // Check for nearest neighbors again
     // In this case the nearest neighbors are not necessarily the ones with the same index

@@ -11,7 +11,7 @@
 #ifndef NNMESH_H_
 #define NNMESH_H_
 
-#include "NNVertex.h"
+#include "SFA/Vertex.h"
 
 namespace sfa
 {
@@ -30,7 +30,7 @@ namespace sfa
 	     * @exception Throws an exception in case n is out of bounds
 	     * 		  (i.e. no vertex with this number exists)
 	     */
-	    virtual NNVertex getVertex(unsigned int n) const = 0;
+	    virtual Vertex getVertex(unsigned int n) const = 0;
 	    /**
 	     * @return Amount of vertices of this mesh
 	     */

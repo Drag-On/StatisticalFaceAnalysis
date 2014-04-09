@@ -8,21 +8,11 @@
 /// it might also begin to hurt your kittens.
 //////////////////////////////////////////////////////////////////////
 
-#include <System/Log/Log.h>
+#include "ICP/IterativeClosestPoint.h"
 
-// Prototypes
-void testSimpleNearestNeighbor();
-void testRigidPointICP();
-
-int main()
+namespace sfa
 {
-    LOG->setLogLevel(dbgl::DBG);
-    LOG->info("Starting tests...");
-
-    testSimpleNearestNeighbor();
-    testRigidPointICP();
-
-    LOG->info("Done!");
-    return 0;
+    IterativeClosestPoint::~IterativeClosestPoint()
+    {
+    }
 }
-

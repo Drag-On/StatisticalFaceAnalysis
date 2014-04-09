@@ -16,13 +16,13 @@ namespace sfa
     {
     }
 
-    unsigned int NearestNeighbor::computeError(NNMesh const& source, NNMesh const& dest) const
+    double NearestNeighbor::computeError(NNMesh const& source, NNMesh const& dest) const
     {
 	// Check if arguments are valid
 	if(source.getAmountOfVertices() <= 0 || dest.getAmountOfVertices() <= 0)
 	    throw std::invalid_argument("Source and/or destination mesh don't have any vertices!");
 
-	unsigned int error = 0;
+	double error = 0;
 	unsigned int amount = source.getAmountOfVertices();
 	for(unsigned int i = 0; i < amount; i++)
 	{
