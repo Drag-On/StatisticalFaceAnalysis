@@ -65,6 +65,7 @@ void keyCallback(Window::KeyEventArgs const& args)
     // Check if next ICP step should be executed
     if (args.key == GLFW_KEY_I && args.action == GLFW_PRESS)
     {
+	LOG->info("Calculating next ICP step!");
 	// Compute next step
 	icp.calcNextStep(*pSourceModel, *pDestModel);
 	pSourceModel->getBasePointer()->updateBuffers();
@@ -81,12 +82,19 @@ void keyCallback(Window::KeyEventArgs const& args)
     // Reload meshes
     if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
     {
+	LOG->info("Reloading meshes...");
 	delete pSourceModel;
 	delete pDestModel;
 	pSourceModel = new Model(properties.getStringValue("src"));
 	pDestModel = new Model(properties.getStringValue("dest"));
 	pSourceModel->getBasePointer()->updateBuffers();
 	pDestModel->getBasePointer()->updateBuffers();
+    }
+    // Log matching error
+    if(args.key == GLFW_KEY_L && args.action == GLFW_PRESS)
+    {
+	auto error = nn.computeError(*pSourceModel, *pDestModel);
+	LOG->info("Matching error: %.20f", error);
     }
 }
 
