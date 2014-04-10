@@ -12,7 +12,7 @@
 
 namespace sfa
 {
-    RigidPointICP::RigidPointICP(NearestNeighbor const& nn) : m_nearestNeighbor(nn)
+    RigidPointICP::RigidPointICP(NearestNeighbor& nn) : m_nearestNeighbor(nn)
     {
     }
 
@@ -58,6 +58,8 @@ namespace sfa
 	    vertex.normal = R * vertex.normal;
 	    source.setVertex(i, vertex);
 	}
+	// Clear nearest neighbor cache
+	m_nearestNeighbor.clearCache();
     }
 }
 

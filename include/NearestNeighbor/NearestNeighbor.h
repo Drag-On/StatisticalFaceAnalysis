@@ -32,7 +32,7 @@ namespace sfa
 	     * @param dest Destination mesh
 	     * @return Number of the destination vertex that's closest to source
 	     */
-	    virtual unsigned int getNearest(unsigned int n, NNMesh const& source, NNMesh const& dest) const = 0;
+	    virtual unsigned int getNearest(unsigned int n, NNMesh const& source, NNMesh const& dest) = 0;
 	    /**
 	     * @brief Computes the error between two meshes
 	     * @details Error is measured by the mean squared distance between points
@@ -43,7 +43,11 @@ namespace sfa
 	     * @param dest Destination mesh
 	     * @return Error value
 	     */
-	    double computeError(NNMesh const& source, NNMesh const& dest) const;
+	    double computeError(NNMesh const& source, NNMesh const& dest);
+	    /**
+	     * @brief Clears previously cached correspondences
+	     */
+	    virtual void clearCache() = 0;
 	private:
     };
 }

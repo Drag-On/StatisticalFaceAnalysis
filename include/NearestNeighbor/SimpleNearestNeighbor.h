@@ -11,6 +11,7 @@
 #ifndef SIMPLENEARESTNEIGHBOR_H_
 #define SIMPLENEARESTNEIGHBOR_H_
 
+#include <map>
 #include <limits>
 #include "NearestNeighbor.h"
 
@@ -24,7 +25,10 @@ namespace sfa
     {
 	public:
 	    virtual unsigned int getNearest(unsigned int n, NNMesh const& source,
-		    NNMesh const& dest) const;
+		    NNMesh const& dest);
+	    virtual void clearCache();
+	private:
+	    std::map<unsigned int, unsigned int> m_cache;
     };
 }
 

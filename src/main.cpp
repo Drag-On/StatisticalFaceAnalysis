@@ -85,6 +85,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	// Compute next step
 	icp.calcNextStep(*pSourceModel, *pDestModel);
 	pSourceModel->getBasePointer()->updateBuffers();
+	LOG->info("Done!");
     }
     // Toggle source and destination mesh visibility
     if(args.key == GLFW_KEY_O && args.action == GLFW_PRESS)

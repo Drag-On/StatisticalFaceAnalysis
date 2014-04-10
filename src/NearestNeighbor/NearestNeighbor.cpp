@@ -16,7 +16,7 @@ namespace sfa
     {
     }
 
-    double NearestNeighbor::computeError(NNMesh const& source, NNMesh const& dest) const
+    double NearestNeighbor::computeError(NNMesh const& source, NNMesh const& dest)
     {
 	// Check if arguments are valid
 	if(source.getAmountOfVertices() <= 0 || dest.getAmountOfVertices() <= 0)

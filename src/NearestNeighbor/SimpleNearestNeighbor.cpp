@@ -13,27 +13,39 @@
 namespace sfa
 {
     unsigned int SimpleNearestNeighbor::getNearest(unsigned int n, NNMesh const& source,
-	    NNMesh const& dest) const
+	    NNMesh const& dest)
     {
 	// Check if arguments are valid
 	if(source.getAmountOfVertices() <= 0 || dest.getAmountOfVertices() <= 0)
 	    throw std::invalid_argument("Source and/or destination mesh don't have any vertices!");
 
-	// Start out with "infinite" distance
-	double minSqDist = std::numeric_limits<double>::max();
 	unsigned int curIndex = 0;
-	Vertex sourceVertex = source.getVertex(n);
-	// Iterate over all destination vertices
-	for(unsigned int i = 0; i < dest.getAmountOfVertices(); i++)
+	auto cached = m_cache.find(n);
+	if(cached != m_cache.end())
+	    curIndex = cached->second;
+	else
 	{
-	    Vertex destVertex = dest.getVertex(i);
-	    double sqDist = (sourceVertex.coords - destVertex.coords).squaredNorm();
-	    if(sqDist < minSqDist)
+	    // Start out with "infinite" distance
+	    double minSqDist = std::numeric_limits<double>::max();
+	    Vertex sourceVertex = source.getVertex(n);
+	    // Iterate over all destination vertices
+	    for (unsigned int i = 0; i < dest.getAmountOfVertices(); i++)
 	    {
-		minSqDist = sqDist;
-		curIndex = i;
+		Vertex destVertex = dest.getVertex(i);
+		double sqDist = (sourceVertex.coords - destVertex.coords).squaredNorm();
+		if (sqDist < minSqDist)
+		{
+		    minSqDist = sqDist;
+		    curIndex = i;
+		}
 	    }
+	    m_cache.insert({n, curIndex});
 	}
 	return curIndex;
+    }
+
+    void SimpleNearestNeighbor::clearCache()
+    {
+	m_cache.clear();
     }
 }
