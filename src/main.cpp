@@ -118,7 +118,7 @@ void renderCallback(Window::RenderEventArgs const& args)
     // Instruct shader
     pShader->use();
     // MVP matrix
-    Mat4f mvp = projection * view * Mat4f::makeScale(0.01f);
+    Mat4f mvp = projection * view; // Unit model matrix
     GLint mvpId = pShader->getDefaultUniformHandle(ShaderProgram::Uniform::MVP);
     if (mvpId >= 0)
     {
