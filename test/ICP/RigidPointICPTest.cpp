@@ -37,7 +37,7 @@ void testRigidPointICP()
     LOG->info("Matching error: %.20f", startError);
 
     // Do ICP
-    RigidPointICP icp;
+    RigidPointICP icp(nn);
     for(unsigned int i = 0; i < 3; i++)
     {
 	// Calculate next step

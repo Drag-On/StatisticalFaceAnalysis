@@ -44,7 +44,7 @@ float moveSpeed = 2.5;
 bool showSource = true, showDest = true;
 
 SimpleNearestNeighbor nn;
-RigidPointICP icp;
+RigidPointICP icp(nn);
 
 Properties properties;
 

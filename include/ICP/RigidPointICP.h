@@ -13,6 +13,7 @@
 
 #include <Eigen/SVD>
 #include "IterativeClosestPoint.h"
+#include "NearestNeighbor/NearestNeighbor.h"
 
 namespace sfa
 {
@@ -22,9 +23,11 @@ namespace sfa
     class RigidPointICP: public IterativeClosestPoint
     {
 	public:
+	    RigidPointICP(NearestNeighbor const& nn);
 	    virtual ~RigidPointICP();
 	    virtual void calcNextStep(Model& source, Model const& dest);
 	private:
+	    NearestNeighbor const& m_nearestNeighbor;
     };
 }
 

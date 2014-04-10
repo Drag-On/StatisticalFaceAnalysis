@@ -12,6 +12,10 @@
 
 namespace sfa
 {
+    RigidPointICP::RigidPointICP(NearestNeighbor const& nn) : m_nearestNeighbor(nn)
+    {
+    }
+
     RigidPointICP::~RigidPointICP()
     {
     }
@@ -20,25 +24,23 @@ namespace sfa
     {
 	auto srcAvg = source.getAverage();
 	auto destAvg = dest.getAverage();
-	assert(source.getAmountOfVertices() == dest.getAmountOfVertices());
-	Eigen::MatrixXd X(3, source.getAmountOfVertices());
-	Eigen::MatrixXd Y(3, dest.getAmountOfVertices());
+	auto amountOfPoints = source.getAmountOfVertices();
+	Eigen::MatrixXd X(3, amountOfPoints);
+	Eigen::MatrixXd Y(3, amountOfPoints);
 	// Fill X and Y
-	for(unsigned int i = 0; i < source.getAmountOfVertices(); i++)
+	for(unsigned int i = 0; i < amountOfPoints; i++)
 	{
-	    auto vertex = source.getVertex(i).coords;
-	    auto corVertex = vertex - srcAvg;
-	    X(0,i) = corVertex.x();
-	    X(1,i) = corVertex.y();
-	    X(2,i) = corVertex.z();
-	}
-	for(unsigned int i = 0; i < dest.getAmountOfVertices(); i++)
-	{
-	    auto vertex = dest.getVertex(i).coords;
-	    auto corVertex = vertex - destAvg;
-	    Y(0,i) = corVertex.x();
-	    Y(1,i) = corVertex.y();
-	    Y(2,i) = corVertex.z();
+	    auto srcVertex = source.getVertex(i).coords;
+	    auto corSrcVertex = srcVertex - srcAvg;
+	    X(0,i) = corSrcVertex.x();
+	    X(1,i) = corSrcVertex.y();
+	    X(2,i) = corSrcVertex.z();
+	    unsigned int nearestIndex = m_nearestNeighbor.getNearest(i, source, dest);
+	    auto destVertex = dest.getVertex(nearestIndex).coords;
+	    auto corDestVertex = destVertex - destAvg;
+	    Y(0, i) = corDestVertex.x();
+	    Y(1, i) = corDestVertex.y();
+	    Y(2, i) = corDestVertex.z();
 	}
 	// Calculate optimal rotation
 	auto XYT = X * Y.transpose();
