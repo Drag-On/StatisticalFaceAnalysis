@@ -185,7 +185,7 @@ int main(int argc, char** argv)
     properties.interpret(argc-1, argv+1);
 
     // Create window
-    pWnd = WindowManager::get()->createWindow<SimpleWindow>();
+    pWnd = WindowManager::get()->createWindow<SimpleWindow>("Statistical Face Analysis");
     // Initialize it
     pWnd->init(true, false, false);
     // Add a camera
