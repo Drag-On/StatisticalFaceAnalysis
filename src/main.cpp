@@ -17,7 +17,6 @@
 #include "Rendering/RenderContext.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/ShaderProgram.h"
-#include "Rendering/Texture.h"
 #include "Rendering/Camera.h"
 #include "Math/Utility.h"
 #include "Math/Quaternion.h"
@@ -33,7 +32,7 @@ using namespace sfa;
 Window* pWnd;
 Model* pSourceModel, *pDestModel;
 ShaderProgram* pShader;
-Texture* pTexture;
+Vec3f colorSrc(1.0f, 0.0f, 0.0f), colorDest(0.0f, 1.0f, 0.0f);
 Camera* pCam;
 Mat4f view, projection;
 float mouseSpeed = 1.5, moveSpeed = 2.5;
@@ -118,15 +117,6 @@ void renderCallback(Window::RenderEventArgs const& args)
 {
     // Instruct shader
     pShader->use();
-    // Diffuse texture
-    GLint diffuseId = pShader->getDefaultUniformHandle(
-	    ShaderProgram::TEX_DIFFUSE);
-    if (diffuseId >= 0)
-    {
-	// Bind diffuse texture to unit 0
-	pShader->bindTexture(GL_TEXTURE0, GL_TEXTURE_2D, pTexture->getTextureHandle());
-	pShader->setUniformSampler(diffuseId, 0);
-    }
     // MVP matrix
     Mat4f mvp = projection * view * Mat4f::makeScale(0.01f);
     GLint mvpId = pShader->getDefaultUniformHandle(ShaderProgram::Uniform::MVP);
@@ -147,9 +137,15 @@ void renderCallback(Window::RenderEventArgs const& args)
 
     // Draw
     if (showSource)
+    {
+	pShader->setUniformFloat3(pShader->getDefaultUniformHandle(ShaderProgram::COLOR), colorSrc.getDataPointer());
 	args.rc->draw(*(pSourceModel->getBasePointer()));
+    }
     if (showDest)
+    {
+	pShader->setUniformFloat3(pShader->getDefaultUniformHandle(ShaderProgram::COLOR), colorDest.getDataPointer());
 	args.rc->draw(*(pDestModel->getBasePointer()));
+    }
 }
 
 int main(int argc, char** argv)
@@ -174,8 +170,7 @@ int main(int argc, char** argv)
     pDestModel = new Model("Resources/Plane.obj");
     pSourceModel->getBasePointer()->updateBuffers();
     pDestModel->getBasePointer()->updateBuffers();
-    pShader = ShaderProgram::createSimpleShader();
-    pTexture = new Texture(Texture::BOGUS, "");
+    pShader = ShaderProgram::createSimpleColorShader();
     // Add render callback so we can draw the mesh
     pWnd->addUpdateCallback(std::bind(&updateCallback, std::placeholders::_1));
     pWnd->addRenderCallback(std::bind(&renderCallback, std::placeholders::_1));
@@ -193,7 +188,6 @@ int main(int argc, char** argv)
     delete pSourceModel;
     delete pDestModel;
     delete pShader;
-    delete pTexture;
     delete pCam;
     // delete pWnd; // No need for this as windows will delete themselves when closed
     // Free remaining internal resources
