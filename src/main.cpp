@@ -11,15 +11,16 @@
 #include <functional>
 #include <iostream>
 #include <Eigen/Dense>
-#include "System/Log/Log.h"
-#include "Window/WindowManager.h"
-#include "Window/SimpleWindow.h"
-#include "Rendering/RenderContext.h"
-#include "Rendering/Mesh.h"
-#include "Rendering/ShaderProgram.h"
-#include "Rendering/Camera.h"
-#include "Math/Utility.h"
-#include "Math/Quaternion.h"
+#include <System/Log/Log.h>
+#include <System/Properties/Properties.h>
+#include <Window/WindowManager.h>
+#include <Window/SimpleWindow.h>
+#include <Rendering/RenderContext.h>
+#include <Rendering/Mesh.h>
+#include <Rendering/ShaderProgram.h>
+#include <Rendering/Camera.h>
+#include <Math/Utility.h>
+#include <Math/Quaternion.h>
 #include "SFA/Model.h"
 #include "NearestNeighbor/SimpleNearestNeighbor.h"
 #include "ICP/RigidPointICP.h"
@@ -41,6 +42,8 @@ bool showSource = true, showDest = true;
 
 SimpleNearestNeighbor nn;
 RigidPointICP icp;
+
+Properties properties;
 
 void scrollCallback(Window::ScrollEventArgs const& args)
 {
@@ -66,6 +69,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	icp.calcNextStep(*pSourceModel, *pDestModel);
 	pSourceModel->getBasePointer()->updateBuffers();
     }
+    // Toggle source and destination mesh visibility
     if(args.key == GLFW_KEY_O && args.action == GLFW_PRESS)
     {
 	showSource = !showSource;
@@ -73,6 +77,16 @@ void keyCallback(Window::KeyEventArgs const& args)
     if(args.key == GLFW_KEY_P && args.action == GLFW_PRESS)
     {
 	showDest = !showDest;
+    }
+    // Reload meshes
+    if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
+    {
+	delete pSourceModel;
+	delete pDestModel;
+	pSourceModel = new Model(properties.getStringValue("src"));
+	pDestModel = new Model(properties.getStringValue("dest"));
+	pSourceModel->getBasePointer()->updateBuffers();
+	pDestModel->getBasePointer()->updateBuffers();
     }
 }
 
@@ -153,6 +167,13 @@ int main(int argc, char** argv)
     LOG->setLogLevel(dbgl::DBG);
     LOG->info("Starting...");
 
+    // Set default properties in case none have been passed
+    properties.setValue("src", "Resources/Plane_Transformed.obj");
+    properties.setValue("dest", "Resources/Plane.obj");
+    // Interpret arguments
+    // Skip first argument as it's the executable's path
+    properties.interpret(argc-1, argv+1);
+
     // Create window
     pWnd = WindowManager::get()->createWindow<SimpleWindow>();
     // Initialize it
@@ -166,8 +187,8 @@ int main(int argc, char** argv)
     projection = Mat4f::makeProjection(pCam->getFieldOfView(),
 	    float(pWnd->getFrameWidth()) / pWnd->getFrameHeight(), pCam->getNear(), pCam->getFar());
     // Load mesh, shader and texture
-    pSourceModel = new Model("Resources/Plane_Transformed.obj");
-    pDestModel = new Model("Resources/Plane.obj");
+    pSourceModel = new Model(properties.getStringValue("src"));
+    pDestModel = new Model(properties.getStringValue("dest"));
     pSourceModel->getBasePointer()->updateBuffers();
     pDestModel->getBasePointer()->updateBuffers();
     pShader = ShaderProgram::createSimpleColorShader();
