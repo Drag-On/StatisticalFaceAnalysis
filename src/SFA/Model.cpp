@@ -17,12 +17,12 @@ namespace sfa
     {
 	// If no path is specified use a plane. This is just for testing
 	// purposes where we don't want to load a file from HD.
-	m_pMesh = dbgl::Mesh::makePlane(false, false);
+	m_pMesh = dbgl::Mesh::makePlane(0);
     }
 
     Model::Model(std::string path)
     {
-	m_pMesh = dbgl::Mesh::load(path, dbgl::Mesh::OBJ, false, false, false);
+	m_pMesh = dbgl::Mesh::load(dbgl::Mesh::OBJ, path, 0);
     }
 
     Model::~Model()

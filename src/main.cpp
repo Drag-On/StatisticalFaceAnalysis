@@ -16,7 +16,7 @@
 #include <Window/WindowManager.h>
 #include <Window/SimpleWindow.h>
 #include <Rendering/RenderContext.h>
-#include <Rendering/Mesh.h>
+#include <Rendering/Mesh/Mesh.h>
 #include <Rendering/ShaderProgram.h>
 #include <Rendering/Camera.h>
 #include <Math/Utility.h>
@@ -187,7 +187,7 @@ int main(int argc, char** argv)
     // Create window
     pWnd = WindowManager::get()->createWindow<SimpleWindow>("Statistical Face Analysis");
     // Initialize it
-    pWnd->init(true, false, false);
+    pWnd->init(Window::DepthTest);
     // Add a camera
     Vec3f pos = Vec3f(0, 0, camDist);
     Vec3f dir = -pos;

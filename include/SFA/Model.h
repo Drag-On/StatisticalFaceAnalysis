@@ -16,7 +16,7 @@
 #include <sstream>
 #include <iostream>
 #include <Eigen/Core>
-#include <Rendering/Mesh.h>
+#include <Rendering/Mesh/Mesh.h>
 #include "NearestNeighbor/NNMesh.h"
 #include "SFA/Vertex.h"
 
