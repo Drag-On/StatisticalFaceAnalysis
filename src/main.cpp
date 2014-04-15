@@ -26,6 +26,7 @@
 #include "SFA/Model.h"
 #include "NearestNeighbor/SimpleNearestNeighbor.h"
 #include "ICP/RigidPointICP.h"
+#include "ICP/PCA_ICP.h"
 
 using namespace std;
 using namespace Eigen;
@@ -45,6 +46,7 @@ bool showSource = true, showDest = true;
 
 SimpleNearestNeighbor nn;
 RigidPointICP icp(nn);
+PCA_ICP pca_icp;
 
 Properties properties;
 
@@ -85,6 +87,16 @@ void keyCallback(Window::KeyEventArgs const& args)
 	// Compute next step
 	icp.calcNextStep(*pSourceModel, *pDestModel);
 	pSourceModel->getBasePointer()->updateBuffers();
+	LOG->info("Done!");
+    }
+    // Check if "PCA ICP" should be executed
+    if (args.key == GLFW_KEY_U && args.action == GLFW_PRESS)
+    {
+	LOG->info("Calculating PCA matching!");
+	// Compute next step
+	pca_icp.calcNextStep(*pSourceModel, *pDestModel);
+	pSourceModel->getBasePointer()->updateBuffers();
+	nn.clearCache();
 	LOG->info("Done!");
     }
     // Toggle source and destination mesh visibility
