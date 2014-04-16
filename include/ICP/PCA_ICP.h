@@ -36,6 +36,7 @@ namespace sfa
 	public:
 	    virtual ~PCA_ICP();
 	    virtual void calcNextStep(Model& source, Model const& dest);
+	    void reset();
 	private:
 	    unsigned int m_index = 0;
     };

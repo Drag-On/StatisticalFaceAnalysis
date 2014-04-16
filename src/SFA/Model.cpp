@@ -22,7 +22,7 @@ namespace sfa
 
     Model::Model(std::string path)
     {
-	m_pMesh = dbgl::Mesh::load(dbgl::Mesh::OBJ, path, 0);
+	m_pMesh = dbgl::Mesh::load(dbgl::Mesh::OBJ, path, dbgl::Mesh::Optimize);
     }
 
     Model::~Model()

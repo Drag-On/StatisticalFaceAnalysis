@@ -118,6 +118,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	pDestModel = new Model(properties.getStringValue("dest"));
 	pSourceModel->getBasePointer()->updateBuffers();
 	pDestModel->getBasePointer()->updateBuffers();
+	pca_icp.reset();
     }
     // Log matching error
     if(args.key == GLFW_KEY_L && args.action == GLFW_PRESS)
