@@ -89,8 +89,18 @@ namespace sfa
 	auto srcEigenVec = srcVectors[m_index].vector.normalized();
 	auto destEigenVec = destVectors[m_index].vector.normalized();
 	Eigen::Vector3d vec;
-	auto angle1 = std::acos(srcEigenVec.dot(destEigenVec));
-	auto angle2 = std::acos(-srcEigenVec.dot(destEigenVec));
+	auto theta1 = srcEigenVec.dot(destEigenVec);
+	if (theta1 < -1.0)
+	    theta1 = -1.0f;
+	else if (theta1 > 1.0)
+	    theta1 = 1.0f;
+	auto theta2 = (-srcEigenVec).dot(destEigenVec);
+	if (theta2 < -1.0)
+	    theta2 = -1.0f;
+	else if (theta2 > 1.0)
+	    theta2 = 1.0f;
+	auto angle1 = std::acos(theta1);
+	auto angle2 = std::acos(theta2);
 	if(angle1 < angle2)
 	    vec = srcEigenVec;
 	else
