@@ -11,7 +11,7 @@
 #ifndef NNMESH_H_
 #define NNMESH_H_
 
-#include "SFA/Vertex.h"
+#include "Vertex.h"
 
 namespace sfa
 {

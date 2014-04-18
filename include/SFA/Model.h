@@ -18,7 +18,6 @@
 #include <Eigen/Core>
 #include <Rendering/Mesh/Mesh.h>
 #include "NearestNeighbor/NNMesh.h"
-#include "SFA/Vertex.h"
 
 namespace sfa
 {
