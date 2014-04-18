@@ -124,7 +124,7 @@ namespace sfa
 	    {
 		// Usually this should finish on first iteration. Only due to bad luck it might need more.
 		auto start = m_vertices[*it];
-		isEdge = checkEdge(m_vertices[i], start, start, start);
+		isEdge = checkEdge(m_vertices[i], start);
 		if(!isEdge)
 		    break;
 	    }
@@ -133,18 +133,28 @@ namespace sfa
 	}
     }
 
-    bool Model::checkEdge(Vertex base, Vertex start, Vertex last, Vertex begin, double angle)
+    bool Model::checkEdge(Vertex base, Vertex start)
+    {
+	std::map<unsigned int, bool> checked;
+	for(auto neighbor : base.neighbors)
+	    checked[neighbor] = false;
+	return checkEdge(base, start, start, checked);
+    }
+
+    bool Model::checkEdge(Vertex base, Vertex start, Vertex begin, std::map<unsigned int, bool> checked,
+	    double angle)
     {
 	// Get a vertex that is both a neighbor of base and start and different than last
 	for (auto it = start.neighbors.begin(); it != start.neighbors.end(); ++it)
 	{
-	    if (*it == last.id)
+	    if(checked[*it] && *it != begin.id)
 		continue;
 	    for (auto it2 = base.neighbors.begin(); it2 != base.neighbors.end(); ++it2)
 	    {
 		if (*it == *it2)
 		{
 		    // Found a match, now calculate angle and add it to the overall angle
+		    checked[*it] = true;
 		    auto vec1 = start.coords - base.coords;
 		    auto vec2 = m_vertices[*it].coords - base.coords;
 		    auto cosTheta = vec1.dot(vec2);
@@ -171,7 +181,7 @@ namespace sfa
 			if(totalAngle >= 4 * dbgl::pi())
 			    return true;
 			// Check the next vertex
-			bool isEdge = checkEdge(base, m_vertices[*it], start, begin, totalAngle);
+			bool isEdge = checkEdge(base, m_vertices[*it], begin, checked, totalAngle);
 			// If checkEdge returns true there might still be a different "path" to prove
 			// it's no edge, thus we continue iterating
 			if (!isEdge)

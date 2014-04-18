@@ -16,6 +16,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <Eigen/Core>
 #include <Rendering/Mesh/Mesh.h>
 #include <Math/Utility.h>
@@ -49,13 +50,28 @@ namespace sfa
 	     */
 	    void analyzeMesh();
 	    /**
+	     * @brief Checks if a vertex is situated on the edge of a mesh.
+	     * @param base Vertex to check
+	     * @param start Neighbor of base to start algorithm from
+	     * @return True in case no way has been found to circle base through its neighbors
+	     * 	       starting from start, and ending up at start with a total angle of 360°
+	     * 	       or more. False otherwise.
+	     * @note If this algorithm returns false base definitely isn't an edge vertex. However,
+	     * 	     if it returns true, it might still be no edge vertex as there might be a path
+	     * 	     from a different neighbor to start from. To make sure that base is an edge
+	     * 	     vertex this method has to be called for each neighboring vertex (passed as
+	     * 	     start). If it still didn't return false, it is an edge vertex.
+	     */
+	    bool checkEdge(Vertex base, Vertex start);
+	    /**
 	     * @brief Called internally by analyzeMesh(). Checks if a vertex is situated on the
 	     * 	      edge of a mesh.
 	     * @param base Vertex to check
 	     * @param start Neighbor of base to start algorithm from
-	     * @param last Last neighbor of base that has been checked
 	     * @param begin Vertex the algorithm has to come back to (should equal start on
 	     * 		    first call)
+	     * @param checked Map containing flags for every neighbor of base if it has already
+	     * 		      been checked or not
 	     * @param angle Cumulative angle so far. Used for recursive calls. Should be 0 for
 	     * 		    manual calls.
 	     * @return True in case no way has been found to circle base through its neighbors
@@ -67,7 +83,8 @@ namespace sfa
 	     * 	     vertex this method has to be called for each neighboring vertex (passed as
 	     * 	     start). If it still didn't return false, it is an edge vertex.
 	     */
-	    bool checkEdge(Vertex base, Vertex start, Vertex last, Vertex begin, double angle = 0);
+	    bool checkEdge(Vertex base, Vertex start, Vertex begin, std::map<unsigned int, bool> checked,
+		    double angle = 0);
 
 	    dbgl::Mesh* m_pMesh;
 	    std::vector<Vertex> m_vertices;
