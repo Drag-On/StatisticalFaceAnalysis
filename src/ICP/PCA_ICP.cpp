@@ -112,11 +112,11 @@ namespace sfa
 	for (unsigned int i = 0; i < source.getAmountOfVertices(); i++)
 	{
 	    auto vertex = source.getVertex(i);
-	    vertex.coords = R * vertex.coords + t;
+	    auto coords = R * vertex.coords + t;
 	    // Should be okay to use the same R for normal since the inverse of a rotation matrix
 	    // is its transpose. Thus the correct matrix is transpose(transpose(R)) = R.
-	    vertex.normal = R * vertex.normal;
-	    source.setVertex(i, vertex);
+	    auto normal = R * vertex.normal;
+	    source.setVertex(i, coords, normal);
 	}
 
 	// Increment index

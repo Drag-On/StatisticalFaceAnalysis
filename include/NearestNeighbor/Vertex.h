@@ -12,6 +12,7 @@
 #define VERTEX_H_
 
 #include <Eigen/Core>
+#include <set>
 
 namespace sfa
 {
@@ -21,9 +22,11 @@ namespace sfa
     struct Vertex
     {
 	public:
-	    unsigned int id;		// Index
-	    Eigen::Vector3d coords;	// Coordinates
-	    Eigen::Vector3d normal;	// Normal
+	    unsigned int id;			// Index
+	    Eigen::Vector3d coords;		// Coordinates
+	    Eigen::Vector3d normal;		// Normal
+	    std::set<unsigned int> neighbors;	// IDs of all neighboring vertices
+	    bool isEdge = false;		// Indicates if the vertex is located on the edge of the mesh
     };
 }
 

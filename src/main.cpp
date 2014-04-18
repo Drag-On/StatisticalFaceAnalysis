@@ -126,6 +126,21 @@ void keyCallback(Window::KeyEventArgs const& args)
 	auto error = nn.computeError(*pSourceModel, *pDestModel);
 	LOG->info("Matching error: %.20f", error);
     }
+    // DEBUG!
+    if(args.key == GLFW_KEY_H && args.action == GLFW_PRESS)
+    {
+	LOG->info("DEBUG!");
+	for(unsigned int i = 0; i < pDestModel->getAmountOfVertices(); i++)
+	{
+	    auto vertex = pDestModel->getVertex(i);
+	    if(vertex.isEdge)
+	    {
+		auto coords = vertex.coords + 0.5f * vertex.normal;
+		pDestModel->setVertex(i, coords, vertex.normal);
+	    }
+	}
+	pDestModel->getBasePointer()->updateBuffers();
+    }
 }
 
 void updateCallback(Window::UpdateEventArgs const& args)
