@@ -138,59 +138,39 @@ namespace sfa
 	std::map<unsigned int, bool> checked;
 	for(auto neighbor : base.neighbors)
 	    checked[neighbor] = false;
-	return checkEdge(base, start, start, checked);
+	checked[start.id] = true;
+	return checkEdge(base, start, start, start, checked);
     }
 
-    bool Model::checkEdge(Vertex base, Vertex start, Vertex begin, std::map<unsigned int, bool> checked,
-	    double angle)
+    bool Model::checkEdge(Vertex base, Vertex start, Vertex begin, Vertex last,
+	    std::map<unsigned int, bool> checked)
     {
 	// Get a vertex that is both a neighbor of base and start and different than last
 	for (auto it = start.neighbors.begin(); it != start.neighbors.end(); ++it)
 	{
-	    if(checked[*it] && *it != begin.id)
+	    // If the neighbors neighbor is the beginning but not the one we just came from
+	    // then there is a way of circling base through their neighbors
+	    if(*it == begin.id && *it != last.id)
+		return false;
+	    // If the neighbor has already been used don't use it again
+	    if(checked[*it])
 		continue;
 	    for (auto it2 = base.neighbors.begin(); it2 != base.neighbors.end(); ++it2)
 	    {
 		if (*it == *it2)
 		{
-		    // Found a match, now calculate angle and add it to the overall angle
+		    // Found a match
 		    checked[*it] = true;
-		    auto vec1 = start.coords - base.coords;
-		    auto vec2 = m_vertices[*it].coords - base.coords;
-		    auto cosTheta = vec1.dot(vec2);
-		    if (cosTheta > 1)
-			cosTheta = 1.0f;
-		    if (cosTheta < -1)
-			cosTheta = -1.0f;
-		    auto newAngle = std::acos(cosTheta);
-		    auto totalAngle = newAngle + angle;
-		    // Check if we're back at the beginning
-		    if(*it == begin.id)
-		    {
-			// If we're back at the beginning and the overall angle is more than 360°
-			// this is surely no edge vertex
-			if (totalAngle >= 2 * dbgl::pi())
-			    return false;
-			else
-			    // Otherwise it might be
-			    return true;
-		    }
-		    else
-		    {
-			// Break if angle gets implausible. The algorithm might get trapped in a loop.
-			if(totalAngle >= 4 * dbgl::pi())
-			    return true;
-			// Check the next vertex
-			bool isEdge = checkEdge(base, m_vertices[*it], begin, checked, totalAngle);
-			// If checkEdge returns true there might still be a different "path" to prove
-			// it's no edge, thus we continue iterating
-			if (!isEdge)
-			    return false;
-		    }
+		    // Check the next vertex
+		    bool isEdge = checkEdge(base, m_vertices[*it], begin, start, checked);
+		    // If checkEdge returns true there might still be a different "path" to prove
+		    // that it's no edge, thus we continue iterating
+		    if (!isEdge)
+			return false;
 		}
 	    }
 	}
-
+	// If we get here the algorithm has not found a proper way
 	return true;
     }
 }

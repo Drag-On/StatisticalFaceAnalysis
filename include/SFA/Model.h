@@ -70,10 +70,9 @@ namespace sfa
 	     * @param start Neighbor of base to start algorithm from
 	     * @param begin Vertex the algorithm has to come back to (should equal start on
 	     * 		    first call)
+	     * @param last Last checked vertex
 	     * @param checked Map containing flags for every neighbor of base if it has already
 	     * 		      been checked or not
-	     * @param angle Cumulative angle so far. Used for recursive calls. Should be 0 for
-	     * 		    manual calls.
 	     * @return True in case no way has been found to circle base through its neighbors
 	     * 	       starting from start, and ending up at begin with a total angle of 360°
 	     * 	       or more. False otherwise.
@@ -83,8 +82,7 @@ namespace sfa
 	     * 	     vertex this method has to be called for each neighboring vertex (passed as
 	     * 	     start). If it still didn't return false, it is an edge vertex.
 	     */
-	    bool checkEdge(Vertex base, Vertex start, Vertex begin, std::map<unsigned int, bool> checked,
-		    double angle = 0);
+	    bool checkEdge(Vertex base, Vertex start, Vertex begin, Vertex last, std::map<unsigned int, bool> checked);
 
 	    dbgl::Mesh* m_pMesh;
 	    std::vector<Vertex> m_vertices;
