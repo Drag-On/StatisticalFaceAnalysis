@@ -8,7 +8,7 @@
 /// it might also begin to hurt your kittens.
 //////////////////////////////////////////////////////////////////////
 
-#include <System/Log/Log.h>
+#include <DBGL/System/Log/Log.h>
 
 // Prototypes
 void testSimpleNearestNeighbor();

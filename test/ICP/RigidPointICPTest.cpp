@@ -11,7 +11,7 @@
 
 #include <stdexcept>
 #include <assert.h>
-#include <System/Log/Log.h>
+#include <DBGL/System/Log/Log.h>
 #include "SFA/Model.h"
 #include "NearestNeighbor/SimpleNearestNeighbor.h"
 #include "ICP/RigidPointICP.h"

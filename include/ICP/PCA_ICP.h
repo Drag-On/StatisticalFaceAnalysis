@@ -15,8 +15,6 @@
 #include <algorithm>
 #include <Eigen/Eigenvalues>
 #include <Eigen/Geometry>
-#include <System/Log/Log.h>
-#include "IterativeClosestPoint.h"
 #include "IterativeClosestPoint.h"
 #include "NearestNeighbor/NearestNeighbor.h"
 

@@ -18,8 +18,8 @@
 #include <vector>
 #include <map>
 #include <Eigen/Core>
-#include <Rendering/Mesh/Mesh.h>
-#include <Math/Utility.h>
+#include <DBGL/Rendering/Mesh/Mesh.h>
+#include <DBGL/Math/Utility.h>
 #include "NearestNeighbor/NNMesh.h"
 
 namespace sfa
