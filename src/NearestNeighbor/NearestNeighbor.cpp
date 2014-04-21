@@ -16,6 +16,17 @@ namespace sfa
     {
     }
 
+    std::vector<Vertex> NearestNeighbor::getAllNearest(std::vector<Vertex> points, NNMesh const& source,
+	    NNMesh const& dest)
+    {
+	std::vector<Vertex> vertices;
+	for(auto point : points)
+	{
+	    vertices.push_back(dest.getVertex(getNearest(point.id, source, dest)));
+	}
+	return vertices;
+    }
+
     double NearestNeighbor::computeError(NNMesh const& source, NNMesh const& dest)
     {
 	// Check if arguments are valid
@@ -37,5 +48,6 @@ namespace sfa
 	error /= amount;
 	return error;
     }
+
 }
 

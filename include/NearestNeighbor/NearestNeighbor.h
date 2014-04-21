@@ -11,6 +11,7 @@
 #ifndef NEARESTNEIGHBOR_H_
 #define NEARESTNEIGHBOR_H_
 
+#include <vector>
 #include <stdexcept>
 #include <Eigen/Core>
 #include "NNMesh.h"
@@ -32,6 +33,14 @@ namespace sfa
 	     * @return Number of the destination vertex that's closest to source
 	     */
 	    virtual unsigned int getNearest(unsigned int n, NNMesh const& source, NNMesh const& dest) = 0;
+	    /**
+	     * @brief Calculates all nearest neighbors for points on source on dest
+	     * @param points Points on source to calculate nearest neighbors for
+	     * @param source Source mesh
+	     * @param dest Destination mesh
+	     * @return List of all nearest neighbors for the passed points
+	     */
+	    std::vector<Vertex> getAllNearest(std::vector<Vertex> points, NNMesh const& source, NNMesh const& dest);
 	    /**
 	     * @brief Computes the error between two meshes
 	     * @details Error is measured by the mean squared distance between points

@@ -11,7 +11,13 @@
 #ifndef ITERATIVECLOSESTPOINT_H_
 #define ITERATIVECLOSESTPOINT_H_
 
+#include <vector>
+#include <random>
+#include <Eigen/Core>
+#include <DBGL/System/Bitmask/Bitmask.h>
+#include <DBGL/System/Log/Log.h>
 #include "SFA/Model.h"
+#include "NearestNeighbor/Vertex.h"
 
 namespace sfa
 {
@@ -21,6 +27,16 @@ namespace sfa
     class IterativeClosestPoint
     {
 	public:
+	    enum PointSelection
+	    {
+		NO_EDGES = 1 << 0,
+		RANDOM = 1 << 1,
+	    };
+
+	    /**
+	     * @brief Constructor
+	     */
+	    IterativeClosestPoint();
 	    /**
 	     * @brief Destructor
 	     */
@@ -31,7 +47,30 @@ namespace sfa
 	     * @param dest Destination model
 	     */
 	    virtual void calcNextStep(Model& source, Model const& dest) = 0;
-	private:
+	    /**
+	     * @brief Selects a certain amount of points on the source mesh
+	     * @param source Source model
+	     * @return List with all points to use for ICP
+	     */
+	    std::vector<Vertex> selectPoints(Model& source);
+	    /**
+	     * @brief Calculates the average of the passed points
+	     * @param points Points to calculate average from
+	     * @return The Average of the passed points
+	     */
+	    Eigen::Vector3d getAverage(std::vector<Vertex> const& points) const;
+	    /**
+	     * @return Selection method flags
+	     */
+	    dbgl::Bitmask const& getSelectionMethod() const;
+	    /**
+	     * @brief Modifies the selection method
+	     * @param flags Determines which points are filtered out
+	     */
+	    void setSelectionMethod(dbgl::Bitmask flags);
+	protected:
+	    dbgl::Bitmask m_selectionMethod = 0;
+	    std::mt19937 m_random;
     };
 }
 

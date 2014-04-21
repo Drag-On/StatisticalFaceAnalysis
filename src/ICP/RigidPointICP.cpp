@@ -12,7 +12,7 @@
 
 namespace sfa
 {
-    RigidPointICP::RigidPointICP(NearestNeighbor& nn) : m_nearestNeighbor(nn)
+    RigidPointICP::RigidPointICP(NearestNeighbor& nn) : IterativeClosestPoint(), m_nearestNeighbor(nn)
     {
     }
 
@@ -22,21 +22,24 @@ namespace sfa
 
     void RigidPointICP::calcNextStep(Model& source, Model const& dest)
     {
-	auto srcAvg = source.getAverage();
-	auto destAvg = dest.getAverage();
-	auto amountOfPoints = source.getAmountOfVertices();
+	// Select points
+	auto sourcePoints = selectPoints(source);
+	auto nearestPoints = m_nearestNeighbor.getAllNearest(sourcePoints, source, dest);
+	// Calc averages
+	auto srcAvg = getAverage(sourcePoints);
+	auto destAvg = getAverage(nearestPoints);
+	auto amountOfPoints = sourcePoints.size();
 	Eigen::MatrixXd X(3, amountOfPoints);
 	Eigen::MatrixXd Y(3, amountOfPoints);
 	// Fill X and Y
 	for(unsigned int i = 0; i < amountOfPoints; i++)
 	{
-	    auto srcVertex = source.getVertex(i).coords;
+	    auto srcVertex = sourcePoints[i].coords;
 	    auto corSrcVertex = srcVertex - srcAvg;
 	    X(0,i) = corSrcVertex.x();
 	    X(1,i) = corSrcVertex.y();
 	    X(2,i) = corSrcVertex.z();
-	    unsigned int nearestIndex = m_nearestNeighbor.getNearest(i, source, dest);
-	    auto destVertex = dest.getVertex(nearestIndex).coords;
+	    auto destVertex = nearestPoints[i].coords;
 	    auto corDestVertex = destVertex - destAvg;
 	    Y(0, i) = corDestVertex.x();
 	    Y(1, i) = corDestVertex.y();

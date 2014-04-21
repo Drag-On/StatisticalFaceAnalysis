@@ -44,6 +44,11 @@ namespace sfa
 	return m_vertices[n];
     }
 
+    std::vector<Vertex> const& Model::getVertices() const
+    {
+	return m_vertices;
+    }
+
     void Model::setVertex(unsigned int n, Eigen::Vector3d coords, Eigen::Vector3d normal)
     {
 	if (n >= getAmountOfVertices())
