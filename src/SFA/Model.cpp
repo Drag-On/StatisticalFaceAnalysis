@@ -22,7 +22,9 @@ namespace sfa
 
     Model::Model(std::string path)
     {
-	m_pMesh = dbgl::Mesh::load(dbgl::Mesh::OBJ, path, dbgl::Mesh::Optimize);
+	dbgl::OBJMeshLoader loader;
+	loader.setNormalCompatibilityAngle(std::numeric_limits<float>::max());
+	m_pMesh = dbgl::Mesh::load(loader, path, dbgl::Mesh::Optimize);
 	analyzeMesh();
     }
 

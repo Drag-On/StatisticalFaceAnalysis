@@ -17,8 +17,10 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <limits>
 #include <Eigen/Core>
 #include <DBGL/Rendering/Mesh/Mesh.h>
+#include <DBGL/Rendering/Mesh/OBJMeshLoader.h>
 #include <DBGL/Math/Utility.h>
 #include "NearestNeighbor/NNMesh.h"
 
