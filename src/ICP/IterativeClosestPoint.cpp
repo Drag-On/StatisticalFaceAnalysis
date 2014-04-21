@@ -55,6 +55,11 @@ namespace sfa
 	return average;
     }
 
+    dbgl::Bitmask& IterativeClosestPoint::selectionMethod()
+    {
+	return m_selectionMethod;
+    }
+
     dbgl::Bitmask const& IterativeClosestPoint::getSelectionMethod() const
     {
 	return m_selectionMethod;

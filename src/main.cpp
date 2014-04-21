@@ -126,6 +126,22 @@ void keyCallback(Window::KeyEventArgs const& args)
 	auto error = nn.computeError(*pSourceModel, *pDestModel);
 	LOG->info("Matching error: %.20f", error);
     }
+    // Modify point selection
+    if(args.key == GLFW_KEY_F1 && args.action == GLFW_PRESS)
+    {
+	icp.setSelectionMethod(0);
+	LOG->info("Using all points.");
+    }
+    else if(args.key == GLFW_KEY_F2 && args.action == GLFW_PRESS)
+    {
+	icp.selectionMethod().set(IterativeClosestPoint::NO_EDGES);
+	LOG->info("Adding filter \"No edges\".");
+    }
+    else if(args.key == GLFW_KEY_F3 && args.action == GLFW_PRESS)
+    {
+	icp.selectionMethod().set(IterativeClosestPoint::RANDOM);
+	LOG->info("Adding filter \"Random\".");
+    }
     // DEBUG!
     if(args.key == GLFW_KEY_H && args.action == GLFW_PRESS)
     {

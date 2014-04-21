@@ -62,6 +62,10 @@ namespace sfa
 	    /**
 	     * @return Selection method flags
 	     */
+	    dbgl::Bitmask& selectionMethod();
+	    /**
+	     * @return Selection method flags
+	     */
 	    dbgl::Bitmask const& getSelectionMethod() const;
 	    /**
 	     * @brief Modifies the selection method
