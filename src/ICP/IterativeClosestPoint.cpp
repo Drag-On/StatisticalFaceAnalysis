@@ -29,15 +29,24 @@ namespace sfa
 	// Initialize random number generator
 	std::uniform_int_distribution<uint32_t> rand_uint_0_1(0,1);
 	// Remove all the ones we don't need
-	for(auto it = source.getVertices().begin(); it != source.getVertices().end(); ++it)
+	for(unsigned int i = 0; i < source.getVertices().size(); i++)
 	{
+	    auto vertex = source.getVertex(i);
 	    bool insert = true;
 	    if (insert && m_selectionMethod.isSet(PointSelection::NO_EDGES))
-		insert = !(*it).isEdge;
+		insert = !vertex.isEdge;
 	    if(insert && m_selectionMethod.isSet(PointSelection::RANDOM))
 		insert = rand_uint_0_1(m_random);
+	    if(insert && m_selectionMethod.isSet(PointSelection::EVERY_SECOND))
+		insert = (i % 2 != 0);
+	    if(insert && m_selectionMethod.isSet(PointSelection::EVERY_THIRD))
+		insert = (i % 3 != 0);
+	    if(insert && m_selectionMethod.isSet(PointSelection::EVERY_FOURTH))
+		insert = (i % 4 != 0);
+	    if(insert && m_selectionMethod.isSet(PointSelection::EVERY_FIFTH))
+		insert = (i % 5 != 0);
 	    if(insert)
-		vertices.push_back(*it);
+		vertices.push_back(vertex);
 	}
 	LOG->info("Selected %d points on source mesh.", vertices.size());
 	return vertices;

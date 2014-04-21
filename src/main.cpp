@@ -134,13 +134,51 @@ void keyCallback(Window::KeyEventArgs const& args)
     }
     else if(args.key == GLFW_KEY_F2 && args.action == GLFW_PRESS)
     {
-	icp.selectionMethod().set(IterativeClosestPoint::NO_EDGES);
-	LOG->info("Adding filter \"No edges\".");
+	icp.selectionMethod().toggle(IterativeClosestPoint::EVERY_SECOND);
+	if(icp.getSelectionMethod().isSet(IterativeClosestPoint::EVERY_SECOND))
+	    LOG->info("Adding filter \"Every second\".");
+	else
+	    LOG->info("Removing filter \"Every second\".");
     }
     else if(args.key == GLFW_KEY_F3 && args.action == GLFW_PRESS)
     {
-	icp.selectionMethod().set(IterativeClosestPoint::RANDOM);
-	LOG->info("Adding filter \"Random\".");
+	icp.selectionMethod().toggle(IterativeClosestPoint::EVERY_THIRD);
+	if(icp.getSelectionMethod().isSet(IterativeClosestPoint::EVERY_THIRD))
+	    LOG->info("Adding filter \"Every third\".");
+	else
+	    LOG->info("Removing filter \"Every third\".");
+    }
+    else if(args.key == GLFW_KEY_F4 && args.action == GLFW_PRESS)
+    {
+	icp.selectionMethod().toggle(IterativeClosestPoint::EVERY_FOURTH);
+	if(icp.getSelectionMethod().isSet(IterativeClosestPoint::EVERY_FOURTH))
+	    LOG->info("Adding filter \"Every fourth\".");
+	else
+	    LOG->info("Removing filter \"Every fourth\".");
+    }
+    else if(args.key == GLFW_KEY_F5 && args.action == GLFW_PRESS)
+    {
+	icp.selectionMethod().toggle(IterativeClosestPoint::EVERY_FIFTH);
+	if(icp.getSelectionMethod().isSet(IterativeClosestPoint::EVERY_FIFTH))
+	    LOG->info("Adding filter \"Every fifth\".");
+	else
+	    LOG->info("Removing filter \"Every fifth\".");
+    }
+    else if(args.key == GLFW_KEY_F6 && args.action == GLFW_PRESS)
+    {
+	icp.selectionMethod().toggle(IterativeClosestPoint::NO_EDGES);
+	if(icp.getSelectionMethod().isSet(IterativeClosestPoint::NO_EDGES))
+	    LOG->info("Adding filter \"No edges\".");
+	else
+	    LOG->info("Removing filter \"No edges\".");
+    }
+    else if(args.key == GLFW_KEY_F7 && args.action == GLFW_PRESS)
+    {
+	icp.selectionMethod().toggle(IterativeClosestPoint::RANDOM);
+	if(icp.getSelectionMethod().isSet(IterativeClosestPoint::RANDOM))
+	    LOG->info("Adding filter \"Random\".");
+	else
+	    LOG->info("Removing filter \"Random\".");
     }
     // DEBUG!
     if(args.key == GLFW_KEY_H && args.action == GLFW_PRESS)

@@ -31,6 +31,10 @@ namespace sfa
 	    {
 		NO_EDGES = 1 << 0,
 		RANDOM = 1 << 1,
+		EVERY_SECOND = 1 << 2,
+		EVERY_THIRD = 1 << 3,
+		EVERY_FOURTH = 1 << 4,
+		EVERY_FIFTH = 1 << 5,
 	    };
 
 	    /**
