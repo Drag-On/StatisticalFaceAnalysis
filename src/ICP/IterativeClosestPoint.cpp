@@ -64,17 +64,17 @@ namespace sfa
 	return average;
     }
 
-    dbgl::Bitmask& IterativeClosestPoint::selectionMethod()
+    dbgl::Bitmask<>& IterativeClosestPoint::selectionMethod()
     {
 	return m_selectionMethod;
     }
 
-    dbgl::Bitmask const& IterativeClosestPoint::getSelectionMethod() const
+    dbgl::Bitmask<> const& IterativeClosestPoint::getSelectionMethod() const
     {
 	return m_selectionMethod;
     }
 
-    void IterativeClosestPoint::setSelectionMethod(dbgl::Bitmask flags)
+    void IterativeClosestPoint::setSelectionMethod(dbgl::Bitmask<> flags)
     {
 	m_selectionMethod = flags;
     }

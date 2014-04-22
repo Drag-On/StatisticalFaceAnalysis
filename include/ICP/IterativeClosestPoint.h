@@ -66,18 +66,18 @@ namespace sfa
 	    /**
 	     * @return Selection method flags
 	     */
-	    dbgl::Bitmask& selectionMethod();
+	    dbgl::Bitmask<>& selectionMethod();
 	    /**
 	     * @return Selection method flags
 	     */
-	    dbgl::Bitmask const& getSelectionMethod() const;
+	    dbgl::Bitmask<> const& getSelectionMethod() const;
 	    /**
 	     * @brief Modifies the selection method
 	     * @param flags Determines which points are filtered out
 	     */
-	    void setSelectionMethod(dbgl::Bitmask flags);
+	    void setSelectionMethod(dbgl::Bitmask<> flags);
 	protected:
-	    dbgl::Bitmask m_selectionMethod = 0;
+	    dbgl::Bitmask<> m_selectionMethod = 0;
 	    std::mt19937 m_random;
     };
 }
