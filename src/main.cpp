@@ -10,7 +10,6 @@
 
 #include <functional>
 #include <iostream>
-#include <Eigen/Dense>
 #include <DBGL/System/Log/Log.h>
 #include <DBGL/System/Properties/Properties.h>
 #include <DBGL/Window/WindowManager.h>
