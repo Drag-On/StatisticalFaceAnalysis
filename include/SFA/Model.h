@@ -18,6 +18,7 @@
 #include <vector>
 #include <map>
 #include <limits>
+#include <random>
 #include <Eigen/Core>
 #include <DBGL/Rendering/Mesh/Mesh.h>
 #include <DBGL/Rendering/Mesh/OBJMeshLoader.h>
@@ -41,6 +42,7 @@ namespace sfa
 	    void setVertex(unsigned int n, Eigen::Vector3d coords, Eigen::Vector3d normal);
 	    virtual unsigned int getAmountOfVertices() const;
 	    Eigen::Vector3d getAverage() const;
+	    void addNoise();
 	    dbgl::Mesh* getBasePointer();
 	private:
 	    /**
@@ -89,6 +91,7 @@ namespace sfa
 
 	    dbgl::Mesh* m_pMesh;
 	    std::vector<Vertex> m_vertices;
+	    std::mt19937 m_random;
     };
 }
 

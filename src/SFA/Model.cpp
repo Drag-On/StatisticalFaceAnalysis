@@ -18,6 +18,9 @@ namespace sfa
 	// purposes where we don't want to load a file from HD.
 	m_pMesh = dbgl::Mesh::makePlane(0);
 	analyzeMesh();
+
+	std::random_device rd;
+	m_random.seed(rd());
     }
 
     Model::Model(std::string path)
@@ -26,6 +29,9 @@ namespace sfa
 	loader.setNormalCompatibilityAngle(std::numeric_limits<float>::max());
 	m_pMesh = dbgl::Mesh::load(loader, path, dbgl::Mesh::Optimize);
 	analyzeMesh();
+
+	std::random_device rd;
+	m_random.seed(rd());
     }
 
     Model::~Model()
@@ -88,6 +94,21 @@ namespace sfa
 	}
 	average /= amount;
 	return average;
+    }
+
+    void Model::addNoise()
+    {
+	// Initialize random number generator
+	std::uniform_real_distribution<float> rand_float(-0.05f, 0.05f);
+	// Iterate all vertices and translate them randomly along their normal
+	for(unsigned int i = 0; i < getAmountOfVertices(); i++)
+	{
+	    auto vertex = getVertex(i);
+	    auto coeff = rand_float(m_random);
+	    auto newCoords = vertex.coords + coeff * vertex.normal;
+	    setVertex(vertex.id, newCoords, vertex.normal);
+	}
+	m_pMesh->updateBuffers();
     }
 
     dbgl::Mesh* Model::getBasePointer()

@@ -179,6 +179,11 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"Random\".");
     }
+    if(args.key == GLFW_KEY_N && args.action == GLFW_PRESS)
+    {
+	LOG->info("Adding random noise to source model.");
+	pSourceModel->addNoise();
+    }
     // DEBUG!
     if(args.key == GLFW_KEY_H && args.action == GLFW_PRESS)
     {
