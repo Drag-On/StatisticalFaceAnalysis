@@ -43,6 +43,7 @@ namespace sfa
 	    virtual unsigned int getAmountOfVertices() const;
 	    Eigen::Vector3d getAverage() const;
 	    void addNoise();
+	    void addHole();
 	    dbgl::Mesh* getBasePointer();
 	private:
 	    /**

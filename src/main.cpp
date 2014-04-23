@@ -184,6 +184,11 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Adding random noise to source model.");
 	pSourceModel->addNoise();
     }
+    if(args.key == GLFW_KEY_M && args.action == GLFW_PRESS)
+    {
+	LOG->info("Adding a random hole to source model.");
+	pSourceModel->addHole();
+    }
     // DEBUG!
     if(args.key == GLFW_KEY_H && args.action == GLFW_PRESS)
     {

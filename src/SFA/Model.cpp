@@ -111,6 +111,17 @@ namespace sfa
 	m_pMesh->updateBuffers();
     }
 
+    void Model::addHole()
+    {
+	// Initialize random number generator
+	std::uniform_int_distribution<uint32_t> rand_uint_0_vertices(0, getAmountOfVertices() - 1);
+	// Generate index of vertex to remove
+	auto index = rand_uint_0_vertices(m_random);
+	m_pMesh->removeVertex(index);
+	m_pMesh->updateBuffers();
+	analyzeMesh();
+    }
+
     dbgl::Mesh* Model::getBasePointer()
     {
 	return m_pMesh;
@@ -118,6 +129,8 @@ namespace sfa
 
     void Model::analyzeMesh()
     {
+	m_vertices.clear();
+
 	// Add all vertices
 	for (unsigned int i = 0; i < m_pMesh->getVertices().size(); i++)
 	{
