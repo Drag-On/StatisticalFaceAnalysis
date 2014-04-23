@@ -25,6 +25,18 @@ namespace sfa
 	// Select points
 	auto sourcePoints = selectPoints(source);
 	auto nearestPoints = m_nearestNeighbor.getAllNearest(sourcePoints, source, dest);
+	// Sort out edge points on dest
+	if(m_selectionMethod.isSet(NO_EDGES))
+	{
+	    for (unsigned int i = 0; i < nearestPoints.size(); i++)
+	    {
+		if (nearestPoints[i].isEdge)
+		{
+		    nearestPoints.erase(nearestPoints.begin() + i);
+		    sourcePoints.erase(sourcePoints.begin() + i);
+		}
+	    }
+	}
 	// Calc averages
 	auto srcAvg = getAverage(sourcePoints);
 	auto destAvg = getAverage(nearestPoints);
