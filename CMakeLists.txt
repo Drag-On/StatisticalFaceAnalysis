@@ -106,5 +106,7 @@ endforeach(file_i)
 ######################################################################
 ### Compile sub projects
 ######################################################################
-add_subdirectory("${PROJECT_SOURCE_DIR}/Test/"
-				 "${PROJECT_BINARY_DIR}/Test/")
+if(COMPILE_TESTS)
+	add_subdirectory("${PROJECT_SOURCE_DIR}/Test/"
+					 "${PROJECT_BINARY_DIR}/Test/")
+endif(COMPILE_TESTS)
