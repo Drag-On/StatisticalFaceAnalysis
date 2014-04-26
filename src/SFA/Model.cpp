@@ -147,6 +147,8 @@ namespace sfa
     {
 	// Clear any previous results
 	m_vertices.clear();
+	m_vertexTree.clear();
+	m_baseIndex2ModelIndex.clear();
 
 	// Add all vertices
 	for (unsigned int i = 0; i < m_pMesh->getVertices().size(); i++)
