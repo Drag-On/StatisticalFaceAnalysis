@@ -132,8 +132,10 @@ namespace sfa
 	std::uniform_int_distribution<uint32_t> rand_uint_0_vertices(0, getAmountOfVertices() - 1);
 	// Generate index of vertex to remove
 	auto index = rand_uint_0_vertices(m_random);
-	for(auto baseIndex : m_vertices[index].baseVertices)
-	    m_pMesh->removeVertex(baseIndex);
+	// Note: we need to iterate from high indices to low indices since every removed vertex will invalidate
+	// every other vertex with an index higher than their own index. Indices are then regenerated in analyzeMesh().
+	for(auto it = m_vertices[index].baseVertices.rbegin(); it != m_vertices[index].baseVertices.rend(); ++it)
+	    m_pMesh->removeVertex(*it);
 	m_pMesh->updateBuffers();
 	analyzeMesh();
     }
