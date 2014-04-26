@@ -55,6 +55,11 @@ namespace sfa
 	return m_vertices;
     }
 
+    dbgl::KdTree<unsigned int, dbgl::Vec3d> const& Model::getVertexTree() const
+    {
+	return m_vertexTree;
+    }
+
     void Model::setVertex(unsigned int n, Eigen::Vector3d coords, Eigen::Vector3d normal)
     {
 	if (n >= getAmountOfVertices())

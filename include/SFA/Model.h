@@ -42,6 +42,7 @@ namespace sfa
 	    virtual ~Model();
 	    virtual Vertex getVertex(unsigned int n) const;
 	    std::vector<Vertex> const& getVertices() const;
+	    dbgl::KdTree<unsigned int, dbgl::Vec3d> const& getVertexTree() const;
 	    void setVertex(unsigned int n, Eigen::Vector3d coords, Eigen::Vector3d normal);
 	    virtual unsigned int getAmountOfVertices() const;
 	    Eigen::Vector3d getAverage() const;

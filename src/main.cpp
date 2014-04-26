@@ -23,7 +23,7 @@
 #include <DBGL/Math/Matrix4x4.h>
 #include <DBGL/Math/Quaternion.h>
 #include "SFA/Model.h"
-#include "NearestNeighbor/SimpleNearestNeighbor.h"
+#include "NearestNeighbor/KdTreeNearestNeighbor.h"
 #include "ICP/RigidPointICP.h"
 #include "ICP/PCA_ICP.h"
 
@@ -43,7 +43,7 @@ float moveSpeed = 2.5;
 
 bool showSource = true, showDest = true;
 
-SimpleNearestNeighbor nn;
+KdTreeNearestNeighbor nn;
 RigidPointICP icp(nn);
 PCA_ICP pca_icp;
 
