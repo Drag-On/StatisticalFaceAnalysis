@@ -26,6 +26,7 @@ namespace sfa
 	    Eigen::Vector3d coords;		// Coordinates
 	    Eigen::Vector3d normal;		// Normal
 	    std::set<unsigned int> neighbors;	// IDs of all neighboring vertices
+	    std::set<unsigned int> baseVertices;// IDs of the vertices of the internal representation that belong to this vertex
 	    bool isEdge = false;		// Indicates if the vertex is located on the edge of the mesh
     };
 }

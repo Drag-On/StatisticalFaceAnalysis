@@ -27,7 +27,7 @@ namespace sfa
     {
 	dbgl::OBJMeshLoader loader;
 	loader.setNormalCompatibilityAngle(std::numeric_limits<float>::max());
-	m_pMesh = dbgl::Mesh::load(loader, path, dbgl::Mesh::Optimize);
+	m_pMesh = dbgl::Mesh::load(loader, path, 0 /* dbgl::Mesh::Optimize */);
 	analyzeMesh();
 
 	std::random_device rd;
@@ -64,19 +64,29 @@ namespace sfa
 	    throw std::out_of_range(msg.str());
 	}
 
-	// Store in own data structure
+	// Update model data structure
 	auto vertex = getVertex(n);
+
+	// Get normal rotation
+	auto rot = Eigen::Quaterniond::FromTwoVectors(vertex.normal, normal);
+
+	// Store in own data structure
 	vertex.coords = coords;
 	vertex.normal = normal;
 	m_vertices[n] = vertex;
 
-	// Pass to mesh class
-	m_pMesh->vertices()[n].x() = coords.x();
-	m_pMesh->vertices()[n].y() = coords.y();
-	m_pMesh->vertices()[n].z() = coords.z();
-	m_pMesh->normals()[n].x() = normal.x();
-	m_pMesh->normals()[n].y() = normal.y();
-	m_pMesh->normals()[n].z() = normal.z();
+	// Pass to base mesh
+	for(auto i : vertex.baseVertices)
+	{
+	    m_pMesh->vertices()[i].x() = coords.x();
+	    m_pMesh->vertices()[i].y() = coords.y();
+	    m_pMesh->vertices()[i].z() = coords.z();
+	    Eigen::Vector3d oldNormal(m_pMesh->normals()[i].x(), m_pMesh->normals()[i].y(), m_pMesh->normals()[i].z());
+	    auto newNormal = rot * oldNormal;
+	    m_pMesh->normals()[i].x() = newNormal[0];
+	    m_pMesh->normals()[i].y() = newNormal[1];
+	    m_pMesh->normals()[i].z() = newNormal[2];
+	}
     }
 
     unsigned int Model::getAmountOfVertices() const
@@ -117,7 +127,8 @@ namespace sfa
 	std::uniform_int_distribution<uint32_t> rand_uint_0_vertices(0, getAmountOfVertices() - 1);
 	// Generate index of vertex to remove
 	auto index = rand_uint_0_vertices(m_random);
-	m_pMesh->removeVertex(index);
+	for(auto baseIndex : m_vertices[index].baseVertices)
+	    m_pMesh->removeVertex(baseIndex);
 	m_pMesh->updateBuffers();
 	analyzeMesh();
     }
@@ -129,6 +140,7 @@ namespace sfa
 
     void Model::analyzeMesh()
     {
+	// Clear any previous results
 	m_vertices.clear();
 
 	// Add all vertices
@@ -137,22 +149,51 @@ namespace sfa
 	    auto vertex = m_pMesh->getVertices()[i];
 	    auto normal = m_pMesh->getNormals()[i];
 
-	    Vertex vert;
-	    vert.id = i;
-	    vert.coords = Eigen::Vector3d(vertex.x(), vertex.y(), vertex.z());
-	    vert.normal = Eigen::Vector3d(normal.x(), normal.y(), normal.z());
-	    m_vertices.push_back(vert);
+	    // Check if there already is a vertex with the same coordinates
+	    auto dbglCoords = dbgl::Vec3d(vertex.x(), vertex.y(), vertex.z());
+	    auto pVertId = m_vertexTree.get(dbglCoords);
+	    if(pVertId != nullptr)
+	    {
+		// Average normals
+		m_vertices[*pVertId].normal += Eigen::Vector3d(normal.x(), normal.y(), normal.z());
+		m_vertices[*pVertId].normal.normalize();
+		// Add base vertex id
+		m_vertices[*pVertId].baseVertices.insert(i);
+		// Create a list base index -> this index
+		m_baseIndex2ModelIndex.push_back(*pVertId);
+	    }
+	    else
+	    {
+		Vertex vert;
+		vert.id = m_vertices.size();
+		vert.coords = Eigen::Vector3d(vertex.x(), vertex.y(), vertex.z());
+		vert.normal = Eigen::Vector3d(normal.x(), normal.y(), normal.z());
+		vert.baseVertices.insert(i);
+		m_vertices.push_back(vert);
+		m_vertexTree.insert(dbglCoords, vert.id);
+		// Create a list base index -> this index
+		m_baseIndex2ModelIndex.push_back(vert.id);
+	    }
 	}
+
+	// Balance the tree for maximum performance
+	m_vertexTree.balance();
 
 	// Compute neighbors
 	for (unsigned int i = 0; i < m_pMesh->getIndices().size(); i += 3)
 	{
-	    m_vertices[m_pMesh->getIndices()[i + 0]].neighbors.insert(m_pMesh->getIndices()[i + 1]);
-	    m_vertices[m_pMesh->getIndices()[i + 0]].neighbors.insert(m_pMesh->getIndices()[i + 2]);
-	    m_vertices[m_pMesh->getIndices()[i + 1]].neighbors.insert(m_pMesh->getIndices()[i + 0]);
-	    m_vertices[m_pMesh->getIndices()[i + 1]].neighbors.insert(m_pMesh->getIndices()[i + 2]);
-	    m_vertices[m_pMesh->getIndices()[i + 2]].neighbors.insert(m_pMesh->getIndices()[i + 0]);
-	    m_vertices[m_pMesh->getIndices()[i + 2]].neighbors.insert(m_pMesh->getIndices()[i + 1]);
+	    m_vertices[m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 0]]].neighbors.insert(
+		    m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 1]]);
+	    m_vertices[m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 0]]].neighbors.insert(
+		    m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 2]]);
+	    m_vertices[m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 1]]].neighbors.insert(
+		    m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 0]]);
+	    m_vertices[m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 1]]].neighbors.insert(
+		    m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 2]]);
+	    m_vertices[m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 2]]].neighbors.insert(
+		    m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 0]]);
+	    m_vertices[m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 2]]].neighbors.insert(
+		    m_baseIndex2ModelIndex[m_pMesh->getIndices()[i + 1]]);
 	}
 
 	// Compute edge vertices

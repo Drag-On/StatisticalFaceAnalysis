@@ -20,9 +20,12 @@
 #include <limits>
 #include <random>
 #include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <DBGL/Rendering/Mesh/Mesh.h>
 #include <DBGL/Rendering/Mesh/OBJMeshLoader.h>
 #include <DBGL/Math/Utility.h>
+#include <DBGL/Math/Vector3.h>
+#include <DBGL/System/Tree/KdTree.h>
 #include "NearestNeighbor/NNMesh.h"
 
 namespace sfa
@@ -92,6 +95,8 @@ namespace sfa
 
 	    dbgl::Mesh* m_pMesh;
 	    std::vector<Vertex> m_vertices;
+	    std::vector<unsigned int> m_baseIndex2ModelIndex;
+	    dbgl::KdTree<unsigned int, dbgl::Vec3d> m_vertexTree;
 	    std::mt19937 m_random;
     };
 }
