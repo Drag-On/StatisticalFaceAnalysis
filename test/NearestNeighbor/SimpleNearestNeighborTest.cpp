@@ -11,8 +11,8 @@
 #include <stdexcept>
 #include <assert.h>
 #include <DBGL/System/Log/Log.h>
-#include "SFA/Model.h"
-#include "NearestNeighbor/SimpleNearestNeighbor.h"
+#include <SFA/Utility/Model.h>
+#include <SFA/NearestNeighbor/SimpleNearestNeighbor.h>
 
 using namespace sfa;
 
