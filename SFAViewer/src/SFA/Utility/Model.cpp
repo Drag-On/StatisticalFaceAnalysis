@@ -166,7 +166,7 @@ namespace sfa
 
 	    // Check if there already is a vertex with the same coordinates
 	    auto dbglCoords = dbgl::Vec3d(vertex.x(), vertex.y(), vertex.z());
-	    auto pVertId = m_vertexTree.get(dbglCoords);
+	    auto pVertId = m_vertexTree.getSimilar(dbglCoords, 0.0001);
 	    if(pVertId != nullptr)
 	    {
 		// Average normals
