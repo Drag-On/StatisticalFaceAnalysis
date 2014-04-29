@@ -33,3 +33,25 @@ include_directories(${EIGEN_INCLUDE_DIR})
 ######################################################################
 add_library(SFALIB SHARED ${SFALIB_SRC})
 set_target_properties(SFALIB PROPERTIES LINKER_LANGUAGE CXX)
+
+######################################################################
+### Add target for doxygen
+######################################################################
+if(NOT DEFINED GRAPHVIZ_INSTALLED)
+	set(GRAPHVIZ_INSTALLED NO)
+endif(NOT DEFINED GRAPHVIZ_INSTALLED)
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+	configure_file(
+		${CMAKE_CURRENT_SOURCE_DIR}/../Doxyfile.in
+		${CMAKE_CURRENT_SOURCE_DIR}/../Doxyfile @ONLY
+	)
+	add_custom_target(doc
+		${DOXYGEN_EXECUTABLE}
+		${CMAKE_CURRENT_SOURCE_DIR}/../Doxyfile
+		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/.."
+		COMMENT "Generating documentation..." VERBATIM
+	)
+else (DOXYGEN_FOUND)
+	message("Doxygen not found!")
+endif(DOXYGEN_FOUND)
