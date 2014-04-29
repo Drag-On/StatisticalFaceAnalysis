@@ -22,12 +22,30 @@ namespace sfa
     struct Vertex
     {
 	public:
-	    unsigned int id;			// Index
-	    Eigen::Vector3d coords;		// Coordinates
-	    Eigen::Vector3d normal;		// Normal
-	    std::set<unsigned int> neighbors;	// IDs of all neighboring vertices
-	    std::set<unsigned int> baseVertices;// IDs of the vertices of the internal representation that belong to this vertex
-	    bool isEdge = false;		// Indicates if the vertex is located on the edge of the mesh
+	    /**
+	     * @brief Index of the vertex
+	     */
+	    unsigned int id;
+	    /**
+	     * @brief Coordinates of the vertex
+	     */
+	    Eigen::Vector3d coords;
+	    /**
+	     * @brief Normal of the vertex
+	     */
+	    Eigen::Vector3d normal;
+	    /**
+	     * @brief Indices of all neighboring vertices
+	     */
+	    std::set<unsigned int> neighbors;
+	    /**
+	     * @brief Indices of all vertices that represent this vertex internally
+	     */
+	    std::set<unsigned int> baseVertices;
+	    /**
+	     * @brief Indicates if the vertex is located on the edge of the mesh
+	     */
+	    bool isEdge = false;
     };
 }
 

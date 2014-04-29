@@ -34,9 +34,20 @@ namespace sfa
     {
 	public:
 	    virtual ~PCA_ICP();
+	    /**
+	     * @brief Aligns one principal component after the other
+	     * @param source Source mesh
+	     * @param dest Destination mesh
+	     */
 	    virtual void calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
+	    /**
+	     * @brief Resets the the amount of already aligned dimensions to zero
+	     */
 	    void reset();
 	private:
+	    /**
+	     * @brief Amount of dimensions already aligned
+	     */
 	    unsigned int m_index = 0;
     };
 }

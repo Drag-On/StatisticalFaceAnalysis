@@ -26,19 +26,22 @@ namespace sfa
     class ICP
     {
 	public:
+	    /**
+	     * @brief Parameters to consider for point selection algorithm
+	     */
 	    enum PointSelection
 	    {
-		NO_EDGES = 1 << 0,
-		RANDOM = 1 << 1,
-		EVERY_SECOND = 1 << 2,
-		EVERY_THIRD = 1 << 3,
-		EVERY_FOURTH = 1 << 4,
-		EVERY_FIFTH = 1 << 5,
+		NO_EDGES = 1 << 0,    //!< NO_EDGES
+		RANDOM = 1 << 1,      //!< RANDOM
+		EVERY_SECOND = 1 << 2,//!< EVERY_SECOND
+		EVERY_THIRD = 1 << 3, //!< EVERY_THIRD
+		EVERY_FOURTH = 1 << 4,//!< EVERY_FOURTH
+		EVERY_FIFTH = 1 << 5, //!< EVERY_FIFTH
 	    };
 
 	    /**
 	     * @brief Constructor
-	     * @param log Pointer to a log object in case logging is wanted
+	     * @param pLog Pointer to a log object in case logging is wanted
 	     */
 	    ICP(AbstractLog* pLog = nullptr);
 	    /**
@@ -77,8 +80,17 @@ namespace sfa
 	     */
 	    void setSelectionMethod(unsigned int flags);
 	protected:
+	    /**
+	     * @brief Bitwise OR-ed parameters from PointSelection
+	     */
 	    unsigned int m_selectionMethod = 0;
+	    /**
+	     * @brief Random number generator
+	     */
 	    std::mt19937 m_random;
+	    /**
+	     * @brief Plug-in possibility for library users to have some logfile output
+	     */
 	    AbstractLog* m_pLog = nullptr;
     };
 }

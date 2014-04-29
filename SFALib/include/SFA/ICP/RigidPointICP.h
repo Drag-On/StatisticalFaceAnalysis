@@ -23,6 +23,11 @@ namespace sfa
     class RigidPointICP: public ICP
     {
 	public:
+	    /**
+	     * @brief Constructs the icp object using nn to get the nearest neighbors
+	     * @param nn Nearest neighbor implementation to use
+	     * @param pLog Log to use or nullptr to disable logging
+	     */
 	    RigidPointICP(NearestNeighbor& nn, AbstractLog* pLog = nullptr);
 	    virtual ~RigidPointICP();
 	    virtual void calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
