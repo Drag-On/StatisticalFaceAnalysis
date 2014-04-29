@@ -11,7 +11,7 @@
 #include <DBGL/System/Log/Log.h>
 
 // Prototypes
-void testSimpleNearestNeighbor();
+void testNearestNeighbor();
 void testRigidPointICP();
 
 int main()
@@ -19,7 +19,7 @@ int main()
     LOG->setLogLevel(dbgl::DBG);
     LOG->info("Starting tests...");
 
-    testSimpleNearestNeighbor();
+    testNearestNeighbor();
     testRigidPointICP();
 
     LOG->info("Done!");

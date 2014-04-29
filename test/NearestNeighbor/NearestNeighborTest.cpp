@@ -13,12 +13,18 @@
 #include <DBGL/System/Log/Log.h>
 #include <SFA/Utility/Model.h>
 #include <SFA/NearestNeighbor/SimpleNearestNeighbor.h>
+#include <SFA/NearestNeighbor/KdTreeNearestNeighbor.h>
 
 using namespace sfa;
 
-void testSimpleNearestNeighbor()
+/**
+ * @brief Starts the test suite for the passed nearest neighbor instance
+ * @param nn Nearest neighbor implementation to test
+ */
+void testNN(NearestNeighbor& nn)
 {
-    LOG->info("Starting SimpleNearestNeighbor test suite...");
+    // Clear nn cache
+    nn.clearCache();
 
     // Create two default meshes
     Model source;
@@ -28,7 +34,7 @@ void testSimpleNearestNeighbor()
     assert(source.getAmountOfVertices() == destination.getAmountOfVertices());
 
     // Check some other methods
-    for(unsigned int i = 0; i < source.getAmountOfVertices(); i++)
+    for (unsigned int i = 0; i < source.getAmountOfVertices(); i++)
     {
 	assert(source.getVertex(i).id == i);
 	assert(destination.getVertex(i).id == i);
@@ -43,7 +49,6 @@ void testSimpleNearestNeighbor()
     // Check for nearest neighbors
     // Both of them are identical, therefore the nearest neighbor should
     // be at the same index
-    SimpleNearestNeighbor nn;
     for (unsigned int i = 0; i < source.getAmountOfVertices(); i++)
     {
 	auto nearest = nn.getNearest(i, source, destination);
@@ -58,14 +63,17 @@ void testSimpleNearestNeighbor()
     {
 	nn.getNearest(source.getAmountOfVertices(), source, destination);
     }
-    catch(std::invalid_argument& e)
+    catch (std::invalid_argument& e)
     {
 	LOG->info(e.what());
     }
-    catch(std::out_of_range& e)
+    catch (std::out_of_range& e)
     {
 	LOG->info(e.what());
     }
+
+    // Clear cache again
+    nn.clearCache();
 
     // Now use meshes from HD
     Model source2("Resources/Cube_Transformed.obj");
@@ -74,15 +82,37 @@ void testSimpleNearestNeighbor()
     // Check alignment error
     assert(nn.computeError(source2, destination2) > 0);
 
-    // Check for nearest neighbors again
+    // Check for nearest neighbors again, this time of the meshes from HD
+    for (unsigned int i = 0; i < source2.getAmountOfVertices(); i++)
+    {
+	auto nearest = nn.getNearest(i, source2, destination2);
+	assert(nearest == i);
+    }
+
+    // Clear cache again
+    nn.clearCache();
+
+    // Check for nearest neighbors of the cube and the plane.
     // In this case the nearest neighbors are not necessarily the ones with the same index
     bool alwaysSame = true;
     for (unsigned int i = 0; i < source2.getAmountOfVertices(); i++)
     {
-	auto nearest = nn.getNearest(i, source2, destination2);
-	if(nearest != i)
+	auto nearest = nn.getNearest(i, source2, destination);
+	if (nearest != i)
 	    alwaysSame = false;
     }
     assert(alwaysSame == false);
+}
+
+void testNearestNeighbor()
+{
+    LOG->info("Starting SimpleNearestNeighbor test suite...");
+    SimpleNearestNeighbor snn;
+    testNN(snn);
+
+    LOG->info("Starting KdTreeNearestNeighbor test suite...");
+    KdTreeNearestNeighbor kdnn;
+    testNN(kdnn);
+
 }
 
