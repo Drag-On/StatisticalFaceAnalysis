@@ -17,7 +17,7 @@
 namespace sfa
 {
     /**
-     * @brief Contains all the data of one vertex
+     * @brief Contains all the data of a vertex needed for nearest neighbor search and icp
      */
     struct Vertex
     {
@@ -40,6 +40,10 @@ namespace sfa
 	    std::set<unsigned int> neighbors;
 	    /**
 	     * @brief Indices of all vertices that represent this vertex internally
+	     * @details For visualization vertices might need to be copied. E.g. in OpenGL
+	     * 		hard edges can only be displayed by copying the edge vertices. Thus
+	     * 		one "high-level" vertex (that is one used point) might have multiple
+	     * 		copies internally. This set is intended to abstract away those copies.
 	     */
 	    std::set<unsigned int> baseVertices;
 	    /**
