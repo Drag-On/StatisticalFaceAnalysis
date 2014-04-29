@@ -26,7 +26,7 @@ namespace sfa
 	va_end(pArgList);
 
 	// Call DBGL log
-	dbgl::Log::inf << buffer;
+	LOG->debug(buffer);
     }
     void Log::warning(const char* msg, ...)
     {
@@ -39,7 +39,7 @@ namespace sfa
 	va_end(pArgList);
 
 	// Call DBGL log
-	dbgl::Log::wrn << buffer;
+	LOG->warning(buffer);
     }
 }
 
