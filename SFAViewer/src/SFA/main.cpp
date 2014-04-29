@@ -132,7 +132,7 @@ void keyCallback(Window::KeyEventArgs const& args)
     Bitmask<> selectionMethod(icp.selectionMethod());
     if(args.key == GLFW_KEY_F1 && args.action == GLFW_PRESS)
     {
-	icp.setSelectionMethod(0);
+	selectionMethod = 0;
 	LOG->info("Using all points.");
     }
     else if(args.key == GLFW_KEY_F2 && args.action == GLFW_PRESS)
@@ -193,6 +193,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Adding a random hole to source model.");
 	pSourceModel->addHole();
     }
+    icp.setSelectionMethod(selectionMethod);
     // DEBUG!
     if(args.key == GLFW_KEY_H && args.action == GLFW_PRESS)
     {
