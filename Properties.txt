@@ -1,0 +1,13 @@
+#######################################################################################
+## Properties for SFA Viewer
+#######################################################################################
+
+####################################################################
+## Default source and destination mesh properties
+####################################################################
+src = ../../Resources/Generic_Face_2_Lowpoly.obj
+dest = ../../Resources/Generic_Face_Lowpoly.obj
+activateStartRandomTranslation = true
+activateStartRandomRotation = true
+maxRandomTranslation = 0.3
+maxRandomRotation = 0.78539816339
