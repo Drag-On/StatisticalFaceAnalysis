@@ -80,7 +80,7 @@ void initCorrectPairs(Model& src, Model& dest)
     }
     // Store pairs
     correctPairs.clear();
-    correctPairs.reserve(src.getAmountOfVertices());
+    correctPairs.resize(src.getAmountOfVertices());
     for(unsigned int i = 0; i < src.getAmountOfVertices(); i++)
     {
 	correctPairs[i] = nn.getNearest(i, src, dest);
