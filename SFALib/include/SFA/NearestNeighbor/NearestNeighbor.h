@@ -53,6 +53,20 @@ namespace sfa
 	     */
 	    double computeError(AbstractMesh const& source, AbstractMesh const& dest);
 	    /**
+	     * @brief Computes the error between two meshes considering point pairs
+	     * @details Error is measured by the mean squared distance between points
+	     * 		of \p source and the point on \p dest defined by \p pairs.
+	     * @param source Source mesh
+	     * @param dest Destination mesh
+	     * @param pairs Defines which source vertex is supposed to match which destination vertex.
+	     * @param[out] matches If not NULL, each element of this vector will be set to true
+	     * 			   in case the vertex defined by \p pairs also is the nearest neighbor. Otherwise
+	     * 			   it is set to false.
+	     * @return Error value
+	     */
+	    double computeError(AbstractMesh const& source, AbstractMesh const& dest,
+		    std::vector<unsigned int> const& pairs, std::vector<bool>* matches);
+	    /**
 	     * @brief Clears previously cached correspondences
 	     */
 	    virtual void clearCache() = 0;

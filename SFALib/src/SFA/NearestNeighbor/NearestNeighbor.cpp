@@ -49,5 +49,34 @@ namespace sfa
 	return error;
     }
 
+    double NearestNeighbor::computeError(AbstractMesh const& source, AbstractMesh const& dest,
+	    std::vector<unsigned int> const& pairs, std::vector<bool>* matches)
+    {
+	// Check if arguments are valid
+	if(source.getAmountOfVertices() <= 0 || dest.getAmountOfVertices() <= 0)
+	    throw std::invalid_argument("Source and/or destination mesh don't have any vertices!");
+
+	double error = 0;
+	unsigned int amount = source.getAmountOfVertices();
+	for(unsigned int i = 0; i < amount; i++)
+	{
+	    unsigned int targetIndex = pairs[i];
+
+	    if(matches != nullptr)
+	    {
+		// Get nearest neighbor and check if it matches with the one defined by pairs
+		unsigned int nearestNum = getNearest(i, source, dest);
+		matches->push_back(nearestNum == targetIndex);
+	    }
+	    auto sourceVert = source.getVertex(i);
+	    auto destVert = dest.getVertex(targetIndex);
+	    auto s = sourceVert.coords;
+	    auto d = destVert.coords;
+	    auto con = s - d;
+	    error += con.squaredNorm();
+	}
+	error /= amount;
+	return error;
+    }
 }
 
