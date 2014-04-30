@@ -42,8 +42,6 @@ float camDist = 3;
 Mat4f view, projection;
 float moveSpeed = 2.5;
 
-double maxRotation = pi_4(); // Maximum random rotation of source mesh
-double maxTranslation = 0.4; // Maximum random translation of source mesh
 bool showSource = true, showDest = true;
 
 sfa::Log logfile;
@@ -116,12 +114,12 @@ void keyCallback(Window::KeyEventArgs const& args)
     else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
     {
 	LOG->info("Applying random rotation to source mesh.");
-	pSourceModel->rotateRandom(maxRotation);
+	pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
     }
     else if (args.key == GLFW_KEY_T && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
     {
 	LOG->info("Applying random translation to source mesh.");
-	pSourceModel->translateRandom(maxTranslation);
+	pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
     }
     // Reload meshes
     else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
@@ -281,17 +279,28 @@ void renderCallback(Window::RenderEventArgs const& args)
     }
 }
 
+bool checkProperties()
+{
+    return properties.getStringValue("src") != "" && properties.getStringValue("dest") != "";
+}
+
 int main(int argc, char** argv)
 {
     LOG->setLogLevel(dbgl::DBG);
     LOG->info("Starting...");
 
-    // Set default properties in case none have been passed
-    properties.setValue("src", "Resources/Plane_Transformed.obj");
-    properties.setValue("dest", "Resources/Plane.obj");
+    // Load properties file from disk
+    properties.load("Properties.txt");
     // Interpret arguments
     // Skip first argument as it's the executable's path
     properties.interpret(argc-1, argv+1);
+
+    if(!checkProperties())
+    {
+	LOG->info("Usage: -src Path/To/Source/Mesh");
+	LOG->info("       -dest Path/To/Destination/Mesh");
+	return -1;
+    }
 
     // Create window
     pWnd = WindowManager::get()->createWindow<SimpleWindow>("Statistical Face Analysis");
@@ -301,11 +310,17 @@ int main(int argc, char** argv)
     Vec3f pos = Vec3f(0, 0, camDist);
     Vec3f dir = -pos;
     pCam = new Camera(pos, dir, Vec3f(1, 0, 0).cross(dir), pi_4(), 0.1, 100);
-    // Load mesh, shader and texture
+    // Load meshes
     pSourceModel = new Model(properties.getStringValue("src"));
     pDestModel = new Model(properties.getStringValue("dest"));
     pSourceModel->getBasePointer()->updateBuffers();
     pDestModel->getBasePointer()->updateBuffers();
+    // Check if the source mesh is supposed to be default-translated
+    if(properties.getBoolValue("activateStartRandomTranslation"))
+	pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
+    if(properties.getBoolValue("activateStartRandomRotation"))
+	pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
+    // Load shader
     pShader = ShaderProgram::createSimpleColorShader();
     // Add callbacks
     pWnd->addUpdateCallback(std::bind(&updateCallback, std::placeholders::_1));
