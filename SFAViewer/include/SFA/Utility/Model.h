@@ -39,6 +39,8 @@ namespace sfa
 	public:
 	    Model();
 	    Model(std::string path);
+	    Model(Model const& other);
+	    Model(Model&& other);
 	    virtual ~Model();
 	    virtual unsigned int getID() const;
 	    virtual Vertex getVertex(unsigned int n) const;
@@ -52,6 +54,8 @@ namespace sfa
 	    void rotateRandom(double maxAngle);
 	    void translateRandom(double maxTranslation);
 	    dbgl::Mesh* getBasePointer();
+	    Model& operator=(Model const& other);
+	    Model& operator=(Model&& other);
 	private:
 	    /**
 	     * @brief Analyzes the underlying mesh and generates some additional data

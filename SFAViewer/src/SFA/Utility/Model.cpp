@@ -34,6 +34,51 @@ namespace sfa
 	m_random.seed(rd());
     }
 
+    Model::Model(Model const& other)
+    {
+	m_pMesh = new dbgl::Mesh(*other.m_pMesh);
+	m_baseIndex2ModelIndex = other.m_baseIndex2ModelIndex;
+	m_vertexTree = other.m_vertexTree;
+	m_vertices = other.m_vertices;
+	m_random = other.m_random;
+    }
+
+    Model::Model(Model&& other)
+    {
+	m_pMesh = other.m_pMesh;
+	other.m_pMesh = nullptr;
+	m_baseIndex2ModelIndex = other.m_baseIndex2ModelIndex;
+	m_vertexTree = other.m_vertexTree;
+	m_vertices = other.m_vertices;
+	m_random = other.m_random;
+    }
+
+    Model& Model::operator=(Model const& other)
+    {
+	delete m_pMesh;
+	m_pMesh = new dbgl::Mesh(*other.m_pMesh);
+	m_baseIndex2ModelIndex = other.m_baseIndex2ModelIndex;
+	m_vertexTree = other.m_vertexTree;
+	m_vertices = other.m_vertices;
+	m_random = other.m_random;
+	return *this;
+    }
+
+    Model& Model::operator=(Model&& other)
+    {
+	if (this != &other)
+	{
+	    delete m_pMesh;
+	    m_pMesh = other.m_pMesh;
+	    other.m_pMesh = nullptr;
+	    m_baseIndex2ModelIndex = other.m_baseIndex2ModelIndex;
+	    m_vertexTree = other.m_vertexTree;
+	    m_vertices = other.m_vertices;
+	    m_random = other.m_random;
+	}
+	return *this;
+    }
+
     Model::~Model()
     {
 	delete m_pMesh;
