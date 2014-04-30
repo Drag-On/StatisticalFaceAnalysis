@@ -39,8 +39,8 @@ ShaderProgram* pShader;
 Vec3f colorSrc(1.0f, 0.0f, 0.0f), colorDest(0.0f, 1.0f, 0.0f);
 Camera* pCam;
 float camDist = 3;
-Mat4f view, projection;
 float moveSpeed = 2.5;
+Mat4f view, projection;
 
 bool showSource = true, showDest = true;
 
@@ -115,11 +115,13 @@ void keyCallback(Window::KeyEventArgs const& args)
     {
 	LOG->info("Applying random rotation to source mesh.");
 	pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
+	pca_icp.reset();
     }
     else if (args.key == GLFW_KEY_T && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
     {
 	LOG->info("Applying random translation to source mesh.");
 	pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
+	pca_icp.reset();
     }
     // Reload meshes
     else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
@@ -301,6 +303,10 @@ int main(int argc, char** argv)
 	LOG->info("       -dest Path/To/Destination/Mesh");
 	return -1;
     }
+    if(properties.getStringValue("defaultCamDistance") != "")
+	camDist = properties.getFloatValue("defaultCamDistance");
+    if(properties.getStringValue("camSpeed") != "")
+	moveSpeed = properties.getFloatValue("camSpeed");
 
     // Create window
     pWnd = WindowManager::get()->createWindow<SimpleWindow>("Statistical Face Analysis");

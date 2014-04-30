@@ -11,3 +11,9 @@ activateStartRandomTranslation = true
 activateStartRandomRotation = true
 maxRandomTranslation = 0.3
 maxRandomRotation = 0.78539816339
+
+####################################################################
+## Viewer properties
+####################################################################
+defaultCamDistance = 3
+camSpeed = 2.5
