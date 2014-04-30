@@ -13,7 +13,7 @@
 #include <assert.h>
 #include <DBGL/System/Log/Log.h>
 #include <SFA/Utility/Model.h>
-#include <SFA/NearestNeighbor/SimpleNearestNeighbor.h>
+#include <SFA/NearestNeighbor/KdTreeNearestNeighbor.h>
 #include <SFA/ICP/RigidPointICP.h>
 
 using namespace sfa;
@@ -31,7 +31,7 @@ void testRigidPointICP()
     Model dest("Resources/Plane.obj");
 
     // Check error
-    SimpleNearestNeighbor nn;
+    KdTreeNearestNeighbor nn;
     auto startError = nn.computeError(src, dest);
     auto error = startError;
     LOG->info("Matching error: %.20f", startError);
