@@ -146,6 +146,35 @@ namespace sfa
 	analyzeMesh();
     }
 
+    void Model::rotateRandom(double maxAngle)
+    {
+	std::uniform_real_distribution<double> rand_double_nMax_max(-maxAngle, maxAngle);
+	double angle = rand_double_nMax_max(m_random);
+	Eigen::Vector3d axis = Eigen::Vector3d::Random();
+	axis.normalize();
+	Eigen::AngleAxis<double> aa(angle, axis);
+	for(unsigned int i = 0; i < m_pMesh->vertices().size(); i++)
+	{
+	    auto vert = m_pMesh->getVertices()[i];
+	    Eigen::Vector3d coords(vert.x(), vert.y(), vert.z());
+	    coords = aa.toRotationMatrix() * coords;
+	    m_pMesh->vertices()[i] = dbgl::Vec3f(coords[0], coords[1], coords[2]);
+	}
+	m_pMesh->updateBuffers();
+	analyzeMesh();
+    }
+
+    void Model::translateRandom(double maxTranslation)
+    {
+	Eigen::Vector3d translation = Eigen::Vector3d::Random();
+	translation.normalize();
+	translation *= maxTranslation;
+	for(unsigned int i = 0; i < m_pMesh->vertices().size(); i++)
+	    m_pMesh->vertices()[i].translate(translation[0], translation[1], translation[2]);
+	m_pMesh->updateBuffers();
+	analyzeMesh();
+    }
+
     dbgl::Mesh* Model::getBasePointer()
     {
 	return m_pMesh;

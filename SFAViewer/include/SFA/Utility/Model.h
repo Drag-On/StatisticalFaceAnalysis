@@ -49,6 +49,8 @@ namespace sfa
 	    Eigen::Vector3d getAverage() const;
 	    void addNoise();
 	    void addHole();
+	    void rotateRandom(double maxAngle);
+	    void translateRandom(double maxTranslation);
 	    dbgl::Mesh* getBasePointer();
 	private:
 	    /**

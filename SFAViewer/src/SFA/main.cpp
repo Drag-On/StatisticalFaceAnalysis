@@ -42,6 +42,8 @@ float camDist = 3;
 Mat4f view, projection;
 float moveSpeed = 2.5;
 
+double maxRotation = pi_4(); // Maximum random rotation of source mesh
+double maxTranslation = 0.4; // Maximum random translation of source mesh
 bool showSource = true, showDest = true;
 
 sfa::Log logfile;
@@ -92,7 +94,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Done!");
     }
     // Check if "PCA ICP" should be executed
-    if (args.key == GLFW_KEY_U && args.action == GLFW_PRESS)
+    else if (args.key == GLFW_KEY_U && args.action == GLFW_PRESS)
     {
 	LOG->info("Calculating PCA matching!");
 	// Compute next step
@@ -102,16 +104,27 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Done!");
     }
     // Toggle source and destination mesh visibility
-    if(args.key == GLFW_KEY_O && args.action == GLFW_PRESS)
+    else if(args.key == GLFW_KEY_O && args.action == GLFW_PRESS)
     {
 	showSource = !showSource;
     }
-    if(args.key == GLFW_KEY_P && args.action == GLFW_PRESS)
+    else if(args.key == GLFW_KEY_P && args.action == GLFW_PRESS)
     {
 	showDest = !showDest;
     }
+    // Randomly rotate or translate
+    else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
+    {
+	LOG->info("Applying random rotation to source mesh.");
+	pSourceModel->rotateRandom(maxRotation);
+    }
+    else if (args.key == GLFW_KEY_T && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
+    {
+	LOG->info("Applying random translation to source mesh.");
+	pSourceModel->translateRandom(maxTranslation);
+    }
     // Reload meshes
-    if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
+    else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
     {
 	LOG->info("Reloading meshes...");
 	delete pSourceModel;
@@ -123,7 +136,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	pca_icp.reset();
     }
     // Log matching error
-    if(args.key == GLFW_KEY_L && args.action == GLFW_PRESS)
+    else if(args.key == GLFW_KEY_L && args.action == GLFW_PRESS)
     {
 	auto error = nn.computeError(*pSourceModel, *pDestModel);
 	LOG->info("Matching error: %.20f", error);
@@ -183,12 +196,12 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"Random\".");
     }
-    if(args.key == GLFW_KEY_N && args.action == GLFW_PRESS)
+    else if(args.key == GLFW_KEY_N && args.action == GLFW_PRESS)
     {
 	LOG->info("Adding random noise to source model.");
 	pSourceModel->addNoise();
     }
-    if(args.key == GLFW_KEY_M && args.action == GLFW_PRESS)
+    else if(args.key == GLFW_KEY_M && args.action == GLFW_PRESS)
     {
 	LOG->info("Adding a random hole to source model.");
 	pSourceModel->addHole();
