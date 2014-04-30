@@ -116,12 +116,14 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Applying random rotation to source mesh.");
 	pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
 	pca_icp.reset();
+	pSourceModel->getBasePointer()->updateBuffers();
     }
     else if (args.key == GLFW_KEY_T && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
     {
 	LOG->info("Applying random translation to source mesh.");
 	pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
 	pca_icp.reset();
+	pSourceModel->getBasePointer()->updateBuffers();
     }
     // Reload meshes
     else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
@@ -200,11 +202,13 @@ void keyCallback(Window::KeyEventArgs const& args)
     {
 	LOG->info("Adding random noise to source model.");
 	pSourceModel->addNoise();
+	pSourceModel->getBasePointer()->updateBuffers();
     }
     else if(args.key == GLFW_KEY_M && args.action == GLFW_PRESS)
     {
 	LOG->info("Adding a random hole to source model.");
 	pSourceModel->addHole();
+	pSourceModel->getBasePointer()->updateBuffers();
     }
     icp.setSelectionMethod(selectionMethod);
     // DEBUG!
@@ -319,13 +323,13 @@ int main(int argc, char** argv)
     // Load meshes
     pSourceModel = new Model(properties.getStringValue("src"));
     pDestModel = new Model(properties.getStringValue("dest"));
-    pSourceModel->getBasePointer()->updateBuffers();
-    pDestModel->getBasePointer()->updateBuffers();
     // Check if the source mesh is supposed to be default-translated
     if(properties.getBoolValue("activateStartRandomTranslation"))
 	pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
     if(properties.getBoolValue("activateStartRandomRotation"))
 	pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
+    pSourceModel->getBasePointer()->updateBuffers();
+    pDestModel->getBasePointer()->updateBuffers();
     // Load shader
     pShader = ShaderProgram::createSimpleColorShader();
     // Add callbacks

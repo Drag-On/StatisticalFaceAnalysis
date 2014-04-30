@@ -129,7 +129,6 @@ namespace sfa
 	    auto newCoords = vertex.coords + coeff * vertex.normal;
 	    setVertex(vertex.id, newCoords, vertex.normal);
 	}
-	m_pMesh->updateBuffers();
     }
 
     void Model::addHole()
@@ -142,7 +141,6 @@ namespace sfa
 	// every other vertex with an index higher than their own index. Indices are then regenerated in analyzeMesh().
 	for(auto it = m_vertices[index].baseVertices.rbegin(); it != m_vertices[index].baseVertices.rend(); ++it)
 	    m_pMesh->removeVertex(*it);
-	m_pMesh->updateBuffers();
 	analyzeMesh();
     }
 
@@ -160,7 +158,6 @@ namespace sfa
 	    coords = aa.toRotationMatrix() * coords;
 	    m_pMesh->vertices()[i] = dbgl::Vec3f(coords[0], coords[1], coords[2]);
 	}
-	m_pMesh->updateBuffers();
 	analyzeMesh();
     }
 
@@ -171,7 +168,6 @@ namespace sfa
 	translation *= maxTranslation;
 	for(unsigned int i = 0; i < m_pMesh->vertices().size(); i++)
 	    m_pMesh->vertices()[i].translate(translation[0], translation[1], translation[2]);
-	m_pMesh->updateBuffers();
 	analyzeMesh();
     }
 
