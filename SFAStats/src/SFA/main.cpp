@@ -111,9 +111,10 @@ int main(int argc, char** argv)
     delete pStatRunner;
     delete pSourceModel;
     delete pDestModel;
-    // Free remaining internal resources
-    WindowManager::get()->terminate();
 
     LOG->info("That's it!");
+
+    // Free remaining internal resources
+    WindowManager::get()->terminate();
     return 0;
 }

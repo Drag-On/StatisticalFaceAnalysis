@@ -8,6 +8,7 @@
 /// it might also begin to hurt your kittens.
 //////////////////////////////////////////////////////////////////////
 
+#include <DBGL/Window/WindowManager.h>
 #include <DBGL/System/Log/Log.h>
 
 // Prototypes
@@ -23,7 +24,8 @@ int main()
     testRigidPointICP();
 
     LOG->info("Done!");
-    delete LOG;
+    dbgl::WindowManager::get()->terminate();
+
     return 0;
 }
 
