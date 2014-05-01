@@ -39,6 +39,8 @@ namespace sfa
 	    double averageRealErrorAfterPCA = 0;
 	    PCA_ICP pca_icp;
 	    std::string pairSelection;
+	    unsigned int srcVertices = 0;
+	    unsigned int destVertices = 0;
 
 	    AverageMatchingError();
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);

@@ -41,6 +41,9 @@ namespace sfa
 	icp.setSelectionMethod(pointSelection);
 	pairSelection = getPairSelectionFlags(icp.getSelectionMethod());
 
+	srcVertices = src.getAmountOfVertices();
+	destVertices = dest.getAmountOfVertices();
+
 	initCorrectPairs(src, dest, nn, icp);
 	testWithModel(src, dest, nn, icp, pcaFirst);
     }
@@ -92,11 +95,11 @@ namespace sfa
 	    averageAlgoResults[i] /= amount;
 	    averageRealResults[i] /= amount;
 	    averageAmountOfMatches[i] /= amount;
-	    averageAlgoErrorBeforePCA /= amount;
-	    averageAlgoErrorAfterPCA /= amount;
-	    averageRealErrorBeforePCA /= amount;
-	    averageRealErrorAfterPCA /= amount;
 	}
+	averageAlgoErrorBeforePCA /= randCycles;
+	averageAlgoErrorAfterPCA /= randCycles;
+	averageRealErrorBeforePCA /= randCycles;
+	averageRealErrorAfterPCA /= randCycles;
     }
 
     void AverageMatchingError::initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp)
@@ -123,7 +126,7 @@ namespace sfa
 
     void AverageMatchingError::printResults()
     {
-	LOG->info("RESULTS (max rotation of %f, max translation of %f, pair selection filter: %s):", maxRot, maxTrans, pairSelection.c_str());
+	LOG->info("RESULTS (max rotation of %f, max translation of %f, pair selection filter: %s, %d source vertices, %d destination vertices):", maxRot, maxTrans, pairSelection.c_str(), srcVertices, destVertices);
 	LOG->info("Average matching error before any ICP steps:");
 	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBeforePCA);
 	LOG->info("Real matching error: %.10f.", averageRealErrorBeforePCA);
