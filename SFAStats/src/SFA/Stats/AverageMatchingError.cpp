@@ -31,13 +31,21 @@ namespace sfa
 	    maxRot = props.getFloatValue("AverageMatching_MaxRot");
 	if(props.getStringValue("AverageMatching_MaxTrans") != "")
 	    maxTrans = props.getFloatValue("AverageMatching_MaxTrans");
+	bool pcaFirst = false;
+	if(props.getStringValue("AverageMatching_PCA_First") != "")
+	    pcaFirst = props.getBoolValue("AverageMatching_PCA_First");
+
+	int pointSelection = 0;
+	if(props.getStringValue("AverageMatching_PairSelection") != "")
+	    pointSelection = props.getIntValue("AverageMatching_PairSelection");
+	icp.setSelectionMethod(pointSelection);
+	pairSelection = getPairSelectionFlags(icp.getSelectionMethod());
 
 	initCorrectPairs(src, dest, nn, icp);
-	testWithModel(src, dest, nn, icp);
-	printResults();
+	testWithModel(src, dest, nn, icp, pcaFirst);
     }
 
-    void AverageMatchingError::testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp)
+    void AverageMatchingError::testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, bool pcaFirst)
     {
 	// Store original model
 	Model original(src);
@@ -51,8 +59,21 @@ namespace sfa
 		src.rotateRandom(maxRot);
 	    if (maxTrans > 0)
 		src.translateRandom(maxTrans);
+	    // Do pca alignment first?
+	    averageAlgoErrorBeforePCA += nn.computeError(src, dest);
+	    averageRealErrorBeforePCA += nn.computeError(src, dest, correctPairs, nullptr);
+	    if(pcaFirst)
+	    {
+		pca_icp.calcNextStep(src, dest); // First dimension
+		pca_icp.calcNextStep(src, dest); // Second dimension
+		averageAlgoErrorAfterPCA += nn.computeError(src, dest);
+		averageRealErrorAfterPCA += nn.computeError(src, dest, correctPairs, nullptr);
+	    }
 	    for (unsigned int j = 0; j < icpCycles; j++)
 	    {
+		// Calculate next icp step
+		icp.calcNextStep(src, dest);
+		// Check matching error
 		std::vector<bool> matches;
 		averageAlgoResults[j] += nn.computeError(src, dest);
 		averageRealResults[j] += nn.computeError(src, dest, correctPairs, &matches);
@@ -62,8 +83,6 @@ namespace sfa
 		    if (matches[k])
 			amountMatches++;
 		averageAmountOfMatches[j] += amountMatches;
-		// Calculate next icp step
-		icp.calcNextStep(src, dest);
 	    }
 	}
 	// Average results
@@ -73,6 +92,10 @@ namespace sfa
 	    averageAlgoResults[i] /= amount;
 	    averageRealResults[i] /= amount;
 	    averageAmountOfMatches[i] /= amount;
+	    averageAlgoErrorBeforePCA /= amount;
+	    averageAlgoErrorAfterPCA /= amount;
+	    averageRealErrorBeforePCA /= amount;
+	    averageRealErrorAfterPCA /= amount;
 	}
     }
 
@@ -100,20 +123,41 @@ namespace sfa
 
     void AverageMatchingError::printResults()
     {
-	LOG->info("Average matching error the algorithm sees after %d cycles for the first %d icp steps (max rotation of %f, max translation of %f):", randCycles, icpCycles, maxRot, maxTrans);
+	LOG->info("RESULTS (max rotation of %f, max translation of %f, pair selection filter: %s):", maxRot, maxTrans, pairSelection.c_str());
+	LOG->info("Average matching error before any ICP steps:");
+	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBeforePCA);
+	LOG->info("Real matching error: %.10f.", averageRealErrorBeforePCA);
+	LOG->info("Average matching error after PCA alignment:");
+	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorAfterPCA);
+	LOG->info("Real matching error: %.10f.", averageRealErrorAfterPCA);
+	LOG->info("Average nearest neighbor matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
 	for(unsigned int i = 0; i < averageAlgoResults.size(); i++)
-	{
-	    LOG->info("Step %d: %.10f.", i, averageAlgoResults[i]);
-	}
-	LOG->info("Average real matching error after %d cycles for the first %d icp steps (max rotation of %f, max translation of %f):", randCycles, icpCycles, maxRot, maxTrans);
+	    LOG->info("Step %d: %.10f.", i+1, averageAlgoResults[i]);
+	LOG->info("Average real matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
 	for(unsigned int i = 0; i < averageRealResults.size(); i++)
-	{
-	    LOG->info("Step %d: %.10f.", i, averageRealResults[i]);
-	}
-	LOG->info("Average amount of matching pairs after %d cycles for the first %d icp steps (max rotation of %f, max translation of %f):", randCycles, icpCycles, maxRot, maxTrans);
+	    LOG->info("Step %d: %.10f.", i+1, averageRealResults[i]);
+	LOG->info("Average amount of matching pairs after %d cycles for the first %d icp steps:", randCycles, icpCycles);
 	for(unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
-	{
-	    LOG->info("Step %d: %f / %d.", i, averageAmountOfMatches[i], correctPairs.size());
-	}
+	    LOG->info("Step %d: %f / %d.", i+1, averageAmountOfMatches[i], correctPairs.size());
+    }
+
+    std::string AverageMatchingError::getPairSelectionFlags(dbgl::Bitmask<> flags)
+    {
+	std::string flagString;
+	if(flags.isSet(ICP::NO_EDGES))
+	    flagString += "NO_EDGES | ";
+	if(flags.isSet(ICP::RANDOM))
+	    flagString += "RANDOM | ";
+	if(flags.isSet(ICP::EVERY_SECOND))
+	    flagString += "EVERY_SECOND | ";
+	if(flags.isSet(ICP::EVERY_THIRD))
+	    flagString += "EVERY_THIRD | ";
+	if(flags.isSet(ICP::EVERY_FOURTH))
+	    flagString += "EVERY_FOURTH | ";
+	if(flags.isSet(ICP::EVERY_FIFTH))
+	    flagString += "EVERY_FIFTH | ";
+	if(flagString.size() > 3)
+	    flagString.erase(flagString.end() - 3, flagString.end());
+	return flagString;
     }
 }

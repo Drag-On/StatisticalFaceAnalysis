@@ -11,12 +11,14 @@
 #ifndef AVERAGEMATCHINGERROR_H_
 #define AVERAGEMATCHINGERROR_H_
 
+#include <string>
 #include <vector>
 #include <DBGL/System/Log/Log.h>
 #include "StatRunner.h"
 #include "SFA/Utility/Model.h"
 #include "SFA/NearestNeighbor/NearestNeighbor.h"
 #include "SFA/ICP/ICP.h"
+#include "SFA/ICP/PCA_ICP.h"
 
 namespace sfa
 {
@@ -31,12 +33,19 @@ namespace sfa
 	    std::vector<double> averageAlgoResults;
 	    std::vector<double> averageRealResults;
 	    std::vector<double> averageAmountOfMatches;
+	    double averageAlgoErrorBeforePCA = 0;
+	    double averageAlgoErrorAfterPCA = 0;
+	    double averageRealErrorBeforePCA = 0;
+	    double averageRealErrorAfterPCA = 0;
+	    PCA_ICP pca_icp;
+	    std::string pairSelection;
 
 	    AverageMatchingError();
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);
-	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
-	    void initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
 	    virtual void printResults();
+	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, bool pcaFirst = false);
+	    void initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
+	    std::string getPairSelectionFlags(dbgl::Bitmask<> flags);
     };
 }
 
