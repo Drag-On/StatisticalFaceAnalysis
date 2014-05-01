@@ -43,8 +43,8 @@ NearestNeighbor* selectNN()
     }
     else
     {
-	LOG->info("No nearest neighbor search specified. Falling back to simple nearest neighbor search.");
-	return new SimpleNearestNeighbor;
+	LOG->info("No nearest neighbor search specified. Falling back to K-d tree nearest neighbor search.");
+	return new KdTreeNearestNeighbor;
     }
 }
 
