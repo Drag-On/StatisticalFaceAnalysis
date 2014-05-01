@@ -13,7 +13,6 @@
 // Prototypes
 void testNearestNeighbor();
 void testRigidPointICP();
-void testRigidPointICPStatistics();
 
 int main()
 {
@@ -22,9 +21,6 @@ int main()
 
     testNearestNeighbor();
     testRigidPointICP();
-
-    // Statistical (not functional tests)
-    testRigidPointICPStatistics();
 
     LOG->info("Done!");
     delete LOG;

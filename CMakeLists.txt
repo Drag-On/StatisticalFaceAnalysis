@@ -19,6 +19,7 @@ cmake_minimum_required (VERSION 2.6)
 set (SFALIB_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/SFALib/include")												# Path to libary headers
 set (SFALIB_LIB_DIR "${CMAKE_CURRENT_LIST_DIR}/${CMAKE_BUILD_TYPE}/SFALib")										# Path to libary file
 set (SFAVIEWER_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/SFAViewer/include")										# Path to viewer headers
+set (SFASTATS_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/SFAStats/include")											# Path to stats headers
 set (EIGEN_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/lib/eigen/") 													# Path to Eigen headers
 set (DBGL_BASE_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/../Dragon-Blaze-Game-Library/DBGL_Base/include")			# Path to DBGL headers
 set (DBGL_BASE_LIB_DIR "${CMAKE_CURRENT_LIST_DIR}/../Dragon-Blaze-Game-Library/DBGL_Base/${CMAKE_BUILD_TYPE}")	# Path to DBGL library file
@@ -66,6 +67,8 @@ add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SFALib/"
 				 "${PROJECT_BINARY_DIR}/SFALib/")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SFAViewer/"
 				 "${PROJECT_BINARY_DIR}/SFAViewer/")
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SFAStats/"
+				 "${PROJECT_BINARY_DIR}/SFAStats/")
 if(COMPILE_TESTS)
 	add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Test/"
 					 "${PROJECT_BINARY_DIR}/Test/")
