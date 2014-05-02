@@ -187,7 +187,7 @@ namespace sfa
 		    << averageTranslation << ".\n";
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
-	    file << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "0" << "\t" << averageAlgoErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
 	    if(averageAlgoErrorAfterPCA > 0)
@@ -215,7 +215,7 @@ namespace sfa
 		    << averageTranslation << ".\n";
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
-	    file << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "0" << "\t" << averageRealErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
 	    if(averageRealErrorAfterPCA > 0)
@@ -243,7 +243,7 @@ namespace sfa
 		    << averageTranslation << ".\n";
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
-	    file << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    for (unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
 		file << i+1 << "\t" << averageAmountOfMatches[i] << "\n";
 	    file.close();
