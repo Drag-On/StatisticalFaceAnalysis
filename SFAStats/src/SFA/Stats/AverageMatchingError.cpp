@@ -75,7 +75,8 @@ namespace sfa
 	for (unsigned int i = 0; i < randCycles; i++)
 	{
 	    // Log
-	    LOG->info("%d...", i);
+	    if(i % 10 == 0)
+		LOG->info("%d...", i);
 	    // Reset original vertex positions
 	    src = original;
 	    // Displace src
