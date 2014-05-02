@@ -31,6 +31,8 @@ namespace sfa
 	    unsigned int icpCycles = 30;
 	    double maxRot = dbgl::pi_4();
 	    double maxTrans = 0.3;
+	    unsigned int holes = 0;
+	    unsigned int noiseLevel = 0;
 	    std::vector<unsigned int> correctPairs;
 	    std::vector<double> averageAlgoResults;
 	    std::vector<double> averageRealResults;

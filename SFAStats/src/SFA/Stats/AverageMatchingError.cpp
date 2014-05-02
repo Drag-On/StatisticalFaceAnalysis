@@ -48,14 +48,14 @@ namespace sfa
 	destVertices = dest.getAmountOfVertices();
 
 	// Add noise?
-	unsigned int noiseLevel = 0;
+	noiseLevel = 0;
 	if(props.getStringValue(Prop_NoiseLevel) != "")
 	    noiseLevel = props.getIntValue(Prop_NoiseLevel);
 	for(unsigned int i = 0; i < noiseLevel; i++)
 	    src.addNoise();
 
 	// Add holes?
-	unsigned int holes = 0;
+	holes = 0;
 	if(props.getStringValue(Prop_Holes) != "")
 	    holes = props.getIntValue(Prop_Holes);
 	for(unsigned int i = 0; i < holes; i++)
@@ -138,7 +138,7 @@ namespace sfa
 
     void AverageMatchingError::printResults()
     {
-	LOG->info("RESULTS (max rotation of %f, max translation of %f, pair selection filter: %s, %d source vertices, %d destination vertices):", maxRot, maxTrans, pairSelection.c_str(), srcVertices, destVertices);
+	LOG->info("RESULTS (max rotation of %f, max translation of %f, pair selection filter: %s, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", maxRot, maxTrans, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
 	LOG->info("Average matching error before any ICP steps:");
 	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBeforePCA);
 	LOG->info("Real matching error: %.10f.", averageRealErrorBeforePCA);
@@ -174,8 +174,9 @@ namespace sfa
 	{
 	    file << "# " << fileNameNNError << "\n";
 	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
-		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
-		    << " source vertices, " << destVertices << " destination vertices\n";
+		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
+		    << ", holes: " << holes << srcVertices << " source vertices, " << destVertices
+		    << " destination vertices\n";
 	    file << "0" << "\t" << averageAlgoErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
 	    if(averageAlgoErrorAfterPCA > 0)
@@ -198,8 +199,9 @@ namespace sfa
 	{
 	    file << "# " << fileNameRealError << "\n";
 	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
-		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
-		    << " source vertices, " << destVertices << " destination vertices\n";
+		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
+		    << ", holes: " << holes << srcVertices << " source vertices, " << destVertices
+		    << " destination vertices\n";
 	    file << "0" << "\t" << averageRealErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
 	    if(averageRealErrorAfterPCA > 0)
@@ -222,8 +224,9 @@ namespace sfa
 	{
 	    file << "# " << fileNamePairs << "\n";
 	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
-		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
-		    << " source vertices, " << destVertices << " destination vertices\n";
+		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
+		    << ", holes: " << holes << srcVertices << " source vertices, " << destVertices
+		    << " destination vertices\n";
 	    for (unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
 		file << i+1 << "\t" << averageAmountOfMatches[i] << "\n";
 	    file.close();
