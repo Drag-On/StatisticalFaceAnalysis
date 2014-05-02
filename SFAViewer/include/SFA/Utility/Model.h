@@ -51,8 +51,8 @@ namespace sfa
 	    Eigen::Vector3d getAverage() const;
 	    void addNoise();
 	    void addHole();
-	    void rotateRandom(double maxAngle);
-	    void translateRandom(double maxTranslation);
+	    double rotateRandom(double maxAngle, double minAngle = 0);
+	    double translateRandom(double maxTranslation, double minTranslation = 0);
 	    dbgl::Mesh* getBasePointer();
 	    Model& operator=(Model const& other);
 	    Model& operator=(Model&& other);

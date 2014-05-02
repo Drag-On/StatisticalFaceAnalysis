@@ -113,15 +113,15 @@ void keyCallback(Window::KeyEventArgs const& args)
     // Randomly rotate or translate
     else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
     {
-	LOG->info("Applying random rotation to source mesh.");
-	pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
+	double rotation = pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
+	LOG->info("Rotated source mesh by %f.", rotation);
 	pca_icp.reset();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
     else if (args.key == GLFW_KEY_T && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
     {
-	LOG->info("Applying random translation to source mesh.");
-	pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
+	double translation = pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
+	LOG->info("Translated source mesh by %f", translation);
 	pca_icp.reset();
 	pSourceModel->getBasePointer()->updateBuffers();
     }

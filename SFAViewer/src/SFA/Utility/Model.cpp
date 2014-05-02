@@ -189,10 +189,14 @@ namespace sfa
 	analyzeMesh();
     }
 
-    void Model::rotateRandom(double maxAngle)
+    double Model::rotateRandom(double maxAngle, double minAngle)
     {
-	std::uniform_real_distribution<double> rand_double_nMax_max(-maxAngle, maxAngle);
-	double angle = rand_double_nMax_max(m_random);
+	std::uniform_real_distribution<double> rand_double_min_max(minAngle, maxAngle);
+	double angle = rand_double_min_max(m_random);
+	std::uniform_int_distribution<short> rand_bool(0, 1);
+	bool flipSign = rand_bool(m_random);
+	if(flipSign)
+	    angle = -angle;
 	Eigen::Vector3d axis = Eigen::Vector3d::Random();
 	axis.normalize();
 	Eigen::AngleAxis<double> aa(angle, axis);
@@ -204,16 +208,20 @@ namespace sfa
 	    m_pMesh->vertices()[i] = dbgl::Vec3f(coords[0], coords[1], coords[2]);
 	}
 	analyzeMesh();
+	return angle;
     }
 
-    void Model::translateRandom(double maxTranslation)
+    double Model::translateRandom(double maxTranslation, double minTranslation)
     {
-	Eigen::Vector3d translation = Eigen::Vector3d::Random();
-	translation.normalize();
-	translation *= maxTranslation;
+	std::uniform_real_distribution<double> rand_double_min_max(minTranslation, maxTranslation);
+	double translation = rand_double_min_max(m_random);
+	Eigen::Vector3d translationVec = Eigen::Vector3d::Random();
+	translationVec.normalize();
+	translationVec *= translation;
 	for(unsigned int i = 0; i < m_pMesh->vertices().size(); i++)
-	    m_pMesh->vertices()[i].translate(translation[0], translation[1], translation[2]);
+	    m_pMesh->vertices()[i].translate(translationVec[0], translationVec[1], translationVec[2]);
 	analyzeMesh();
+	return translation;
     }
 
     dbgl::Mesh* Model::getBasePointer()
