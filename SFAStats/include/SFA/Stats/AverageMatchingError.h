@@ -45,6 +45,13 @@ namespace sfa
 	    unsigned int destVertices = 0;
 	    dbgl::Properties* props = nullptr;
 
+	    const std::string Prop_RandCycles = "AverageMatching_RandCycles";
+	    const std::string Prop_ICPCycles = "AverageMatching_IcpCycles";
+	    const std::string Prop_MaxRot = "AverageMatching_MaxRot";
+	    const std::string Prop_MaxTrans = "AverageMatching_MaxTrans";
+	    const std::string Prop_PCAFirst = "AverageMatching_PCA_First";
+	    const std::string Prop_PairSelection = "AverageMatching_PairSelection";
+
 	    AverageMatchingError();
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);
 	    virtual void printResults();

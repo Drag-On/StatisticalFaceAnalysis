@@ -26,21 +26,21 @@ namespace sfa
 	this->props = &props;
 
 	// Initialize variables from properties
-	if(props.getStringValue("AverageMatching_RandCycles") != "")
-	    randCycles = props.getIntValue("AverageMatching_RandCycles");
-	if(props.getStringValue("AverageMatching_IcpCycles") != "")
-	    icpCycles = props.getIntValue("AverageMatching_IcpCycles");
-	if(props.getStringValue("AverageMatching_MaxRot") != "")
-	    maxRot = props.getFloatValue("AverageMatching_MaxRot");
-	if(props.getStringValue("AverageMatching_MaxTrans") != "")
-	    maxTrans = props.getFloatValue("AverageMatching_MaxTrans");
+	if(props.getStringValue(Prop_RandCycles) != "")
+	    randCycles = props.getIntValue(Prop_RandCycles);
+	if(props.getStringValue(Prop_ICPCycles) != "")
+	    icpCycles = props.getIntValue(Prop_ICPCycles);
+	if(props.getStringValue(Prop_MaxRot) != "")
+	    maxRot = props.getFloatValue(Prop_MaxRot);
+	if(props.getStringValue(Prop_MaxTrans) != "")
+	    maxTrans = props.getFloatValue(Prop_MaxTrans);
 	bool pcaFirst = false;
-	if(props.getStringValue("AverageMatching_PCA_First") != "")
-	    pcaFirst = props.getBoolValue("AverageMatching_PCA_First");
+	if(props.getStringValue(Prop_PCAFirst) != "")
+	    pcaFirst = props.getBoolValue(Prop_PCAFirst);
 
 	int pointSelection = 0;
-	if(props.getStringValue("AverageMatching_PairSelection") != "")
-	    pointSelection = props.getIntValue("AverageMatching_PairSelection");
+	if(props.getStringValue(Prop_PairSelection) != "")
+	    pointSelection = props.getIntValue(Prop_PairSelection);
 	icp.setSelectionMethod(pointSelection);
 	pairSelection = getPairSelectionFlags(icp.getSelectionMethod());
 
@@ -146,7 +146,7 @@ namespace sfa
     {
 	// Generate file name
 	std::string fileName = "Results_Avrg_Err_";
-	if(props->getBoolValue("AverageMatching_PCA_First"))
+	if(props->getBoolValue(Prop_PCAFirst))
 	    fileName += "PCA_";
 	fileName += pairSelection;
 
