@@ -175,7 +175,7 @@ namespace sfa
 	    file << "# " << fileNameNNError << "\n";
 	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
 		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
-		    << ", holes: " << holes << srcVertices << " source vertices, " << destVertices
+		    << ", holes: " << holes << ", " << srcVertices << " source vertices, " << destVertices
 		    << " destination vertices\n";
 	    file << "0" << "\t" << averageAlgoErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
@@ -200,7 +200,7 @@ namespace sfa
 	    file << "# " << fileNameRealError << "\n";
 	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
 		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
-		    << ", holes: " << holes << srcVertices << " source vertices, " << destVertices
+		    << ", holes: " << holes << ", " << srcVertices << " source vertices, " << destVertices
 		    << " destination vertices\n";
 	    file << "0" << "\t" << averageRealErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
@@ -225,7 +225,7 @@ namespace sfa
 	    file << "# " << fileNamePairs << "\n";
 	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
 		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
-		    << ", holes: " << holes << srcVertices << " source vertices, " << destVertices
+		    << ", holes: " << holes << ", " << srcVertices << " source vertices, " << destVertices
 		    << " destination vertices\n";
 	    for (unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
 		file << i+1 << "\t" << averageAmountOfMatches[i] << "\n";
