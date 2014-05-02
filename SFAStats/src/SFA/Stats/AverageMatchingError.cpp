@@ -76,9 +76,9 @@ namespace sfa
 	    src = original;
 	    // Displace src
 	    if (maxRot > 0)
-		src.rotateRandom(maxRot);
+		averageRotation += src.rotateRandom(maxRot, minRot);
 	    if (maxTrans > 0)
-		src.translateRandom(maxTrans);
+		averageTranslation += src.translateRandom(maxTrans, minTrans);
 	    // Do pca alignment first?
 	    averageAlgoErrorBeforePCA += nn.computeError(src, dest);
 	    averageRealErrorBeforePCA += nn.computeError(src, dest, correctPairs);
@@ -111,6 +111,8 @@ namespace sfa
 	averageAlgoErrorAfterPCA /= randCycles;
 	averageRealErrorBeforePCA /= randCycles;
 	averageRealErrorAfterPCA /= randCycles;
+	averageRotation /= randCycles;
+	averageTranslation /= randCycles;
     }
 
     void AverageMatchingError::initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp)
@@ -138,7 +140,7 @@ namespace sfa
 
     void AverageMatchingError::printResults()
     {
-	LOG->info("RESULTS (max rotation of %f, max translation of %f, pair selection filter: %s, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", maxRot, maxTrans, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
+	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
 	LOG->info("Average matching error before any ICP steps:");
 	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBeforePCA);
 	LOG->info("Real matching error: %.10f.", averageRealErrorBeforePCA);
@@ -173,10 +175,13 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNameNNError << "\n";
-	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
-		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
-		    << ", holes: " << holes << ", " << srcVertices << " source vertices, " << destVertices
-		    << " destination vertices\n";
+	    file << "# Rotation in the range of [" << maxRot << ", " << minRot << "], average: "
+		    << averageRotation << ".\n";
+	    file << "# Translation in the range of [" << maxTrans << ", " << minTrans << "], average: "
+		    << averageTranslation << ".\n";
+	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
+	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
+	    file << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "0" << "\t" << averageAlgoErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
 	    if(averageAlgoErrorAfterPCA > 0)
@@ -198,10 +203,13 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNameRealError << "\n";
-	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
-		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
-		    << ", holes: " << holes << ", " << srcVertices << " source vertices, " << destVertices
-		    << " destination vertices\n";
+	    file << "# Rotation in the range of [" << maxRot << ", " << minRot << "], average: "
+		    << averageRotation << ".\n";
+	    file << "# Translation in the range of [" << maxTrans << ", " << minTrans << "], average: "
+		    << averageTranslation << ".\n";
+	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
+	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
+	    file << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "0" << "\t" << averageRealErrorBeforePCA << "\n";
 	    unsigned int offset = 0;
 	    if(averageRealErrorAfterPCA > 0)
@@ -223,10 +231,13 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNamePairs << "\n";
-	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
-		    << ", pair selection filter: " << pairSelection.c_str() << ", noise level: " << noiseLevel
-		    << ", holes: " << holes << ", " << srcVertices << " source vertices, " << destVertices
-		    << " destination vertices\n";
+	    file << "# Rotation in the range of [" << maxRot << ", " << minRot << "], average: "
+		    << averageRotation << ".\n";
+	    file << "# Translation in the range of [" << maxTrans << ", " << minTrans << "], average: "
+		    << averageTranslation << ".\n";
+	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
+	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
+	    file << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    for (unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
 		file << i+1 << "\t" << averageAmountOfMatches[i] << "\n";
 	    file.close();

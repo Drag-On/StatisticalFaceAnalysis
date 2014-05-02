@@ -30,7 +30,9 @@ namespace sfa
 	    unsigned int randCycles = 100;
 	    unsigned int icpCycles = 30;
 	    double maxRot = dbgl::pi_4();
+	    double minRot = 0;
 	    double maxTrans = 0.3;
+	    double minTrans = 0;
 	    unsigned int holes = 0;
 	    unsigned int noiseLevel = 0;
 	    std::vector<unsigned int> correctPairs;
@@ -41,6 +43,8 @@ namespace sfa
 	    double averageAlgoErrorAfterPCA = 0;
 	    double averageRealErrorBeforePCA = 0;
 	    double averageRealErrorAfterPCA = 0;
+	    double averageRotation = 0;
+	    double averageTranslation = 0;
 	    PCA_ICP pca_icp;
 	    std::string pairSelection;
 	    unsigned int srcVertices = 0;
@@ -50,7 +54,9 @@ namespace sfa
 	    const std::string Prop_RandCycles = "AverageMatching_RandCycles";
 	    const std::string Prop_ICPCycles = "AverageMatching_IcpCycles";
 	    const std::string Prop_MaxRot = "AverageMatching_MaxRot";
+	    const std::string Prop_MinRot = "AverageMatching_MinRot";
 	    const std::string Prop_MaxTrans = "AverageMatching_MaxTrans";
+	    const std::string Prop_MinTrans = "AverageMatching_MinTrans";
 	    const std::string Prop_PCAFirst = "AverageMatching_PCA_First";
 	    const std::string Prop_PairSelection = "AverageMatching_PairSelection";
 	    const std::string Prop_NoiseLevel = "AverageMatching_NoiseLevel";
