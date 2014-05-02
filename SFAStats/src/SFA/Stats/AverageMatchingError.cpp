@@ -47,6 +47,20 @@ namespace sfa
 	srcVertices = src.getAmountOfVertices();
 	destVertices = dest.getAmountOfVertices();
 
+	// Add noise?
+	unsigned int noiseLevel = 0;
+	if(props.getStringValue(Prop_NoiseLevel) != "")
+	    noiseLevel = props.getIntValue(Prop_NoiseLevel);
+	for(unsigned int i = 0; i < noiseLevel; i++)
+	    src.addNoise();
+
+	// Add holes?
+	unsigned int holes = 0;
+	if(props.getStringValue(Prop_Holes) != "")
+	    holes = props.getIntValue(Prop_Holes);
+	for(unsigned int i = 0; i < holes; i++)
+	    src.addHole();
+
 	initCorrectPairs(src, dest, nn, icp);
 	testWithModel(src, dest, nn, icp, pcaFirst);
     }
@@ -163,8 +177,14 @@ namespace sfa
 		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
 		    << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "0" << "\t" << averageAlgoErrorBeforePCA << "\n";
+	    unsigned int offset = 0;
+	    if(averageAlgoErrorAfterPCA > 0)
+	    {
+		file << "1" << "\t" << averageAlgoErrorAfterPCA << "\n";
+		offset = 1;
+	    }
 	    for (unsigned int i = 0; i < averageAlgoResults.size(); i++)
-		file << i+1 << "\t" << averageAlgoResults[i] << "\n";
+		file << i+1+offset << "\t" << averageAlgoResults[i] << "\n";
 	    file.close();
 	}
 	else
@@ -181,8 +201,14 @@ namespace sfa
 		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
 		    << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "0" << "\t" << averageRealErrorBeforePCA << "\n";
+	    unsigned int offset = 0;
+	    if(averageRealErrorAfterPCA > 0)
+	    {
+		file << "1" << "\t" << averageRealErrorAfterPCA << "\n";
+		offset = 1;
+	    }
 	    for (unsigned int i = 0; i < averageRealResults.size(); i++)
-		file << i+1 << "\t" << averageRealResults[i] << "\n";
+		file << i+1+offset << "\t" << averageRealResults[i] << "\n";
 	    file.close();
 	}
 	else

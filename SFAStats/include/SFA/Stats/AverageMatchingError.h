@@ -51,6 +51,8 @@ namespace sfa
 	    const std::string Prop_MaxTrans = "AverageMatching_MaxTrans";
 	    const std::string Prop_PCAFirst = "AverageMatching_PCA_First";
 	    const std::string Prop_PairSelection = "AverageMatching_PairSelection";
+	    const std::string Prop_NoiseLevel = "AverageMatching_NoiseLevel";
+	    const std::string Prop_Holes = "AverageMatching_Holes";
 
 	    AverageMatchingError();
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);
