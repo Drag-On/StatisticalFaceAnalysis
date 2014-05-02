@@ -11,6 +11,8 @@
 #ifndef AVERAGEMATCHINGERROR_H_
 #define AVERAGEMATCHINGERROR_H_
 
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <DBGL/System/Log/Log.h>
@@ -41,10 +43,12 @@ namespace sfa
 	    std::string pairSelection;
 	    unsigned int srcVertices = 0;
 	    unsigned int destVertices = 0;
+	    dbgl::Properties* props = nullptr;
 
 	    AverageMatchingError();
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);
 	    virtual void printResults();
+	    virtual void writeResults();
 	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, bool pcaFirst = false);
 	    void initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
 	    std::string getPairSelectionFlags(dbgl::Bitmask<> flags);

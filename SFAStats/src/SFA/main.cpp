@@ -105,6 +105,7 @@ int main(int argc, char** argv)
 
     pStatRunner->run(*pSourceModel, *pDestModel, *pnn, *picp, properties);
     pStatRunner->printResults();
+    pStatRunner->writeResults();
 
     delete pnn;
     delete picp;

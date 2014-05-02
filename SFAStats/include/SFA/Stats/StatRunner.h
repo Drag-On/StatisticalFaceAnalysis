@@ -24,6 +24,7 @@ namespace sfa
 	    virtual ~StatRunner() {};
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props) = 0;
 	    virtual void printResults() = 0;
+	    virtual void writeResults() = 0;
     };
 }
 

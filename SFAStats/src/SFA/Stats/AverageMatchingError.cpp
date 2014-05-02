@@ -22,6 +22,9 @@ namespace sfa
     void AverageMatchingError::run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props)
     {
 	LOG->info("Starting rigid body point-to-point ICP statistics test suite...");
+
+	this->props = &props;
+
 	// Initialize variables from properties
 	if(props.getStringValue("AverageMatching_RandCycles") != "")
 	    randCycles = props.getIntValue("AverageMatching_RandCycles");
@@ -139,21 +142,85 @@ namespace sfa
 	    LOG->info("Step %d: %f / %d.", i+1, averageAmountOfMatches[i], correctPairs.size());
     }
 
+    void AverageMatchingError::writeResults()
+    {
+	// Generate file name
+	std::string fileName = "Results_Avrg_Err_";
+	if(props->getBoolValue("AverageMatching_PCA_First"))
+	    fileName += "PCA_";
+	fileName += pairSelection;
+
+	// Write average nearest neighbor error
+	std::string fileNameNNError(fileName);
+	fileNameNNError += "_NN";
+	fileNameNNError += ".txt";
+	std::ofstream file;
+	file.open(fileNameNNError, std::ios::out | std::ios::app);
+	if (file.is_open())
+	{
+	    file << "# " << fileNameNNError << "\n";
+	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
+		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
+		    << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "0" << "\t" << averageAlgoErrorBeforePCA << "\n";
+	    for (unsigned int i = 0; i < averageAlgoResults.size(); i++)
+		file << i+1 << "\t" << averageAlgoResults[i] << "\n";
+	    file.close();
+	}
+	else
+	    LOG->warning("Unable to write %s.", fileNameNNError.c_str());
+	// Write average real error
+	std::string fileNameRealError(fileName);
+	fileNameRealError += "_Real";
+	fileNameRealError += ".txt";
+	file.open(fileNameRealError, std::ios::out | std::ios::app);
+	if (file.is_open())
+	{
+	    file << "# " << fileNameRealError << "\n";
+	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
+		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
+		    << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "0" << "\t" << averageRealErrorBeforePCA << "\n";
+	    for (unsigned int i = 0; i < averageRealResults.size(); i++)
+		file << i+1 << "\t" << averageRealResults[i] << "\n";
+	    file.close();
+	}
+	else
+	    LOG->warning("Unable to write %s.", fileNameRealError.c_str());
+	// Write average amount of matching pairs
+	std::string fileNamePairs(fileName);
+	fileNamePairs += "_Pairs";
+	fileNamePairs += ".txt";
+	file.open(fileNamePairs, std::ios::out | std::ios::app);
+	if (file.is_open())
+	{
+	    file << "# " << fileNamePairs << "\n";
+	    file << "# max rotation of " << maxRot << ", max translation of " << maxTrans
+		    << ", pair selection filter: " << pairSelection.c_str() << ", " << srcVertices
+		    << " source vertices, " << destVertices << " destination vertices\n";
+	    for (unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
+		file << i+1 << "\t" << averageAmountOfMatches[i] << "\n";
+	    file.close();
+	}
+	else
+	    LOG->warning("Unable to write %s.", fileNamePairs.c_str());
+    }
+
     std::string AverageMatchingError::getPairSelectionFlags(dbgl::Bitmask<> flags)
     {
 	std::string flagString;
 	if(flags.isSet(ICP::NO_EDGES))
-	    flagString += "NO_EDGES | ";
+	    flagString += "NO_EDGES___";
 	if(flags.isSet(ICP::RANDOM))
-	    flagString += "RANDOM | ";
+	    flagString += "RANDOM_";
 	if(flags.isSet(ICP::EVERY_SECOND))
-	    flagString += "EVERY_SECOND | ";
+	    flagString += "EVERY_SECOND___";
 	if(flags.isSet(ICP::EVERY_THIRD))
-	    flagString += "EVERY_THIRD | ";
+	    flagString += "EVERY_THIRD___";
 	if(flags.isSet(ICP::EVERY_FOURTH))
-	    flagString += "EVERY_FOURTH | ";
+	    flagString += "EVERY_FOURTH___";
 	if(flags.isSet(ICP::EVERY_FIFTH))
-	    flagString += "EVERY_FIFTH | ";
+	    flagString += "EVERY_FIFTH___";
 	if(flagString.size() > 3)
 	    flagString.erase(flagString.end() - 3, flagString.end());
 	return flagString;
