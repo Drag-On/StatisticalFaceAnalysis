@@ -50,7 +50,7 @@ namespace sfa
     }
 
     double NearestNeighbor::computeError(AbstractMesh const& source, AbstractMesh const& dest,
-	    std::vector<unsigned int> const& pairs, std::vector<bool>* matches)
+	    std::vector<unsigned int> const& pairs, unsigned int* numMatches, std::vector<bool>* matches)
     {
 	// Check if arguments are valid
 	if(source.getAmountOfVertices() <= 0 || dest.getAmountOfVertices() <= 0)
@@ -58,15 +58,21 @@ namespace sfa
 
 	double error = 0;
 	unsigned int amount = source.getAmountOfVertices();
+	if (numMatches != nullptr)
+	    (*numMatches) = 0;
 	for(unsigned int i = 0; i < amount; i++)
 	{
 	    unsigned int targetIndex = pairs[i];
 
-	    if(matches != nullptr)
+	    if(numMatches != nullptr || matches != nullptr)
 	    {
 		// Get nearest neighbor and check if it matches with the one defined by pairs
 		unsigned int nearestNum = getNearest(i, source, dest);
-		matches->push_back(nearestNum == targetIndex);
+		bool isMatching = nearestNum == targetIndex;
+		if (matches != nullptr)
+		    matches->push_back(isMatching);
+		if(numMatches != nullptr && isMatching)
+		    (*numMatches)++;
 	    }
 	    auto sourceVert = source.getVertex(i);
 	    auto destVert = dest.getVertex(targetIndex);

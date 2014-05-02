@@ -59,13 +59,15 @@ namespace sfa
 	     * @param source Source mesh
 	     * @param dest Destination mesh
 	     * @param pairs Defines which source vertex is supposed to match which destination vertex.
+	     * @param[out] numMatches If not NULL the amount of matching pairs will be copied here
 	     * @param[out] matches If not NULL, each element of this vector will be set to true
 	     * 			   in case the vertex defined by \p pairs also is the nearest neighbor. Otherwise
 	     * 			   it is set to false.
 	     * @return Error value
 	     */
 	    double computeError(AbstractMesh const& source, AbstractMesh const& dest,
-		    std::vector<unsigned int> const& pairs, std::vector<bool>* matches);
+		    std::vector<unsigned int> const& pairs, unsigned int* numMatches = nullptr,
+		    std::vector<bool>* matches = nullptr);
 	    /**
 	     * @brief Clears previously cached correspondences
 	     */
