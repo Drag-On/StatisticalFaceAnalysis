@@ -31,6 +31,10 @@ namespace sfa
 	    maxRot = props.getFloatValue(Prop_MaxRot);
 	if(props.getStringValue(Prop_MaxTrans) != "")
 	    maxTrans = props.getFloatValue(Prop_MaxTrans);
+	if(props.getStringValue(Prop_MinRot) != "")
+	    minRot = props.getFloatValue(Prop_MinRot);
+	if(props.getStringValue(Prop_MinTrans) != "")
+	    minTrans = props.getFloatValue(Prop_MinTrans);
 	bool pcaFirst = false;
 	if(props.getStringValue(Prop_PCAFirst) != "")
 	    pcaFirst = props.getBoolValue(Prop_PCAFirst);
