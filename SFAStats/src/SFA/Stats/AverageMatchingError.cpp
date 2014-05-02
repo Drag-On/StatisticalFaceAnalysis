@@ -14,9 +14,6 @@ namespace sfa
 {
     AverageMatchingError::AverageMatchingError()
     {
-	averageAlgoResults.resize(icpCycles, 0);
-	averageRealResults.resize(icpCycles, 0);
-	averageAmountOfMatches.resize(icpCycles, 0);
     }
 
     void AverageMatchingError::run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props)
@@ -43,6 +40,11 @@ namespace sfa
 	    pointSelection = props.getIntValue(Prop_PairSelection);
 	icp.setSelectionMethod(pointSelection);
 	pairSelection = getPairSelectionFlags(icp.getSelectionMethod());
+
+	// Allocate enough space
+	averageAlgoResults.resize(icpCycles, 0);
+	averageRealResults.resize(icpCycles, 0);
+	averageAmountOfMatches.resize(icpCycles, 0);
 
 	srcVertices = src.getAmountOfVertices();
 	destVertices = dest.getAmountOfVertices();
@@ -72,6 +74,8 @@ namespace sfa
 	// Iterate %randCycles% times
 	for (unsigned int i = 0; i < randCycles; i++)
 	{
+	    // Log
+	    LOG->info("%d...", i);
 	    // Reset original vertex positions
 	    src = original;
 	    // Displace src
@@ -136,6 +140,7 @@ namespace sfa
 	// Revert back to original vertex positions
 	icp.setSelectionMethod(selectionMethod);
 	src = std::move(original);
+	LOG->info("Initialization done.");
     }
 
     void AverageMatchingError::printResults()
