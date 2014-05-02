@@ -64,37 +64,31 @@ namespace sfa
 		src.translateRandom(maxTrans);
 	    // Do pca alignment first?
 	    averageAlgoErrorBeforePCA += nn.computeError(src, dest);
-	    averageRealErrorBeforePCA += nn.computeError(src, dest, correctPairs, nullptr);
+	    averageRealErrorBeforePCA += nn.computeError(src, dest, correctPairs);
 	    if(pcaFirst)
 	    {
 		pca_icp.calcNextStep(src, dest); // First dimension
 		pca_icp.calcNextStep(src, dest); // Second dimension
 		averageAlgoErrorAfterPCA += nn.computeError(src, dest);
-		averageRealErrorAfterPCA += nn.computeError(src, dest, correctPairs, nullptr);
+		averageRealErrorAfterPCA += nn.computeError(src, dest, correctPairs);
 	    }
 	    for (unsigned int j = 0; j < icpCycles; j++)
 	    {
 		// Calculate next icp step
 		icp.calcNextStep(src, dest);
 		// Check matching error
-		std::vector<bool> matches;
+		unsigned int matches = 0;
 		averageAlgoResults[j] += nn.computeError(src, dest);
 		averageRealResults[j] += nn.computeError(src, dest, correctPairs, &matches);
-		// Calc amount of matches
-		unsigned int amountMatches = 0;
-		for (unsigned int k = 0; k < matches.size(); k++)
-		    if (matches[k])
-			amountMatches++;
-		averageAmountOfMatches[j] += amountMatches;
+		averageAmountOfMatches[j] += matches;
 	    }
 	}
 	// Average results
-	unsigned int amount = randCycles * icpCycles;
 	for (unsigned int i = 0; i < averageAlgoResults.size(); i++)
 	{
-	    averageAlgoResults[i] /= amount;
-	    averageRealResults[i] /= amount;
-	    averageAmountOfMatches[i] /= amount;
+	    averageAlgoResults[i] /= randCycles;
+	    averageRealResults[i] /= randCycles;
+	    averageAmountOfMatches[i] /= randCycles;
 	}
 	averageAlgoErrorBeforePCA /= randCycles;
 	averageAlgoErrorAfterPCA /= randCycles;
