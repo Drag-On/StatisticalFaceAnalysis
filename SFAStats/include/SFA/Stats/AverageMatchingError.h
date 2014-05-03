@@ -27,6 +27,26 @@ namespace sfa
     class AverageMatchingError : public StatRunner
     {
 	public:
+	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);
+	    virtual void printResults();
+	    virtual void writeResults();
+
+	private:
+	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, bool pcaFirst = false);
+	    void initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
+	    std::string getPairSelectionFlags(dbgl::Bitmask<> flags);
+
+	    const std::string Prop_RandCycles = "AverageMatching_RandCycles";
+	    const std::string Prop_ICPCycles = "AverageMatching_IcpCycles";
+	    const std::string Prop_MaxRot = "AverageMatching_MaxRot";
+	    const std::string Prop_MinRot = "AverageMatching_MinRot";
+	    const std::string Prop_MaxTrans = "AverageMatching_MaxTrans";
+	    const std::string Prop_MinTrans = "AverageMatching_MinTrans";
+	    const std::string Prop_PCAFirst = "AverageMatching_PCA_First";
+	    const std::string Prop_PairSelection = "AverageMatching_PairSelection";
+	    const std::string Prop_NoiseLevel = "AverageMatching_NoiseLevel";
+	    const std::string Prop_Holes = "AverageMatching_Holes";
+
 	    unsigned int randCycles = 100;
 	    unsigned int icpCycles = 30;
 	    double maxRot = dbgl::pi_4();
@@ -50,25 +70,6 @@ namespace sfa
 	    unsigned int srcVertices = 0;
 	    unsigned int destVertices = 0;
 	    dbgl::Properties* props = nullptr;
-
-	    const std::string Prop_RandCycles = "AverageMatching_RandCycles";
-	    const std::string Prop_ICPCycles = "AverageMatching_IcpCycles";
-	    const std::string Prop_MaxRot = "AverageMatching_MaxRot";
-	    const std::string Prop_MinRot = "AverageMatching_MinRot";
-	    const std::string Prop_MaxTrans = "AverageMatching_MaxTrans";
-	    const std::string Prop_MinTrans = "AverageMatching_MinTrans";
-	    const std::string Prop_PCAFirst = "AverageMatching_PCA_First";
-	    const std::string Prop_PairSelection = "AverageMatching_PairSelection";
-	    const std::string Prop_NoiseLevel = "AverageMatching_NoiseLevel";
-	    const std::string Prop_Holes = "AverageMatching_Holes";
-
-	    AverageMatchingError();
-	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);
-	    virtual void printResults();
-	    virtual void writeResults();
-	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, bool pcaFirst = false);
-	    void initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
-	    std::string getPairSelectionFlags(dbgl::Bitmask<> flags);
     };
 }
 

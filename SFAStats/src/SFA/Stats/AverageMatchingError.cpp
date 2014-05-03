@@ -12,10 +12,6 @@
 
 namespace sfa
 {
-    AverageMatchingError::AverageMatchingError()
-    {
-    }
-
     void AverageMatchingError::run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props)
     {
 	LOG->info("Starting rigid body point-to-point ICP statistics test suite...");
