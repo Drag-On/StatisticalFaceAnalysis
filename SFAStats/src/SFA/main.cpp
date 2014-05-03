@@ -18,6 +18,7 @@
 #include "SFA/ICP/RigidPointICP.h"
 #include "SFA/Stats/StatRunner.h"
 #include "SFA/Stats/AverageMatchingError.h"
+#include "SFA/Stats/PCAMatchingError.h"
 
 using namespace dbgl;
 using namespace sfa;
@@ -68,6 +69,11 @@ StatRunner* selectStatRunner()
     {
 	LOG->info("Using AverageMatchingError StatRunner.");
 	return new AverageMatchingError;
+    }
+    else if(properties.getStringValue("StatRunner") == "PCAMatchingError")
+    {
+	LOG->info("Using PCAMatchingError StatRunner.");
+	return new PCAMatchingError;
     }
     else
     {
