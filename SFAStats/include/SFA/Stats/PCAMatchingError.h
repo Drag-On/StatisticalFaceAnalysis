@@ -35,12 +35,14 @@ namespace sfa
 	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn);
 	    void initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
 
+	    const std::string Prop_RandCycles = "PCAMatching_RandCycles";
 	    const std::string Prop_ToRot = "PCAMatching_ToRot";
 	    const std::string Prop_FromRot = "PCAMatching_FromRot";
 	    const std::string Prop_RotSteps = "PCAMatching_RotSteps";
 	    const std::string Prop_NoiseLevel = "PCAMatching_NoiseLevel";
 	    const std::string Prop_Holes = "PCAMatching_Holes";
 
+	    unsigned int randCycles = 100;
 	    double toRot = dbgl::pi_4();
 	    double fromRot = 0;
 	    unsigned int rotSteps = 10;

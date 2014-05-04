@@ -14,11 +14,13 @@ namespace sfa
 {
     void PCAMatchingError::run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props)
     {
-	LOG->info("Starting rigid body point-to-point ICP statistics test suite...");
+	LOG->info("Starting PCAMatchingError test suite...");
 
 	this->props = &props;
 
 	// Initialize variables from properties
+	if(props.getStringValue(Prop_RandCycles) != "")
+	    randCycles = props.getIntValue(Prop_RandCycles);
 	if(props.getStringValue(Prop_ToRot) != "")
 	    toRot = props.getFloatValue(Prop_ToRot);
 	if(props.getStringValue(Prop_FromRot) != "")
@@ -62,24 +64,36 @@ namespace sfa
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
 	    // Log
 	    LOG->info("%d...", rotCycle);
-	    // Reset original vertex positions
-	    src = original;
-	    // Displace src
-	    if (curRotation > 0)
-		src.rotateRandom(curRotation, curRotation);
-	    // Store matching error before PCA
-	    unsigned int matches = 0;
-	    algoResults[rotCycle] = nn.computeError(src, dest);
-	    realResults[rotCycle] = nn.computeError(src, dest, correctPairs, &matches);
-	    amountOfMatches[rotCycle] = matches;
-	    // Do PCA alignment
-	    pca_icp.reset();
-	    pca_icp.calcNextStep(src, dest); // First dimension
-	    pca_icp.calcNextStep(src, dest); // Second dimension
-	    // Calculate error again
-	    algoResults[rotCycle] = algoResults[rotCycle] - nn.computeError(src, dest);
-	    realResults[rotCycle] = realResults[rotCycle] - nn.computeError(src, dest, correctPairs, &matches);
-	    amountOfMatches[rotCycle] = matches - amountOfMatches[rotCycle];
+	    double curNNMatching = 0;
+	    double curRealMatching = 0;
+	    unsigned int curAmountOfMatches = 0;
+	    for(unsigned int i = 0; i < randCycles; i++)
+	    {
+		// Reset original vertex positions
+		src = original;
+		// Displace src
+		if (curRotation > 0)
+		    src.rotateRandom(curRotation, curRotation);
+		// Store matching error before PCA
+		curNNMatching = nn.computeError(src, dest);
+		curRealMatching = nn.computeError(src, dest, correctPairs, &curAmountOfMatches);
+		// Do PCA alignment
+		pca_icp.reset();
+		pca_icp.calcNextStep(src, dest); // First dimension
+		pca_icp.calcNextStep(src, dest); // Second dimension
+		// Calculate error again
+		unsigned int matches = 0;
+		algoResults[rotCycle] += curNNMatching - nn.computeError(src, dest);
+		realResults[rotCycle] += curRealMatching - nn.computeError(src, dest, correctPairs, &matches);
+		amountOfMatches[rotCycle] += matches - curAmountOfMatches;
+	    }
+	    // Average results
+	    for(unsigned int i = 0; i < rotSteps; i++)
+	    {
+		algoResults[i] /= randCycles;
+		realResults[i] /= randCycles;
+		amountOfMatches[i] /= randCycles;
+	    }
 	}
     }
 
