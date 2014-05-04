@@ -85,15 +85,12 @@ namespace sfa
 		unsigned int matches = 0;
 		avrgAlgoResults[rotCycle] += curNNMatching - nn.computeError(src, dest);
 		avrgRealResults[rotCycle] += curRealMatching - nn.computeError(src, dest, correctPairs, &matches);
-		avrgAmountOfMatches[rotCycle] += matches - curAmountOfMatches;
+		avrgAmountOfMatches[rotCycle] += (int)matches - (int)curAmountOfMatches;
 	    }
 	    // Average results
-	    for(unsigned int i = 0; i < rotSteps; i++)
-	    {
-		avrgAlgoResults[i] /= randCycles;
-		avrgRealResults[i] /= randCycles;
-		avrgAmountOfMatches[i] /= randCycles;
-	    }
+	    avrgAlgoResults[rotCycle] /= randCycles;
+	    avrgRealResults[rotCycle] /= randCycles;
+	    avrgAmountOfMatches[rotCycle] /= randCycles;
 	}
     }
 
