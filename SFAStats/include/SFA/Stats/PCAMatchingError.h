@@ -49,9 +49,9 @@ namespace sfa
 	    unsigned int holes = 0;
 	    unsigned int noiseLevel = 0;
 	    std::vector<unsigned int> correctPairs;
-	    std::vector<double> algoResults;
-	    std::vector<double> realResults;
-	    std::vector<int> amountOfMatches;
+	    std::vector<double> avrgAlgoResults;
+	    std::vector<double> avrgRealResults;
+	    std::vector<double> avrgAmountOfMatches;
 	    dbgl::Properties* props = nullptr;
 	    PCA_ICP pca_icp;
 	    unsigned int srcVertices = 0;

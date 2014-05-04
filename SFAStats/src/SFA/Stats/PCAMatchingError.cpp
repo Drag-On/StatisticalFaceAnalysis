@@ -29,9 +29,9 @@ namespace sfa
 	    rotSteps = props.getFloatValue(Prop_RotSteps);
 
 	// Allocate enough space
-	algoResults.resize(rotSteps, 0);
-	realResults.resize(rotSteps, 0);
-	amountOfMatches.resize(rotSteps, 0);
+	avrgAlgoResults.resize(rotSteps, 0);
+	avrgRealResults.resize(rotSteps, 0);
+	avrgAmountOfMatches.resize(rotSteps, 0);
 
 	srcVertices = src.getAmountOfVertices();
 	destVertices = dest.getAmountOfVertices();
@@ -83,16 +83,16 @@ namespace sfa
 		pca_icp.calcNextStep(src, dest); // Second dimension
 		// Calculate error again
 		unsigned int matches = 0;
-		algoResults[rotCycle] += curNNMatching - nn.computeError(src, dest);
-		realResults[rotCycle] += curRealMatching - nn.computeError(src, dest, correctPairs, &matches);
-		amountOfMatches[rotCycle] += matches - curAmountOfMatches;
+		avrgAlgoResults[rotCycle] += curNNMatching - nn.computeError(src, dest);
+		avrgRealResults[rotCycle] += curRealMatching - nn.computeError(src, dest, correctPairs, &matches);
+		avrgAmountOfMatches[rotCycle] += matches - curAmountOfMatches;
 	    }
 	    // Average results
 	    for(unsigned int i = 0; i < rotSteps; i++)
 	    {
-		algoResults[i] /= randCycles;
-		realResults[i] /= randCycles;
-		amountOfMatches[i] /= randCycles;
+		avrgAlgoResults[i] /= randCycles;
+		avrgRealResults[i] /= randCycles;
+		avrgAmountOfMatches[i] /= randCycles;
 	    }
 	}
     }
@@ -127,9 +127,9 @@ namespace sfa
 	for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	{
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-	    LOG->info("Rotation step %d (%f rad): %f NN error.", rotCycle, curRotation, algoResults[rotCycle]);
-	    LOG->info("Rotation step %d (%f rad): %f real error.", rotCycle, curRotation, realResults[rotCycle]);
-	    LOG->info("Rotation step %d (%f rad): %f matches.", rotCycle, curRotation, amountOfMatches[rotCycle]);
+	    LOG->info("Rotation step %d (%f rad): %f NN error.", rotCycle, curRotation, avrgAlgoResults[rotCycle]);
+	    LOG->info("Rotation step %d (%f rad): %f real error.", rotCycle, curRotation, avrgRealResults[rotCycle]);
+	    LOG->info("Rotation step %d (%f rad): %f matches.", rotCycle, curRotation, avrgAmountOfMatches[rotCycle]);
 	}
     }
 
@@ -154,7 +154,7 @@ namespace sfa
 	    for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	    {
 		double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-		file << curRotation << "\t" << algoResults[rotCycle] << "\n";
+		file << curRotation << "\t" << avrgAlgoResults[rotCycle] << "\n";
 	    }
 	    file.close();
 	}
@@ -174,7 +174,7 @@ namespace sfa
 	    for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	    {
 		double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-		file << curRotation << "\t" << realResults[rotCycle] << "\n";
+		file << curRotation << "\t" << avrgRealResults[rotCycle] << "\n";
 	    }
 	    file.close();
 	}
@@ -194,7 +194,7 @@ namespace sfa
 	    for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	    {
 		double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-		file << curRotation << "\t" << amountOfMatches[rotCycle] << "\n";
+		file << curRotation << "\t" << avrgAmountOfMatches[rotCycle] << "\n";
 	    }
 	    file.close();
 	}
