@@ -19,6 +19,7 @@
 #include "SFA/Stats/StatRunner.h"
 #include "SFA/Stats/AverageMatchingError.h"
 #include "SFA/Stats/PCAMatchingError.h"
+#include "SFA/Stats/PerformanceBenchmark.h"
 
 using namespace dbgl;
 using namespace sfa;
@@ -74,6 +75,11 @@ StatRunner* selectStatRunner()
     {
 	LOG->info("Using PCAMatchingError StatRunner.");
 	return new PCAMatchingError;
+    }
+    else if(properties.getStringValue("StatRunner") == "PerformanceBenchmark")
+    {
+	LOG->info("Using PerformanceBenchmark StatRunner.");
+	return new PerformanceBenchmark;
     }
     else
     {
