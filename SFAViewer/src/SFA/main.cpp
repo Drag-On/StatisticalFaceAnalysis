@@ -83,7 +83,7 @@ void framebufferResizeCallback(Window::FramebufferResizeEventArgs const& /*args*
 void keyCallback(Window::KeyEventArgs const& args)
 {
     // Check if next ICP step should be executed
-    if (args.key == GLFW_KEY_I && args.action == GLFW_PRESS)
+    if (args.key == Input::Key::KEY_I && args.action == Input::KeyState::PRESSED)
     {
 	LOG->info("Calculating next ICP step!");
 	// Compute next step
@@ -92,7 +92,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Done!");
     }
     // Check if "PCA ICP" should be executed
-    else if (args.key == GLFW_KEY_U && args.action == GLFW_PRESS)
+    else if (args.key == Input::Key::KEY_U && args.action == Input::KeyState::PRESSED)
     {
 	LOG->info("Calculating PCA matching!");
 	// Compute next step
@@ -102,23 +102,23 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Done!");
     }
     // Toggle source and destination mesh visibility
-    else if(args.key == GLFW_KEY_O && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_O && args.action == Input::KeyState::PRESSED)
     {
 	showSource = !showSource;
     }
-    else if(args.key == GLFW_KEY_P && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_P && args.action == Input::KeyState::PRESSED)
     {
 	showDest = !showDest;
     }
     // Randomly rotate or translate
-    else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
+    else if (args.key == Input::Key::KEY_R && args.action == Input::KeyState::PRESSED && args.mods.isSet(Input::Modifier::KEY_CONTROL))
     {
 	double rotation = pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
 	LOG->info("Rotated source mesh by %f.", rotation);
 	pca_icp.reset();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
-    else if (args.key == GLFW_KEY_T && args.action == GLFW_PRESS && args.mods == GLFW_MOD_CONTROL)
+    else if (args.key == Input::Key::KEY_T && args.action == Input::KeyState::PRESSED && args.mods.isSet(Input::Modifier::KEY_CONTROL))
     {
 	double translation = pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
 	LOG->info("Translated source mesh by %f", translation);
@@ -126,7 +126,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	pSourceModel->getBasePointer()->updateBuffers();
     }
     // Reload meshes
-    else if (args.key == GLFW_KEY_R && args.action == GLFW_PRESS)
+    else if (args.key == Input::Key::KEY_R && args.action == Input::KeyState::PRESSED)
     {
 	LOG->info("Reloading meshes...");
 	delete pSourceModel;
@@ -138,19 +138,19 @@ void keyCallback(Window::KeyEventArgs const& args)
 	pca_icp.reset();
     }
     // Log matching error
-    else if(args.key == GLFW_KEY_L && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_L && args.action == Input::KeyState::PRESSED)
     {
 	auto error = nn.computeError(*pSourceModel, *pDestModel);
 	LOG->info("Matching error: %.20f", error);
     }
     // Modify point selection
     Bitmask<> selectionMethod(icp.selectionMethod());
-    if(args.key == GLFW_KEY_F1 && args.action == GLFW_PRESS)
+    if(args.key == Input::Key::KEY_F1 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod = 0;
 	LOG->info("Using all points.");
     }
-    else if(args.key == GLFW_KEY_F2 && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_F2 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_SECOND);
 	if(selectionMethod.isSet(ICP::EVERY_SECOND))
@@ -158,7 +158,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"Every second\".");
     }
-    else if(args.key == GLFW_KEY_F3 && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_F3 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_THIRD);
 	if(selectionMethod.isSet(ICP::EVERY_THIRD))
@@ -166,7 +166,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"Every third\".");
     }
-    else if(args.key == GLFW_KEY_F4 && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_F4 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_FOURTH);
 	if(selectionMethod.isSet(ICP::EVERY_FOURTH))
@@ -174,7 +174,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"Every fourth\".");
     }
-    else if(args.key == GLFW_KEY_F5 && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_F5 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_FIFTH);
 	if(selectionMethod.isSet(ICP::EVERY_FIFTH))
@@ -182,7 +182,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"Every fifth\".");
     }
-    else if(args.key == GLFW_KEY_F6 && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_F6 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::NO_EDGES);
 	if(selectionMethod.isSet(ICP::NO_EDGES))
@@ -190,7 +190,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"No edges\".");
     }
-    else if(args.key == GLFW_KEY_F7 && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_F7 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::RANDOM);
 	if(selectionMethod.isSet(ICP::RANDOM))
@@ -198,13 +198,13 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG->info("Removing filter \"Random\".");
     }
-    else if(args.key == GLFW_KEY_N && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_N && args.action == Input::KeyState::PRESSED)
     {
 	LOG->info("Adding random noise to source model.");
 	pSourceModel->addNoise();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
-    else if(args.key == GLFW_KEY_M && args.action == GLFW_PRESS)
+    else if(args.key == Input::Key::KEY_M && args.action == Input::KeyState::PRESSED)
     {
 	LOG->info("Adding a random hole to source model.");
 	pSourceModel->addHole();
@@ -212,7 +212,7 @@ void keyCallback(Window::KeyEventArgs const& args)
     }
     icp.setSelectionMethod(selectionMethod);
     // DEBUG!
-    if(args.key == GLFW_KEY_H && args.action == GLFW_PRESS)
+    if(args.key == Input::Key::KEY_H && args.action == Input::KeyState::PRESSED)
     {
 	LOG->info("DEBUG!");
 	for(unsigned int i = 0; i < pDestModel->getAmountOfVertices(); i++)
@@ -234,17 +234,17 @@ void updateCallback(Window::UpdateEventArgs const& args)
 
     // Update camera position and rotation
     double x = 0, y = 0;
-    if (pWnd->getKey(GLFW_KEY_W) == GLFW_PRESS)
+    if (pWnd->getKey(Input::Key::KEY_W) == Input::KeyState::DOWN)
 	y += deltaTime * moveSpeed;
-    if (pWnd->getKey(GLFW_KEY_S) == GLFW_PRESS)
+    if (pWnd->getKey(Input::Key::KEY_S) == Input::KeyState::DOWN)
 	y -= deltaTime * moveSpeed;
-    if (pWnd->getKey(GLFW_KEY_A) == GLFW_PRESS)
+    if (pWnd->getKey(Input::Key::KEY_A) == Input::KeyState::DOWN)
 	x -= deltaTime * moveSpeed;
-    if (pWnd->getKey(GLFW_KEY_D) == GLFW_PRESS)
+    if (pWnd->getKey(Input::Key::KEY_D) == Input::KeyState::DOWN)
 	x += deltaTime * moveSpeed;
-    if (pWnd->getKey(GLFW_KEY_E) == GLFW_PRESS)
+    if (pWnd->getKey(Input::Key::KEY_E) == Input::KeyState::DOWN)
     	camDist -= deltaTime * moveSpeed;
-    if (pWnd->getKey(GLFW_KEY_Q) == GLFW_PRESS)
+    if (pWnd->getKey(Input::Key::KEY_Q) == Input::KeyState::DOWN)
 	camDist += deltaTime * moveSpeed;
     moveCamera(x, y);
 
