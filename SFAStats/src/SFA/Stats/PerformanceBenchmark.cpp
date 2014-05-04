@@ -63,6 +63,8 @@ namespace sfa
 		averageTranslation += src.translateRandom(maxTrans, minTrans);
 	    for (unsigned int j = 0; j < icpCycles; j++)
 	    {
+		if(typeid(icp) == typeid(PCA_ICP))
+		    dynamic_cast<PCA_ICP*>(&icp)->reset();
 		// Start time
 		steady_clock::time_point start = steady_clock::now();
 		// Calculate next icp step
