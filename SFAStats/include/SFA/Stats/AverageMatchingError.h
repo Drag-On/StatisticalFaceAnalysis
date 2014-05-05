@@ -62,6 +62,7 @@ namespace sfa
 	    double averageRealErrorBegin = 0;
 	    double averageRotation = 0;
 	    double averageTranslation = 0;
+	    double averageSelectedPoints = 0;
 	    PCA_ICP pca_icp;
 	    std::string pairSelection;
 	    unsigned int srcVertices = 0;

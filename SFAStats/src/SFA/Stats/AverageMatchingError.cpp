@@ -81,13 +81,13 @@ namespace sfa
 		averageRotation += src.rotateRandom(maxRot, minRot);
 	    if (maxTrans > 0)
 		averageTranslation += src.translateRandom(maxTrans, minTrans);
-	    // Do pca alignment first?
+	    // Calculate error
 	    averageAlgoErrorBegin += nn.computeError(src, dest);
 	    averageRealErrorBegin += nn.computeError(src, dest, correctPairs);
 	    for (unsigned int j = 0; j < icpCycles; j++)
 	    {
 		// Calculate next icp step
-		icp.calcNextStep(src, dest);
+		averageSelectedPoints += icp.calcNextStep(src, dest);
 		// Check matching error
 		unsigned int matches = 0;
 		averageAlgoResults[j] += nn.computeError(src, dest);
@@ -106,6 +106,7 @@ namespace sfa
 	averageRealErrorBegin /= randCycles;
 	averageRotation /= randCycles;
 	averageTranslation /= randCycles;
+	averageSelectedPoints /= (randCycles * icpCycles);
     }
 
     void AverageMatchingError::initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp)
@@ -138,6 +139,7 @@ namespace sfa
 	LOG->info("Average matching error before any ICP steps:");
 	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBegin);
 	LOG->info("Real matching error: %.10f.", averageRealErrorBegin);
+	LOG->info("Average amount of selected points: %.10f.", averageSelectedPoints);
 	LOG->info("Average nearest neighbor matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
 	for(unsigned int i = 0; i < averageAlgoResults.size(); i++)
 	    LOG->info("Step %d: %.10f.", i+1, averageAlgoResults[i]);
@@ -171,6 +173,7 @@ namespace sfa
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "# Average amount of selected points: " << averageSelectedPoints << ".\n";
 	    file << "0" << "\t" << averageAlgoErrorBegin << "\n";
 	    for (unsigned int i = 0; i < averageAlgoResults.size(); i++)
 		file << i+1 << "\t" << averageAlgoResults[i] << "\n";
@@ -193,6 +196,7 @@ namespace sfa
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "# Average amount of selected points: " << averageSelectedPoints << ".\n";
 	    file << "0" << "\t" << averageRealErrorBegin << "\n";
 	    for (unsigned int i = 0; i < averageRealResults.size(); i++)
 		file << i+1 << "\t" << averageRealResults[i] << "\n";
@@ -215,6 +219,7 @@ namespace sfa
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "# Average amount of selected points: " << averageSelectedPoints << ".\n";
 	    for (unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
 		file << i+1 << "\t" << averageAmountOfMatches[i] << "\n";
 	    file.close();
