@@ -200,12 +200,13 @@ namespace sfa
 	Eigen::Vector3d axis = Eigen::Vector3d::Random();
 	axis.normalize();
 	Eigen::AngleAxis<double> aa(angle, axis);
-	for(unsigned int i = 0; i < m_pMesh->vertices().size(); i++)
+	for(unsigned int i = 0; i < getAmountOfVertices(); i++)
 	{
-	    auto vert = m_pMesh->getVertices()[i];
-	    Eigen::Vector3d coords(vert.x(), vert.y(), vert.z());
+	    auto coords = getVertex(i).coords;
 	    coords = aa.toRotationMatrix() * coords;
-	    m_pMesh->vertices()[i] = dbgl::Vec3f(coords[0], coords[1], coords[2]);
+	    auto normal = getVertex(i).normal;
+	    normal = aa.toRotationMatrix() * normal;
+	    setVertex(i, coords, normal);
 	}
 	analyzeMesh();
 	return angle;
