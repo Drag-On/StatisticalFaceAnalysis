@@ -16,11 +16,11 @@ namespace sfa
     {
     }
 
-    void PCA_ICP::calcNextStep(AbstractMesh& source, AbstractMesh const& dest)
+    unsigned int PCA_ICP::calcNextStep(AbstractMesh& source, AbstractMesh const& dest)
     {
 	// Only 3 principal components...
 	if(m_index >= 3)
-	    return;
+	    return 0;
 
 	auto srcAvg = source.getAverage();
 	auto destAvg = dest.getAverage();
@@ -120,6 +120,8 @@ namespace sfa
 
 	// Increment index
 	m_index++;
+
+	return source.getAmountOfVertices();
     }
 
     void PCA_ICP::reset()

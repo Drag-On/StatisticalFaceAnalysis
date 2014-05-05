@@ -20,7 +20,7 @@ namespace sfa
     {
     }
 
-    void RigidPointICP::calcNextStep(AbstractMesh& source, AbstractMesh const& dest)
+    unsigned int RigidPointICP::calcNextStep(AbstractMesh& source, AbstractMesh const& dest)
     {
 	// Select points
 	auto sourcePoints = selectPoints(source);
@@ -75,6 +75,8 @@ namespace sfa
 	}
 	// Clear nearest neighbor cache
 	m_nearestNeighbor.clearCache();
+
+	return sourcePoints.size();
     }
 }
 

@@ -52,8 +52,9 @@ namespace sfa
 	     * @brief Calculates the next ICP step and applies it to source
 	     * @param source Source model
 	     * @param dest Destination model
+	     * @return The amount of points used for the calculation
 	     */
-	    virtual void calcNextStep(AbstractMesh& source, AbstractMesh const& dest) = 0;
+	    virtual unsigned int calcNextStep(AbstractMesh& source, AbstractMesh const& dest) = 0;
 	    /**
 	     * @brief Selects a certain amount of points on the source mesh
 	     * @param source Source model

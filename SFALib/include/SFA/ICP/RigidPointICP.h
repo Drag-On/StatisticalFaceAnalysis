@@ -30,7 +30,7 @@ namespace sfa
 	     */
 	    RigidPointICP(NearestNeighbor& nn, AbstractLog* pLog = nullptr);
 	    virtual ~RigidPointICP();
-	    virtual void calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
+	    virtual unsigned int calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
 	private:
 	    NearestNeighbor& m_nearestNeighbor;
     };

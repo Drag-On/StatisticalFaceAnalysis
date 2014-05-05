@@ -39,7 +39,7 @@ namespace sfa
 	     * @param source Source mesh
 	     * @param dest Destination mesh
 	     */
-	    virtual void calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
+	    virtual unsigned int calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
 	    /**
 	     * @brief Resets the the amount of already aligned dimensions to zero
 	     */
