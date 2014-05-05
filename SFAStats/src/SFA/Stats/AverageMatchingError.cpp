@@ -31,9 +31,6 @@ namespace sfa
 	    minRot = props.getFloatValue(Prop_MinRot);
 	if(props.getStringValue(Prop_MinTrans) != "")
 	    minTrans = props.getFloatValue(Prop_MinTrans);
-	bool pcaFirst = false;
-	if(props.getStringValue(Prop_PCAFirst) != "")
-	    pcaFirst = props.getBoolValue(Prop_PCAFirst);
 
 	int pointSelection = 0;
 	if(props.getStringValue(Prop_PairSelection) != "")
@@ -64,10 +61,10 @@ namespace sfa
 	    src.addHole();
 
 	initCorrectPairs(src, dest, nn, icp);
-	testWithModel(src, dest, nn, icp, pcaFirst);
+	testWithModel(src, dest, nn, icp);
     }
 
-    void AverageMatchingError::testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, bool pcaFirst)
+    void AverageMatchingError::testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp)
     {
 	// Store original model
 	Model original(src);
@@ -85,15 +82,8 @@ namespace sfa
 	    if (maxTrans > 0)
 		averageTranslation += src.translateRandom(maxTrans, minTrans);
 	    // Do pca alignment first?
-	    averageAlgoErrorBeforePCA += nn.computeError(src, dest);
-	    averageRealErrorBeforePCA += nn.computeError(src, dest, correctPairs);
-	    if(pcaFirst)
-	    {
-		pca_icp.calcNextStep(src, dest); // First dimension
-		pca_icp.calcNextStep(src, dest); // Second dimension
-		averageAlgoErrorAfterPCA += nn.computeError(src, dest);
-		averageRealErrorAfterPCA += nn.computeError(src, dest, correctPairs);
-	    }
+	    averageAlgoErrorBegin += nn.computeError(src, dest);
+	    averageRealErrorBegin += nn.computeError(src, dest, correctPairs);
 	    for (unsigned int j = 0; j < icpCycles; j++)
 	    {
 		// Calculate next icp step
@@ -112,10 +102,8 @@ namespace sfa
 	    averageRealResults[i] /= randCycles;
 	    averageAmountOfMatches[i] /= randCycles;
 	}
-	averageAlgoErrorBeforePCA /= randCycles;
-	averageAlgoErrorAfterPCA /= randCycles;
-	averageRealErrorBeforePCA /= randCycles;
-	averageRealErrorAfterPCA /= randCycles;
+	averageAlgoErrorBegin /= randCycles;
+	averageRealErrorBegin /= randCycles;
 	averageRotation /= randCycles;
 	averageTranslation /= randCycles;
     }
@@ -148,11 +136,8 @@ namespace sfa
     {
 	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
 	LOG->info("Average matching error before any ICP steps:");
-	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBeforePCA);
-	LOG->info("Real matching error: %.10f.", averageRealErrorBeforePCA);
-	LOG->info("Average matching error after PCA alignment:");
-	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorAfterPCA);
-	LOG->info("Real matching error: %.10f.", averageRealErrorAfterPCA);
+	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBegin);
+	LOG->info("Real matching error: %.10f.", averageRealErrorBegin);
 	LOG->info("Average nearest neighbor matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
 	for(unsigned int i = 0; i < averageAlgoResults.size(); i++)
 	    LOG->info("Step %d: %.10f.", i+1, averageAlgoResults[i]);
@@ -168,8 +153,6 @@ namespace sfa
     {
 	// Generate file name
 	std::string fileName = "Results_Avrg_Err_";
-	if(props->getBoolValue(Prop_PCAFirst))
-	    fileName += "PCA_";
 	fileName += pairSelection;
 
 	// Write average nearest neighbor error
@@ -188,15 +171,9 @@ namespace sfa
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
-	    file << "0" << "\t" << averageAlgoErrorBeforePCA << "\n";
-	    unsigned int offset = 0;
-	    if(averageAlgoErrorAfterPCA > 0)
-	    {
-		file << "1" << "\t" << averageAlgoErrorAfterPCA << "\n";
-		offset = 1;
-	    }
+	    file << "0" << "\t" << averageAlgoErrorBegin << "\n";
 	    for (unsigned int i = 0; i < averageAlgoResults.size(); i++)
-		file << i+1+offset << "\t" << averageAlgoResults[i] << "\n";
+		file << i+1 << "\t" << averageAlgoResults[i] << "\n";
 	    file.close();
 	}
 	else
@@ -216,15 +193,9 @@ namespace sfa
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
-	    file << "0" << "\t" << averageRealErrorBeforePCA << "\n";
-	    unsigned int offset = 0;
-	    if(averageRealErrorAfterPCA > 0)
-	    {
-		file << "1" << "\t" << averageRealErrorAfterPCA << "\n";
-		offset = 1;
-	    }
+	    file << "0" << "\t" << averageRealErrorBegin << "\n";
 	    for (unsigned int i = 0; i < averageRealResults.size(); i++)
-		file << i+1+offset << "\t" << averageRealResults[i] << "\n";
+		file << i+1 << "\t" << averageRealResults[i] << "\n";
 	    file.close();
 	}
 	else

@@ -32,7 +32,7 @@ namespace sfa
 	    virtual void writeResults();
 
 	private:
-	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, bool pcaFirst = false);
+	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
 	    void initCorrectPairs(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp);
 	    std::string getPairSelectionFlags(dbgl::Bitmask<> flags);
 
@@ -42,7 +42,6 @@ namespace sfa
 	    const std::string Prop_MinRot = "AverageMatching_MinRot";
 	    const std::string Prop_MaxTrans = "AverageMatching_MaxTrans";
 	    const std::string Prop_MinTrans = "AverageMatching_MinTrans";
-	    const std::string Prop_PCAFirst = "AverageMatching_PCA_First";
 	    const std::string Prop_PairSelection = "AverageMatching_PairSelection";
 	    const std::string Prop_NoiseLevel = "AverageMatching_NoiseLevel";
 	    const std::string Prop_Holes = "AverageMatching_Holes";
@@ -59,10 +58,8 @@ namespace sfa
 	    std::vector<double> averageAlgoResults;
 	    std::vector<double> averageRealResults;
 	    std::vector<double> averageAmountOfMatches;
-	    double averageAlgoErrorBeforePCA = 0;
-	    double averageAlgoErrorAfterPCA = 0;
-	    double averageRealErrorBeforePCA = 0;
-	    double averageRealErrorAfterPCA = 0;
+	    double averageAlgoErrorBegin = 0;
+	    double averageRealErrorBegin = 0;
 	    double averageRotation = 0;
 	    double averageTranslation = 0;
 	    PCA_ICP pca_icp;
