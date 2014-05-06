@@ -43,6 +43,7 @@ namespace sfa
 	    const std::string Prop_MaxTrans = "AverageMatching_MaxTrans";
 	    const std::string Prop_MinTrans = "AverageMatching_MinTrans";
 	    const std::string Prop_PairSelection = "AverageMatching_PairSelection";
+	    const std::string Prop_PairSelectionPercent = "AverageMatching_PairSelectionPercent";
 	    const std::string Prop_NoiseLevel = "AverageMatching_NoiseLevel";
 	    const std::string Prop_Holes = "AverageMatching_Holes";
 

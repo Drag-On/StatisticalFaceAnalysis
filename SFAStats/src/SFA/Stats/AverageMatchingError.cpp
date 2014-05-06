@@ -35,8 +35,12 @@ namespace sfa
 	int pointSelection = 0;
 	if(props.getStringValue(Prop_PairSelection) != "")
 	    pointSelection = props.getIntValue(Prop_PairSelection);
+	double pairSelectionPercent = 1;
+	if(props.getStringValue(Prop_PairSelectionPercent) != "")
+	    pairSelectionPercent = props.getFloatValue(Prop_PairSelectionPercent);
 	icp.setSelectionMethod(pointSelection);
 	pairSelection = getPairSelectionFlags(icp.getSelectionMethod());
+	icp.setSelectionPercentage(pairSelectionPercent);
 
 	// Allocate enough space
 	averageAlgoResults.resize(icpCycles, 0);
@@ -115,6 +119,8 @@ namespace sfa
 	Model original(src);
 	unsigned int selectionMethod = icp.getSelectionMethod();
 	icp.setSelectionMethod(ICP::NO_EDGES);
+	double selectionPercent = icp.getSelectionPercentage();
+	icp.setSelectionPercentage(1);
 	// Calculate a lot if icp steps to make sure we have the correct pairs
 	for (unsigned int i = 0; i < icpCycles; i++)
 	{
@@ -129,6 +135,7 @@ namespace sfa
 	}
 	// Revert back to original vertex positions
 	icp.setSelectionMethod(selectionMethod);
+	icp.setSelectionPercentage(selectionPercent);
 	src = std::move(original);
 	LOG->info("Initialization done.");
     }
