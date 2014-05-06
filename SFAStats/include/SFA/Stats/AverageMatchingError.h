@@ -55,6 +55,7 @@ namespace sfa
 	    double minTrans = 0;
 	    unsigned int holes = 0;
 	    unsigned int noiseLevel = 0;
+	    double pairSelectionPercent = 1;
 	    std::vector<unsigned int> correctPairs;
 	    std::vector<double> averageAlgoResults;
 	    std::vector<double> averageRealResults;
