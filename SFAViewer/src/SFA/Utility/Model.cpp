@@ -125,6 +125,7 @@ namespace sfa
 
 	// Get normal rotation
 	auto rot = Eigen::Quaterniond::FromTwoVectors(vertex.normal, normal);
+	rot.normalize();
 
 	// Store in own data structure
 	vertex.coords = coords;
@@ -138,7 +139,7 @@ namespace sfa
 	    m_pMesh->vertices()[i].y() = coords.y();
 	    m_pMesh->vertices()[i].z() = coords.z();
 	    Eigen::Vector3d oldNormal(m_pMesh->normals()[i].x(), m_pMesh->normals()[i].y(), m_pMesh->normals()[i].z());
-	    auto newNormal = rot * oldNormal;
+	    Eigen::Vector3d newNormal = rot * oldNormal;
 	    m_pMesh->normals()[i].x() = newNormal[0];
 	    m_pMesh->normals()[i].y() = newNormal[1];
 	    m_pMesh->normals()[i].z() = newNormal[2];
@@ -200,12 +201,13 @@ namespace sfa
 	Eigen::Vector3d axis = Eigen::Vector3d::Random();
 	axis.normalize();
 	Eigen::AngleAxis<double> aa(angle, axis);
+	Eigen::Quaterniond quat(aa);
 	for(unsigned int i = 0; i < getAmountOfVertices(); i++)
 	{
 	    auto coords = getVertex(i).coords;
-	    coords = aa.toRotationMatrix() * coords;
+	    coords = quat * coords;
 	    auto normal = getVertex(i).normal;
-	    normal = aa.toRotationMatrix() * normal;
+	    normal = quat * normal;
 	    setVertex(i, coords, normal);
 	}
 	analyzeMesh();
