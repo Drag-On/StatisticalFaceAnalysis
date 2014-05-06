@@ -298,7 +298,7 @@ int main(int argc, char** argv)
     // Load properties file from disk
     properties.load("Properties.txt");
     // Interpret arguments
-    // Skip first argument as it's the executable's path
+    // Skip first argument as it's the executables path
     properties.interpret(argc-1, argv+1);
 
     if(!checkProperties())
