@@ -49,6 +49,25 @@ namespace sfa
 	    if(insert)
 		vertices.push_back(vertex);
 	}
+	// Pick n% of those already selected
+	if(m_selectionPercentage < 1)
+	{
+	    double elementsToPick = vertices.size() * m_selectionPercentage;
+	    for(auto it = vertices.begin(); it != vertices.end(); ++it)
+	    {
+		double needed = elementsToPick;
+		double left = std::distance(it, vertices.end());
+		double probability = needed / left;
+		std::uniform_real_distribution<double> rand_double(0, 1);
+		if(rand_double(m_random) <= probability)
+		    elementsToPick--;
+		else
+		{
+		    vertices.erase(it);
+		    --it;
+		}
+	    }
+	}
 	if (m_pLog != nullptr)
 	    m_pLog->info("Selected %d points on source mesh.", vertices.size());
 	return vertices;
@@ -79,5 +98,15 @@ namespace sfa
     void ICP::setSelectionMethod(unsigned int flags)
     {
 	m_selectionMethod = flags;
+    }
+
+    double const& ICP::getSelectionPercentage() const
+    {
+	return m_selectionPercentage;
+    }
+
+    void ICP::setSelectionPercentage(double percentage)
+    {
+	m_selectionPercentage = percentage;
     }
 }

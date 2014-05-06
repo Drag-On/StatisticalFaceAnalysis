@@ -80,11 +80,21 @@ namespace sfa
 	     * @param flags Determines which points are filtered out
 	     */
 	    void setSelectionMethod(unsigned int flags);
+	    /**
+	     * @return Percentage (range of [0,1])
+	     */
+	    double const& getSelectionPercentage() const;
+	    /**
+	     * @brief Modifies the selection percentage
+	     * @param percentage Percentage in the range of [0,1]
+	     */
+	    void setSelectionPercentage(double percentage);
 	protected:
 	    /**
 	     * @brief Bitwise OR-ed parameters from PointSelection
 	     */
 	    unsigned int m_selectionMethod = 0;
+	    double m_selectionPercentage = 1;
 	    /**
 	     * @brief Random number generator
 	     */
