@@ -46,6 +46,7 @@ namespace sfa
 	    const std::string Prop_MaxTrans = "PerformanceBenchmark_MaxTrans";
 	    const std::string Prop_MinTrans = "PerformanceBenchmark_MinTrans";
 	    const std::string Prop_PairSelection = "PerformanceBenchmark_PairSelection";
+	    const std::string Prop_PairSelectionPercent = "PerformanceBenchmark_PairSelectionPercent";
 
 	    unsigned int randCycles = 100;
 	    unsigned int icpCycles = 30;
@@ -56,6 +57,7 @@ namespace sfa
 	    double averageTime = 0;
 	    double averageRotation = 0;
 	    double averageTranslation = 0;
+	    double pairSelectionPercent = 1;
 	    PCA_ICP pca_icp;
 	    std::string pairSelection;
 	    unsigned int srcVertices = 0;

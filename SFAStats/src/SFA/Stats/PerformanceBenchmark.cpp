@@ -35,8 +35,11 @@ namespace sfa
     	int pointSelection = 0;
     	if(props.getStringValue(Prop_PairSelection) != "")
     	    pointSelection = props.getIntValue(Prop_PairSelection);
+	if(props.getStringValue(Prop_PairSelectionPercent) != "")
+	    pairSelectionPercent = props.getFloatValue(Prop_PairSelectionPercent);
     	icp.setSelectionMethod(pointSelection);
     	pairSelection = getPairSelectionFlags(icp.getSelectionMethod());
+    	icp.setSelectionPercentage(pairSelectionPercent);
 
     	srcVertices = src.getAmountOfVertices();
     	destVertices = dest.getAmountOfVertices();
@@ -130,8 +133,10 @@ namespace sfa
 	    flagString += "EVERY_FOURTH___";
 	if(flags.isSet(ICP::EVERY_FIFTH))
 	    flagString += "EVERY_FIFTH___";
-	if(flagString.size() > 3)
-	    flagString.erase(flagString.end() - 3, flagString.end());
+	std::ostringstream s;
+	s << pairSelectionPercent * 100;
+	flagString += s.str();
+	flagString += "_Percent";
 	return flagString;
     }
 }
