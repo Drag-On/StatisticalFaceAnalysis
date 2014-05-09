@@ -1,0 +1,47 @@
+//////////////////////////////////////////////////////////////////////
+/// Statistical Face Analysis
+///
+/// Copyright (c) 2014 by Jan Moeller
+///
+/// This software is provided "as-is" and does not claim to be
+/// complete or free of bugs in any way. It should work, but
+/// it might also begin to hurt your kittens.
+//////////////////////////////////////////////////////////////////////
+
+namespace sfa
+{
+    template <typename Iterator> double StatRunner::calcMean(Iterator begin, Iterator end) const
+    {
+	// Amount of elements
+	double n = std::distance(begin, end);
+	// Compute mean
+	double mean = 0;
+	for(auto it = begin; it != end; ++it)
+	    mean += *it;
+	mean /= n;
+	return mean;
+    }
+
+    template <typename Iterator> double StatRunner::calcVariance(Iterator begin, Iterator end) const
+    {
+	// Amount of elements
+	double n = std::distance(begin, end);
+	// Compute mean
+	double mean = calcMean(begin, end);
+	// Compute variance
+	double variance = 0;
+	for (auto it = begin; it != end; ++it)
+	    variance = (*it - mean) * (*it - mean);
+	variance = 1 / (n - 1) * variance;
+	return variance;
+    }
+
+    template <typename Iterator> double StatRunner::calcStandardDeviation(Iterator begin, Iterator end) const
+    {
+	// Compute variance
+	double variance = calcVariance(begin, end);
+	// Compute standard deviation
+	double standardDeviation = std::sqrt(variance);
+	return standardDeviation;
+    }
+}
