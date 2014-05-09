@@ -57,6 +57,12 @@ namespace sfa
 	    unsigned int noiseLevel = 0;
 	    double pairSelectionPercent = 1;
 	    std::vector<unsigned int> correctPairs;
+	    std::vector<std::vector<double>> algoResults;
+	    std::vector<std::vector<double>> realResults;
+	    std::vector<std::vector<double>> amountOfMatches;
+	    std::vector<double> algoStdDeviation;
+	    std::vector<double> realStdDeviation;
+	    std::vector<double> pairsStdDeviation;
 	    std::vector<double> averageAlgoResults;
 	    std::vector<double> averageRealResults;
 	    std::vector<double> averageAmountOfMatches;

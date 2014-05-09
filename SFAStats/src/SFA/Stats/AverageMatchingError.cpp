@@ -45,6 +45,12 @@ namespace sfa
 	averageAlgoResults.resize(icpCycles, 0);
 	averageRealResults.resize(icpCycles, 0);
 	averageAmountOfMatches.resize(icpCycles, 0);
+	algoResults.resize(icpCycles);
+	realResults.resize(icpCycles);
+	amountOfMatches.resize(icpCycles);
+	algoStdDeviation.resize(icpCycles);
+	realStdDeviation.resize(icpCycles);
+	pairsStdDeviation.resize(icpCycles);
 
 	srcVertices = src.getAmountOfVertices();
 	destVertices = dest.getAmountOfVertices();
@@ -93,9 +99,14 @@ namespace sfa
 		averageSelectedPoints += icp.calcNextStep(src, dest);
 		// Check matching error
 		unsigned int matches = 0;
-		averageAlgoResults[j] += nn.computeError(src, dest);
-		averageRealResults[j] += nn.computeError(src, dest, correctPairs, &matches);
+		double algoError = nn.computeError(src, dest);
+		double realError = nn.computeError(src, dest, correctPairs, &matches);
+		averageAlgoResults[j] += algoError;
+		averageRealResults[j] += realError;
 		averageAmountOfMatches[j] += matches;
+		algoResults[j].push_back(algoError);
+		realResults[j].push_back(realError);
+		amountOfMatches[j].push_back(matches);
 	    }
 	}
 	// Average results
@@ -104,6 +115,9 @@ namespace sfa
 	    averageAlgoResults[i] /= randCycles;
 	    averageRealResults[i] /= randCycles;
 	    averageAmountOfMatches[i] /= randCycles;
+	    algoStdDeviation[i] = calcStandardDeviation(algoResults[i].begin(), algoResults[i].end());
+	    realStdDeviation[i] = calcStandardDeviation(realResults[i].begin(), realResults[i].end());
+	    pairsStdDeviation[i] = calcStandardDeviation(amountOfMatches[i].begin(), amountOfMatches[i].end());
 	}
 	averageAlgoErrorBegin /= randCycles;
 	averageRealErrorBegin /= randCycles;
@@ -142,19 +156,14 @@ namespace sfa
     void AverageMatchingError::printResults()
     {
 	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
-	LOG->info("Average matching error before any ICP steps:");
-	LOG->info("Nearest neighbor matching error: %.10f.", averageAlgoErrorBegin);
-	LOG->info("Real matching error: %.10f.", averageRealErrorBegin);
 	LOG->info("Average amount of selected points: %.10f.", averageSelectedPoints);
 	LOG->info("Average nearest neighbor matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
+	LOG->info("Step \t nn error \t real error \t pair error \t std deviation nn \t std deviation real \t std deviation pair");
+	LOG->info("0 \t %.10f \t %.10f", averageAlgoErrorBegin, averageRealErrorBegin);
 	for(unsigned int i = 0; i < averageAlgoResults.size(); i++)
-	    LOG->info("Step %d: %.10f.", i+1, averageAlgoResults[i]);
-	LOG->info("Average real matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
-	for(unsigned int i = 0; i < averageRealResults.size(); i++)
-	    LOG->info("Step %d: %.10f.", i+1, averageRealResults[i]);
-	LOG->info("Average amount of matching pairs after %d cycles for the first %d icp steps:", randCycles, icpCycles);
-	for(unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
-	    LOG->info("Step %d: %f / %d.", i+1, averageAmountOfMatches[i], correctPairs.size());
+	{
+	    LOG->info("%d \t %.10f \t %.10f \t %.10f / %d \t %.10f \t %.10f \t %.10f", i+1, averageAlgoResults[i], averageRealResults[i], averageAmountOfMatches[i], correctPairs.size(), algoStdDeviation[i], realStdDeviation[i], pairsStdDeviation[i]);
+	}
     }
 
     void AverageMatchingError::writeResults()
@@ -180,9 +189,10 @@ namespace sfa
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "# Average amount of selected points: " << averageSelectedPoints << ".\n";
-	    file << "0" << "\t" << averageAlgoErrorBegin << "\n";
+	    file << "step \t nn error \t std deviation\n";
+	    file << "0" << "\t" << averageAlgoErrorBegin << "\t" << "0\n";
 	    for (unsigned int i = 0; i < averageAlgoResults.size(); i++)
-		file << i+1 << "\t" << averageAlgoResults[i] << "\n";
+		file << i+1 << "\t" << averageAlgoResults[i] << "\t" << algoStdDeviation[i] << "\n";
 	    file.close();
 	}
 	else
@@ -203,9 +213,10 @@ namespace sfa
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "# Average amount of selected points: " << averageSelectedPoints << ".\n";
-	    file << "0" << "\t" << averageRealErrorBegin << "\n";
+	    file << "step \t real error \t std deviation\n";
+	    file << "0" << "\t" << averageRealErrorBegin << "\t" << "0\n";
 	    for (unsigned int i = 0; i < averageRealResults.size(); i++)
-		file << i+1 << "\t" << averageRealResults[i] << "\n";
+		file << i+1 << "\t" << averageRealResults[i] << "\t" << realStdDeviation[i] << "\n";
 	    file.close();
 	}
 	else
@@ -226,8 +237,9 @@ namespace sfa
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
 	    file << "# Average amount of selected points: " << averageSelectedPoints << ".\n";
+	    file << "step \t pair error \t std deviation\n";
 	    for (unsigned int i = 0; i < averageAmountOfMatches.size(); i++)
-		file << i+1 << "\t" << averageAmountOfMatches[i] << "\n";
+		file << i+1 << "\t" << averageAmountOfMatches[i] << "\t" << pairsStdDeviation[i] << "\n";
 	    file.close();
 	}
 	else
