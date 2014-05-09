@@ -44,6 +44,8 @@ namespace sfa
     	srcVertices = src.getAmountOfVertices();
     	destVertices = dest.getAmountOfVertices();
 
+    	times.resize(randCycles * icpCycles);
+
     	testWithModel(src, dest, nn, icp);
     }
 
@@ -75,11 +77,14 @@ namespace sfa
 		// End time
 		steady_clock::time_point end = steady_clock::now();
 		// Store computation time
-		averageTime += duration_cast<microseconds>(end - start).count();
+		double time = duration_cast<microseconds>(end - start).count();
+		times[(i * icpCycles) + j] = time;
 	    }
 	}
 	// Average results
-	averageTime /= randCycles;
+	averageTime = calcMean(times.begin(), times.end());
+	variance = calcVariance(times.begin(), times.end());
+	standardDeviation = calcStandardDeviation(times.begin(), times.end());
 	averageRotation /= randCycles;
 	averageTranslation /= randCycles;
     }
@@ -88,6 +93,8 @@ namespace sfa
     {
 	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), srcVertices, destVertices);
 	LOG->info("Average ICP time: %f microseconds", averageTime);
+	LOG->info("Variance: %f microseconds", variance);
+	LOG->info("Standard deviation: %f microseconds", standardDeviation);
     }
 
     void PerformanceBenchmark::writeResults()
@@ -110,8 +117,12 @@ namespace sfa
 		    << averageTranslation << ".\n";
 	    file << "# Pair selection filter: " << pairSelection.c_str() << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
-	    file << "microseconds\n";
-	    file << averageTime << "\n";
+	    file << "# Average (micro seconds): " << averageTime << "\n";
+	    file << "# Variance: " << variance << "\n";
+	    file << "# Standard deviation: " << standardDeviation << "\n";
+	    file << "Iteration\t micro seconds\n";
+	    for(unsigned int i = 0; i < times.size(); i++)
+		file << i << "\t" << times[i] << "\n";
 	    file.close();
 	}
 	else

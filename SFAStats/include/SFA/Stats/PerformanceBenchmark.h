@@ -54,7 +54,10 @@ namespace sfa
 	    double minRot = 0;
 	    double maxTrans = 0.3;
 	    double minTrans = 0;
+	    std::vector<double> times;
 	    double averageTime = 0;
+	    double variance = 0;
+	    double standardDeviation = 0;
 	    double averageRotation = 0;
 	    double averageTranslation = 0;
 	    double pairSelectionPercent = 1;
