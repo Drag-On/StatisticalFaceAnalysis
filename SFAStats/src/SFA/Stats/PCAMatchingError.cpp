@@ -32,6 +32,12 @@ namespace sfa
 	avrgAlgoResults.resize(rotSteps, 0);
 	avrgRealResults.resize(rotSteps, 0);
 	avrgAmountOfMatches.resize(rotSteps, 0);
+	algoResults.resize(rotSteps);
+	realResults.resize(rotSteps);
+	amountOfMatches.resize(rotSteps);
+	algoStdDeviation.resize(rotSteps, 0);
+	realStdDeviation.resize(rotSteps, 0);
+	pairsStdDeviation.resize(rotSteps, 0);
 
 	srcVertices = src.getAmountOfVertices();
 	destVertices = dest.getAmountOfVertices();
@@ -75,22 +81,33 @@ namespace sfa
 		if (curRotation > 0)
 		    src.rotateRandom(curRotation, curRotation);
 		// Store matching error before PCA
-		curNNMatching = nn.computeError(src, dest);
-		curRealMatching = nn.computeError(src, dest, correctPairs, &curAmountOfMatches);
+		double nnError = nn.computeError(src, dest);
+		double realError = nn.computeError(src, dest, correctPairs, &curAmountOfMatches);
+		curNNMatching = nnError;
+		curRealMatching = realError;
 		// Do PCA alignment
 		pca_icp.reset();
 		pca_icp.calcNextStep(src, dest); // First dimension
 		pca_icp.calcNextStep(src, dest); // Second dimension
 		// Calculate error again
 		unsigned int matches = 0;
-		avrgAlgoResults[rotCycle] += curNNMatching - nn.computeError(src, dest);
-		avrgRealResults[rotCycle] += curRealMatching - nn.computeError(src, dest, correctPairs, &matches);
-		avrgAmountOfMatches[rotCycle] += (int)matches - (int)curAmountOfMatches;
+		double nnErrorChange = curNNMatching - nn.computeError(src, dest);
+		double realErrorChange = curRealMatching - nn.computeError(src, dest, correctPairs, &matches);
+		double pairChange = (int)matches - (int)curAmountOfMatches;
+		avrgAlgoResults[rotCycle] += nnErrorChange;
+		avrgRealResults[rotCycle] += realErrorChange;
+		avrgAmountOfMatches[rotCycle] += pairChange;
+		algoResults[rotCycle].push_back(nnErrorChange);
+		realResults[rotCycle].push_back(realErrorChange);
+		amountOfMatches[rotCycle].push_back(pairChange);
 	    }
 	    // Average results
 	    avrgAlgoResults[rotCycle] /= randCycles;
 	    avrgRealResults[rotCycle] /= randCycles;
 	    avrgAmountOfMatches[rotCycle] /= randCycles;
+	    algoStdDeviation[rotCycle] = calcStandardDeviation(algoResults[rotCycle].begin(), algoResults[rotCycle].end());
+	    realStdDeviation[rotCycle] = calcStandardDeviation(realResults[rotCycle].begin(), realResults[rotCycle].end());
+	    pairsStdDeviation[rotCycle] = calcStandardDeviation(amountOfMatches[rotCycle].begin(), amountOfMatches[rotCycle].end());
 	}
     }
 
@@ -124,9 +141,9 @@ namespace sfa
 	for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	{
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-	    LOG->info("Rotation step %d (%f rad): %f NN error.", rotCycle, curRotation, avrgAlgoResults[rotCycle]);
-	    LOG->info("Rotation step %d (%f rad): %f real error.", rotCycle, curRotation, avrgRealResults[rotCycle]);
-	    LOG->info("Rotation step %d (%f rad): %f matches.", rotCycle, curRotation, avrgAmountOfMatches[rotCycle]);
+	    LOG->info("Rotation step %d (%f rad): %f NN error. Std deviation: %f.", rotCycle, curRotation, avrgAlgoResults[rotCycle], algoStdDeviation[rotCycle]);
+	    LOG->info("Rotation step %d (%f rad): %f real error. Std deviation: %f.", rotCycle, curRotation, avrgRealResults[rotCycle], realStdDeviation[rotCycle]);
+	    LOG->info("Rotation step %d (%f rad): %f matches. Std deviation: %f.", rotCycle, curRotation, avrgAmountOfMatches[rotCycle], pairsStdDeviation[rotCycle]);
 	}
     }
 
@@ -148,10 +165,11 @@ namespace sfa
 	    file << "# Rotation in " << rotSteps << " steps from " << fromRot << " to " << toRot << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "rotation\tnn error\tstd deviation\n";
 	    for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	    {
 		double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-		file << curRotation << "\t" << avrgAlgoResults[rotCycle] << "\n";
+		file << curRotation << "\t" << avrgAlgoResults[rotCycle] << "\t" << algoStdDeviation[rotCycle] << "\n";
 	    }
 	    file.close();
 	}
@@ -168,10 +186,11 @@ namespace sfa
 	    file << "# Rotation in " << rotSteps << " from " << fromRot << " to " << toRot << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "rotation\treal error\tstd deviation\n";
 	    for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	    {
 		double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-		file << curRotation << "\t" << avrgRealResults[rotCycle] << "\n";
+		file << curRotation << "\t" << avrgRealResults[rotCycle] << "\t" << realStdDeviation[rotCycle] << "\n";
 	    }
 	    file.close();
 	}
@@ -188,10 +207,11 @@ namespace sfa
 	    file << "# Rotation in " << rotSteps << " from " << fromRot << " to " << toRot << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
+	    file << "rotation\tpair error\tstd deviation\n";
 	    for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	    {
 		double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-		file << curRotation << "\t" << avrgAmountOfMatches[rotCycle] << "\n";
+		file << curRotation << "\t" << avrgAmountOfMatches[rotCycle] << "\t" << pairsStdDeviation[rotCycle] << "\n";
 	    }
 	    file.close();
 	}

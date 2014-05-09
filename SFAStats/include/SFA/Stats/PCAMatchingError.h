@@ -52,6 +52,12 @@ namespace sfa
 	    std::vector<double> avrgAlgoResults;
 	    std::vector<double> avrgRealResults;
 	    std::vector<double> avrgAmountOfMatches;
+	    std::vector<std::vector<double>> algoResults;
+	    std::vector<std::vector<double>> realResults;
+	    std::vector<std::vector<double>> amountOfMatches;
+	    std::vector<double> algoStdDeviation;
+	    std::vector<double> realStdDeviation;
+	    std::vector<double> pairsStdDeviation;
 	    dbgl::Properties* props = nullptr;
 	    PCA_ICP pca_icp;
 	    unsigned int srcVertices = 0;
