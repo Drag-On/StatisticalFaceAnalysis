@@ -211,6 +211,14 @@ void keyCallback(Window::KeyEventArgs const& args)
 	pSourceModel->getBasePointer()->updateBuffers();
     }
     icp.setSelectionMethod(selectionMethod);
+    // Swap src and dest?
+    if(args.key == Input::Key::KEY_GRAVE_ACCENT && args.action == Input::KeyState::PRESSED)
+    {
+	LOG->info("Swapping models.");
+	std::swap(pSourceModel, pDestModel);
+	pSourceModel->refresh();
+	pDestModel->refresh();
+    }
     // DEBUG!
     if(args.key == Input::Key::KEY_H && args.action == Input::KeyState::PRESSED)
     {

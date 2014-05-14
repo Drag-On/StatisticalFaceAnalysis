@@ -49,6 +49,7 @@ namespace sfa
 	    virtual void setVertex(unsigned int n, Eigen::Vector3d const& coords, Eigen::Vector3d const& normal);
 	    virtual unsigned int getAmountOfVertices() const;
 	    Eigen::Vector3d getAverage() const;
+	    void refresh();
 	    void addNoise();
 	    void addHole();
 	    double rotateRandom(double maxAngle, double minAngle = 0);

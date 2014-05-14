@@ -163,6 +163,11 @@ namespace sfa
 	return average;
     }
 
+    void Model::refresh()
+    {
+	analyzeMesh();
+    }
+
     void Model::addNoise()
     {
 	// Initialize random number generator
