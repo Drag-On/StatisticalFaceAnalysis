@@ -38,7 +38,7 @@ namespace sfa
     {
 	public:
 	    Model();
-	    Model(std::string path);
+	    Model(std::string path, bool optimize = false);
 	    Model(Model const& other);
 	    Model(Model&& other);
 	    virtual ~Model();

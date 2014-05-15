@@ -23,11 +23,11 @@ namespace sfa
 	m_random.seed(rd());
     }
 
-    Model::Model(std::string path)
+    Model::Model(std::string path, bool optimize)
     {
 	dbgl::OBJMeshLoader loader;
 	loader.setNormalCompatibilityAngle(std::numeric_limits<float>::max());
-	m_pMesh = dbgl::Mesh::load(loader, path, 0 /* dbgl::Mesh::Optimize */);
+	m_pMesh = dbgl::Mesh::load(loader, path, optimize ? dbgl::Mesh::Optimize : 0);
 	analyzeMesh();
 
 	std::random_device rd;
