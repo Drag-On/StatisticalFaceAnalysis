@@ -26,6 +26,7 @@
 #include "SFA/Utility/Log.h"
 #include "SFA/NearestNeighbor/KdTreeNearestNeighbor.h"
 #include "SFA/ICP/RigidPointICP.h"
+#include "SFA/ICP/RigidPlaneICP.h"
 #include "SFA/ICP/PCA_ICP.h"
 
 using namespace std;
@@ -47,7 +48,9 @@ bool showSource = true, showDest = true;
 sfa::Log logfile;
 
 KdTreeNearestNeighbor nn;
-RigidPointICP icp(nn, &logfile);
+RigidPointICP rigidPoint_icp(nn, &logfile);
+RigidPlaneICP rigidPlane_icp(nn, &logfile);
+ICP* icp = &rigidPoint_icp;
 PCA_ICP pca_icp;
 
 Properties properties;
@@ -87,7 +90,7 @@ void keyCallback(Window::KeyEventArgs const& args)
     {
 	LOG->info("Calculating next ICP step!");
 	// Compute next step
-	icp.calcNextStep(*pSourceModel, *pDestModel);
+	icp->calcNextStep(*pSourceModel, *pDestModel);
 	pSourceModel->getBasePointer()->updateBuffers();
 	LOG->info("Done!");
     }
@@ -144,7 +147,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG->info("Matching error: %.20f", error);
     }
     // Modify point selection
-    Bitmask<> selectionMethod(icp.selectionMethod());
+    Bitmask<> selectionMethod(icp->selectionMethod());
     if(args.key == Input::Key::KEY_F1 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod = 0;
@@ -210,7 +213,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	pSourceModel->addHole();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
-    icp.setSelectionMethod(selectionMethod);
+    icp->setSelectionMethod(selectionMethod);
     // Swap src and dest?
     if(args.key == Input::Key::KEY_GRAVE_ACCENT && args.action == Input::KeyState::PRESSED)
     {
@@ -218,6 +221,20 @@ void keyCallback(Window::KeyEventArgs const& args)
 	std::swap(pSourceModel, pDestModel);
 	pSourceModel->refresh();
 	pDestModel->refresh();
+    }
+    // Toggle icp algorithm
+    if(args.key == Input::Key::KEY_BACKSPACE && args.action == Input::KeyState::PRESSED)
+    {
+	if(typeid(*icp) == typeid(RigidPlaneICP))
+	{
+	    icp = &rigidPoint_icp;
+	    LOG->info("Using rigid-body point-to-point ICP.");
+	}
+	else
+	{
+	    icp = &rigidPlane_icp;
+	    LOG->info("Using rigid-body point-to-plane ICP.");
+	}
     }
     // DEBUG!
     if(args.key == Input::Key::KEY_H && args.action == Input::KeyState::PRESSED)
