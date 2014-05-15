@@ -85,6 +85,7 @@ namespace sfa
 //	if (a.rows() < a.cols())
 //	    return pseudoInverse(MatrixType(a.transpose()), epsilon).transpose();
 
+	// Note: JacobiSVD may run into overflow issues and produce NaNs
 	Eigen::JacobiSVD<MatrixType> svd(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
 	typename MatrixType::Scalar tolerance = epsilon * std::max(a.cols(), a.rows()) *
 		svd.singularValues().array().abs().maxCoeff();
