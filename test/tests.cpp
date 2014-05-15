@@ -14,6 +14,7 @@
 // Prototypes
 void testNearestNeighbor();
 void testRigidPointICP();
+void testRigidPlaneICP();
 
 int main()
 {
@@ -22,6 +23,7 @@ int main()
 
     testNearestNeighbor();
     testRigidPointICP();
+    testRigidPlaneICP();
 
     LOG->info("Done!");
     dbgl::WindowManager::get()->terminate();
