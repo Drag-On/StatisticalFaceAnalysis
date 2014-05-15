@@ -11,9 +11,11 @@
 #ifndef RIGIDPLANEICP_H_
 #define RIGIDPLANEICP_H_
 
+#include <limits>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <Eigen/LU>
+#include <Eigen/SVD>
 #include "ICP.h"
 #include "SFA/NearestNeighbor/NearestNeighbor.h"
 
@@ -31,6 +33,9 @@ namespace sfa
 	    virtual ~RigidPlaneICP();
 	    virtual unsigned int calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
 	private:
+	    template<typename MatrixType> MatrixType pseudoInverse(const MatrixType &a,
+		    double epsilon = std::numeric_limits<typename MatrixType::Scalar>::epsilon());
+
 	    NearestNeighbor& m_nearestNeighbor;
     };
 }

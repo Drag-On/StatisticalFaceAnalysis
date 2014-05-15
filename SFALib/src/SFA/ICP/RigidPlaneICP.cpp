@@ -39,22 +39,23 @@ namespace sfa
 	}
 	// Setup values
 	auto amountOfPoints = sourcePoints.size();
-	Eigen::MatrixXd A(6, amountOfPoints);
+	Eigen::MatrixXd A(amountOfPoints, 6);
 	Eigen::VectorXd b(amountOfPoints);
 	for(unsigned int i = 0; i < amountOfPoints; i++)
 	{
 	    Eigen::Vector3d c = sourcePoints[i].coords.cross(sourcePoints[i].normal);
 	    Eigen::Vector3d n = sourcePoints[i].normal;
-	    A(0, i) = c[0];
-	    A(1, i) = c[1];
-	    A(2, i) = c[2];
-	    A(3, i) = n[0];
-	    A(4, i) = n[1];
-	    A(5, i) = n[2];
+	    A(i, 0) = c[0];
+	    A(i, 1) = c[1];
+	    A(i, 2) = c[2];
+	    A(i, 3) = n[0];
+	    A(i, 4) = n[1];
+	    A(i, 5) = n[2];
 	    b(i) = n.dot(nearestPoints[i].coords) - n.dot(sourcePoints[i].coords);
 	}
 	// Calculate values
-	Eigen::Vector3d x = A.inverse() * b; // x = (alpha, beta, gamma, tx, ty, tz)
+	Eigen::MatrixXd psInv = pseudoInverse(A);
+	Eigen::VectorXd x = psInv * b; // x = (alpha, beta, gamma, tx, ty, tz)
 	// Rotation matrix
 	Eigen::Matrix3d R;
 	R = Eigen::AngleAxis<double>(x[0], Eigen::Vector3d::UnitX())
@@ -76,5 +77,18 @@ namespace sfa
 	m_nearestNeighbor.clearCache();
 
 	return sourcePoints.size();
+    }
+
+    template<typename MatrixType> MatrixType RigidPlaneICP::pseudoInverse(const MatrixType &a,
+	    double epsilon)
+    {
+//	if (a.rows() < a.cols())
+//	    return pseudoInverse(MatrixType(a.transpose()), epsilon).transpose();
+
+	Eigen::JacobiSVD<MatrixType> svd(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
+	typename MatrixType::Scalar tolerance = epsilon * std::max(a.cols(), a.rows()) *
+		svd.singularValues().array().abs().maxCoeff();
+	return svd.matrixV() * MatrixType((svd.singularValues().array().abs() > tolerance).select(
+		svd.singularValues().array().inverse(), 0)).asDiagonal() * svd.matrixU().adjoint();
     }
 }
