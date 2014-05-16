@@ -153,9 +153,11 @@ namespace sfa
 	LOG->info("Initialization done.");
     }
 
-    void AverageMatchingError::printResults()
+    void AverageMatchingError::printResults(dbgl::Properties& props)
     {
 	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
+	LOG->info("Source: %s", props.getStringValue("src").c_str());
+	LOG->info("Destination: %s", props.getStringValue("dest").c_str());
 	LOG->info("Average amount of selected points: %.10f.", averageSelectedPoints);
 	LOG->info("Average nearest neighbor matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
 	LOG->info("Step \t nn error \t real error \t pair error \t std deviation nn \t std deviation real \t std deviation pair");
@@ -166,7 +168,7 @@ namespace sfa
 	}
     }
 
-    void AverageMatchingError::writeResults()
+    void AverageMatchingError::writeResults(dbgl::Properties& props)
     {
 	// Generate file name
 	std::string fileName = "Results_Avrg_Err_";
@@ -181,6 +183,8 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNameNNError << "\n";
+	    file << "# Source: " << props.getStringValue("src") << "\n";
+	    file << "# Destination: " << props.getStringValue("dest") << "\n";
 	    file << "# Rotation in the range of [" << maxRot << ", " << minRot << "], average: "
 		    << averageRotation << ".\n";
 	    file << "# Translation in the range of [" << maxTrans << ", " << minTrans << "], average: "
@@ -205,6 +209,8 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNameRealError << "\n";
+	    file << "# Source: " << props.getStringValue("src") << "\n";
+	    file << "# Destination: " << props.getStringValue("dest") << "\n";
 	    file << "# Rotation in the range of [" << maxRot << ", " << minRot << "], average: "
 		    << averageRotation << ".\n";
 	    file << "# Translation in the range of [" << maxTrans << ", " << minTrans << "], average: "
@@ -229,6 +235,8 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNamePairs << "\n";
+	    file << "# Source: " << props.getStringValue("src") << "\n";
+	    file << "# Destination: " << props.getStringValue("dest") << "\n";
 	    file << "# Rotation in the range of [" << maxRot << ", " << minRot << "], average: "
 		    << averageRotation << ".\n";
 	    file << "# Translation in the range of [" << maxTrans << ", " << minTrans << "], average: "

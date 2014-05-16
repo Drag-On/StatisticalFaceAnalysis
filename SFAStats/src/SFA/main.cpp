@@ -16,6 +16,7 @@
 #include "SFA/NearestNeighbor/KdTreeNearestNeighbor.h"
 #include "SFA/ICP/ICP.h"
 #include "SFA/ICP/RigidPointICP.h"
+#include "SFA/ICP/RigidPlaneICP.h"
 #include "SFA/ICP/PCA_ICP.h"
 #include "SFA/Stats/StatRunner.h"
 #include "SFA/Stats/AverageMatchingError.h"
@@ -57,6 +58,11 @@ ICP* selectICP(NearestNeighbor& nn)
     {
 	LOG->info("Using rigid body point-to-point ICP.");
 	return new RigidPointICP(nn);
+    }
+    else if(properties.getStringValue("ICP") == "RigidPoint2Plane")
+    {
+	LOG->info("Using rigid body point-to-plane ICP.");
+	return new RigidPlaneICP(nn);
     }
     else if(properties.getStringValue("ICP") == "PCA")
     {
@@ -122,8 +128,8 @@ int main(int argc, char** argv)
     Model* pDestModel = new Model(properties.getStringValue("dest"));
 
     pStatRunner->run(*pSourceModel, *pDestModel, *pnn, *picp, properties);
-    pStatRunner->printResults();
-    pStatRunner->writeResults();
+    pStatRunner->printResults(properties);
+    pStatRunner->writeResults(properties);
 
     delete pnn;
     delete picp;

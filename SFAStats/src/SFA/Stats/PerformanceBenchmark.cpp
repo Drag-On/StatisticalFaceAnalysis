@@ -89,15 +89,17 @@ namespace sfa
 	averageTranslation /= randCycles;
     }
 
-    void PerformanceBenchmark::printResults()
+    void PerformanceBenchmark::printResults(dbgl::Properties& props)
     {
 	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), srcVertices, destVertices);
+	LOG->info("Source: %s", props.getStringValue("src").c_str());
+	LOG->info("Destination: %s", props.getStringValue("dest").c_str());
 	LOG->info("Average ICP time: %f microseconds", averageTime);
 	LOG->info("Variance: %f microseconds", variance);
 	LOG->info("Standard deviation: %f microseconds", standardDeviation);
     }
 
-    void PerformanceBenchmark::writeResults()
+    void PerformanceBenchmark::writeResults(dbgl::Properties& props)
     {
 	// Generate file name
 	std::string fileName = "Results_Avrg_Performance_";
@@ -111,6 +113,8 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNameTime << "\n";
+	    file << "# Source: " << props.getStringValue("src") << "\n";
+	    file << "# Destination: " << props.getStringValue("dest") << "\n";
 	    file << "# Rotation in the range of [" << maxRot << ", " << minRot << "], average: "
 		    << averageRotation << ".\n";
 	    file << "# Translation in the range of [" << maxTrans << ", " << minTrans << "], average: "

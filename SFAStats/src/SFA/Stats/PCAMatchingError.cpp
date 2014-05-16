@@ -135,9 +135,11 @@ namespace sfa
 	LOG->info("Initialization done.");
     }
 
-    void PCAMatchingError::printResults()
+    void PCAMatchingError::printResults(dbgl::Properties& props)
     {
 	LOG->info("RESULTS (rotation in %d steps from %f to %f, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", rotSteps, fromRot, toRot, noiseLevel, holes, srcVertices, destVertices);
+	LOG->info("Source: %s", props.getStringValue("src").c_str());
+	LOG->info("Destination: %s", props.getStringValue("dest").c_str());
 	for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	{
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
@@ -147,7 +149,7 @@ namespace sfa
 	}
     }
 
-    void PCAMatchingError::writeResults()
+    void PCAMatchingError::writeResults(dbgl::Properties& props)
     {
 	// Generate file name
 	std::string fileName = "Results_PCA_Matching_";
@@ -162,6 +164,8 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNameNNError << "\n";
+	    file << "# Source: " << props.getStringValue("src") << "\n";
+	    file << "# Destination: " << props.getStringValue("dest") << "\n";
 	    file << "# Rotation in " << rotSteps << " steps from " << fromRot << " to " << toRot << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
@@ -183,6 +187,8 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNameRealError << "\n";
+	    file << "# Source: " << props.getStringValue("src") << "\n";
+	    file << "# Destination: " << props.getStringValue("dest") << "\n";
 	    file << "# Rotation in " << rotSteps << " from " << fromRot << " to " << toRot << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";
@@ -204,6 +210,8 @@ namespace sfa
 	if (file.is_open())
 	{
 	    file << "# " << fileNamePairs << "\n";
+	    file << "# Source: " << props.getStringValue("src") << "\n";
+	    file << "# Destination: " << props.getStringValue("dest") << "\n";
 	    file << "# Rotation in " << rotSteps << " from " << fromRot << " to " << toRot << ".\n";
 	    file << "# Noise level: " << noiseLevel << ", holes: " << holes << ".\n";
 	    file << "# " << srcVertices << " source vertices, " << destVertices << " destination vertices\n";

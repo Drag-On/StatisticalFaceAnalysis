@@ -23,8 +23,8 @@ namespace sfa
 	public:
 	    virtual ~StatRunner() {};
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props) = 0;
-	    virtual void printResults() = 0;
-	    virtual void writeResults() = 0;
+	    virtual void printResults(dbgl::Properties& props) = 0;
+	    virtual void writeResults(dbgl::Properties& props) = 0;
 	    template <typename Iterator> double calcMean(Iterator begin, Iterator end) const;
 	    template <typename Iterator> double calcVariance(Iterator begin, Iterator end) const;
 	    template <typename Iterator> double calcStandardDeviation(Iterator begin, Iterator end) const;

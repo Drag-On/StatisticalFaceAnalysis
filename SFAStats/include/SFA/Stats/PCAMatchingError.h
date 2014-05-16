@@ -28,8 +28,8 @@ namespace sfa
     {
 	public:
 	    virtual void run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props);
-	    virtual void printResults();
-	    virtual void writeResults();
+	    virtual void printResults(dbgl::Properties& props);
+	    virtual void writeResults(dbgl::Properties& props);
 
 	private:
 	    void testWithModel(Model& src, Model& dest, NearestNeighbor& nn);
