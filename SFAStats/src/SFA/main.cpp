@@ -34,7 +34,7 @@ bool checkProperties()
 
 NearestNeighbor* selectNN()
 {
-    if (properties.getStringValue("NearestNeighbor") == "K-d tree")
+    if (properties.getStringValue("NearestNeighbor") == "KdTree")
     {
 	LOG->info("Using K-d tree for nearest neighbor search.");
 	return new KdTreeNearestNeighbor;
@@ -53,12 +53,12 @@ NearestNeighbor* selectNN()
 
 ICP* selectICP(NearestNeighbor& nn)
 {
-    if (properties.getStringValue("ICP") == "Rigid-Body Point-to-point")
+    if (properties.getStringValue("ICP") == "RigidPoint2Point")
     {
 	LOG->info("Using rigid body point-to-point ICP.");
 	return new RigidPointICP(nn);
     }
-    else if(properties.getStringValue("ICP") == "PCA ICP")
+    else if(properties.getStringValue("ICP") == "PCA")
     {
 	LOG->info("Using PCA ICP.");
 	return new PCA_ICP;
