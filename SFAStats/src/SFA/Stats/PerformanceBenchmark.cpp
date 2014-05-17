@@ -58,7 +58,7 @@ namespace sfa
 	{
 	    // Log
 	    if(i % 10 == 0)
-		LOG->info("%d...", i);
+		LOG->info("%...", i);
 	    // Reset original vertex positions
 	    src = original;
 	    // Displace src
@@ -91,12 +91,12 @@ namespace sfa
 
     void PerformanceBenchmark::printResults(dbgl::Properties& props)
     {
-	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), srcVertices, destVertices);
-	LOG->info("Source: %s", props.getStringValue("src").c_str());
-	LOG->info("Destination: %s", props.getStringValue("dest").c_str());
-	LOG->info("Average ICP time: %f microseconds", averageTime);
-	LOG->info("Variance: %f microseconds", variance);
-	LOG->info("Standard deviation: %f microseconds", standardDeviation);
+	LOG->info("RESULTS (rotation in the range of [%, %], average rotation: %, translation in the range of [%, %], average translation: %, pair selection filter: %, % source vertices, % destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), srcVertices, destVertices);
+	LOG->info("Source: %", props.getStringValue("src").c_str());
+	LOG->info("Destination: %", props.getStringValue("dest").c_str());
+	LOG->info("Average ICP time: % microseconds", averageTime);
+	LOG->info("Variance: % microseconds", variance);
+	LOG->info("Standard deviation: % microseconds", standardDeviation);
     }
 
     void PerformanceBenchmark::writeResults(dbgl::Properties& props)
@@ -130,7 +130,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %s.", fileNameTime.c_str());
+	    LOG->warning("Unable to write %.", fileNameTime.c_str());
     }
 
     std::string PerformanceBenchmark::getPairSelectionFlags(dbgl::Bitmask<> flags)

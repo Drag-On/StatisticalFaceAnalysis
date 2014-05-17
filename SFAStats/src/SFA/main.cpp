@@ -102,7 +102,7 @@ StatRunner* selectStatRunner()
 
 int main(int argc, char** argv)
 {
-    LOG->setLogLevel(dbgl::DBG);
+    LOG->setLogLevel(dbgl::Log::Level::DBG);
     LOG->info("Starting...");
 
     // Load properties file from disk

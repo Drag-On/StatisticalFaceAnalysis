@@ -82,7 +82,7 @@ namespace sfa
 	{
 	    // Log
 	    if(i % 10 == 0)
-		LOG->info("%d...", i);
+		LOG->info("%...", i);
 	    // Reset original vertex positions
 	    src = original;
 	    // Displace src
@@ -155,16 +155,16 @@ namespace sfa
 
     void AverageMatchingError::printResults(dbgl::Properties& props)
     {
-	LOG->info("RESULTS (rotation in the range of [%f, %f], average rotation: %f, translation in the range of [%f, %f], average translation: %f, pair selection filter: %s, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
-	LOG->info("Source: %s", props.getStringValue("src").c_str());
-	LOG->info("Destination: %s", props.getStringValue("dest").c_str());
-	LOG->info("Average amount of selected points: %.10f.", averageSelectedPoints);
-	LOG->info("Average nearest neighbor matching error after %d cycles for the first %d ICP steps:", randCycles, icpCycles);
+	LOG->info("RESULTS (rotation in the range of [%, %], average rotation: %, translation in the range of [%, %], average translation: %, pair selection filter: %, noise level: %, holes: %, % source vertices, % destination vertices):", maxRot, minRot, averageRotation, maxTrans, minTrans, averageTranslation, pairSelection.c_str(), noiseLevel, holes, srcVertices, destVertices);
+	LOG->info("Source: %", props.getStringValue("src").c_str());
+	LOG->info("Destination: %", props.getStringValue("dest").c_str());
+	LOG->info("Average amount of selected points: %{10}.", averageSelectedPoints);
+	LOG->info("Average nearest neighbor matching error after % cycles for the first % ICP steps:", randCycles, icpCycles);
 	LOG->info("Step \t nn error \t real error \t pair error \t std deviation nn \t std deviation real \t std deviation pair");
-	LOG->info("0 \t %.10f \t %.10f", averageAlgoErrorBegin, averageRealErrorBegin);
+	LOG->info("0 \t %{10} \t %{10}", averageAlgoErrorBegin, averageRealErrorBegin);
 	for(unsigned int i = 0; i < averageAlgoResults.size(); i++)
 	{
-	    LOG->info("%d \t %.10f \t %.10f \t %.10f / %d \t %.10f \t %.10f \t %.10f", i+1, averageAlgoResults[i], averageRealResults[i], averageAmountOfMatches[i], correctPairs.size(), algoStdDeviation[i], realStdDeviation[i], pairsStdDeviation[i]);
+	    LOG->info("% \t %{10} \t %{10} \t %{10} / % \t %{10} \t %{10} \t %{10}", i+1, averageAlgoResults[i], averageRealResults[i], averageAmountOfMatches[i], correctPairs.size(), algoStdDeviation[i], realStdDeviation[i], pairsStdDeviation[i]);
 	}
     }
 
@@ -200,7 +200,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %s.", fileNameNNError.c_str());
+	    LOG->warning("Unable to write %.", fileNameNNError);
 	// Write average real error
 	std::string fileNameRealError(fileName);
 	fileNameRealError += "_Real";
@@ -226,7 +226,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %s.", fileNameRealError.c_str());
+	    LOG->warning("Unable to write %.", fileNameRealError);
 	// Write average amount of matching pairs
 	std::string fileNamePairs(fileName);
 	fileNamePairs += "_Pairs";
@@ -251,7 +251,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %s.", fileNamePairs.c_str());
+	    LOG->warning("Unable to write %.", fileNamePairs);
     }
 
     std::string AverageMatchingError::getPairSelectionFlags(dbgl::Bitmask<> flags)

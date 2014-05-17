@@ -34,7 +34,7 @@ void testRigidPointICP()
     KdTreeNearestNeighbor nn;
     auto startError = nn.computeError(src, dest);
     auto error = startError;
-    LOG->info("Matching error: %.20f", startError);
+    LOG->info("Matching error: %{20}", startError);
 
     // Do ICP
     RigidPointICP icp(nn);
@@ -45,7 +45,7 @@ void testRigidPointICP()
 
 	// Check error
 	error = nn.computeError(src, dest);
-	LOG->info("Matching error: %.20f", error);
+	LOG->info("Matching error: %{20}", error);
     }
     assert(error < startError);
 }

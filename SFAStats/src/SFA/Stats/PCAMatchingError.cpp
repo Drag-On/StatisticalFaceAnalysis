@@ -69,7 +69,7 @@ namespace sfa
 	{
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
 	    // Log
-	    LOG->info("%d...", rotCycle);
+	    LOG->info("%...", rotCycle);
 	    double curNNMatching = 0;
 	    double curRealMatching = 0;
 	    unsigned int curAmountOfMatches = 0;
@@ -137,15 +137,15 @@ namespace sfa
 
     void PCAMatchingError::printResults(dbgl::Properties& props)
     {
-	LOG->info("RESULTS (rotation in %d steps from %f to %f, noise level: %d, holes: %d, %d source vertices, %d destination vertices):", rotSteps, fromRot, toRot, noiseLevel, holes, srcVertices, destVertices);
-	LOG->info("Source: %s", props.getStringValue("src").c_str());
-	LOG->info("Destination: %s", props.getStringValue("dest").c_str());
+	LOG->info("RESULTS (rotation in % steps from % to %, noise level: %, holes: %, % source vertices, % destination vertices):", rotSteps, fromRot, toRot, noiseLevel, holes, srcVertices, destVertices);
+	LOG->info("Source: %", props.getStringValue("src").c_str());
+	LOG->info("Destination: %", props.getStringValue("dest").c_str());
 	for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	{
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-	    LOG->info("Rotation step %d (%f rad): %f NN error. Std deviation: %f.", rotCycle, curRotation, avrgAlgoResults[rotCycle], algoStdDeviation[rotCycle]);
-	    LOG->info("Rotation step %d (%f rad): %f real error. Std deviation: %f.", rotCycle, curRotation, avrgRealResults[rotCycle], realStdDeviation[rotCycle]);
-	    LOG->info("Rotation step %d (%f rad): %f matches. Std deviation: %f.", rotCycle, curRotation, avrgAmountOfMatches[rotCycle], pairsStdDeviation[rotCycle]);
+	    LOG->info("Rotation step % (%f rad): %f NN error. Std deviation: %.", rotCycle, curRotation, avrgAlgoResults[rotCycle], algoStdDeviation[rotCycle]);
+	    LOG->info("Rotation step % (%f rad): %f real error. Std deviation: %.", rotCycle, curRotation, avrgRealResults[rotCycle], realStdDeviation[rotCycle]);
+	    LOG->info("Rotation step % (%f rad): %f matches. Std deviation: %.", rotCycle, curRotation, avrgAmountOfMatches[rotCycle], pairsStdDeviation[rotCycle]);
 	}
     }
 
@@ -178,7 +178,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %s.", fileNameNNError.c_str());
+	    LOG->warning("Unable to write %.", fileNameNNError.c_str());
 	// Write real error
 	std::string fileNameRealError(fileName);
 	fileNameRealError += "_Real";
@@ -201,7 +201,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %s.", fileNameRealError.c_str());
+	    LOG->warning("Unable to write %.", fileNameRealError.c_str());
 	// Write amount of matching pairs
 	std::string fileNamePairs(fileName);
 	fileNamePairs += "_Pairs";
@@ -224,6 +224,6 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %s.", fileNamePairs.c_str());
+	    LOG->warning("Unable to write %.", fileNamePairs.c_str());
     }
 }

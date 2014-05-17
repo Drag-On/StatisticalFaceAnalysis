@@ -18,7 +18,7 @@ void testRigidPlaneICP();
 
 int main()
 {
-    LOG->setLogLevel(dbgl::DBG);
+    LOG->setLogLevel(dbgl::Log::Level::DBG);
     LOG->info("Starting tests...");
 
     testNearestNeighbor();

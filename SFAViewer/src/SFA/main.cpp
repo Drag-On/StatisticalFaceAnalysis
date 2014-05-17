@@ -117,14 +117,14 @@ void keyCallback(Window::KeyEventArgs const& args)
     else if (args.key == Input::Key::KEY_R && args.action == Input::KeyState::PRESSED && args.mods.isSet(Input::Modifier::KEY_CONTROL))
     {
 	double rotation = pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
-	LOG->info("Rotated source mesh by %f.", rotation);
+	LOG->info("Rotated source mesh by %.", rotation);
 	pca_icp.reset();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
     else if (args.key == Input::Key::KEY_T && args.action == Input::KeyState::PRESSED && args.mods.isSet(Input::Modifier::KEY_CONTROL))
     {
 	double translation = pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
-	LOG->info("Translated source mesh by %f", translation);
+	LOG->info("Translated source mesh by %", translation);
 	pca_icp.reset();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
@@ -144,7 +144,7 @@ void keyCallback(Window::KeyEventArgs const& args)
     else if(args.key == Input::Key::KEY_L && args.action == Input::KeyState::PRESSED)
     {
 	auto error = nn.computeError(*pSourceModel, *pDestModel);
-	LOG->info("Matching error: %.20f", error);
+	LOG->info("Matching error: %{20}", error);
     }
     // Modify point selection
     Bitmask<> selectionMethod(icp->selectionMethod());
@@ -317,7 +317,7 @@ bool checkProperties()
 
 int main(int argc, char** argv)
 {
-    LOG->setLogLevel(dbgl::DBG);
+    LOG->setLogLevel(dbgl::Log::Level::DBG);
     LOG->info("Starting...");
 
     // Load properties file from disk
@@ -375,11 +375,12 @@ int main(int argc, char** argv)
     delete pDestModel;
     delete pShader;
     delete pCam;
+
+    LOG->info("That's it!");
+
     // delete pWnd; // No need for this as windows will delete themselves when closed
     // Free remaining internal resources
     WindowManager::get()->terminate();
-
-    LOG->info("That's it!");
     return 0;
 }
 
