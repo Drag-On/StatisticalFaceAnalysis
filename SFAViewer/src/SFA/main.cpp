@@ -88,21 +88,21 @@ void keyCallback(Window::KeyEventArgs const& args)
     // Check if next ICP step should be executed
     if (args.key == Input::Key::KEY_I && args.action == Input::KeyState::PRESSED)
     {
-	LOG->info("Calculating next ICP step!");
+	LOG.info("Calculating next ICP step!");
 	// Compute next step
 	icp->calcNextStep(*pSourceModel, *pDestModel);
 	pSourceModel->getBasePointer()->updateBuffers();
-	LOG->info("Done!");
+	LOG.info("Done!");
     }
     // Check if "PCA ICP" should be executed
     else if (args.key == Input::Key::KEY_U && args.action == Input::KeyState::PRESSED)
     {
-	LOG->info("Calculating PCA matching!");
+	LOG.info("Calculating PCA matching!");
 	// Compute next step
 	pca_icp.calcNextStep(*pSourceModel, *pDestModel);
 	pSourceModel->getBasePointer()->updateBuffers();
 	nn.clearCache();
-	LOG->info("Done!");
+	LOG.info("Done!");
     }
     // Toggle source and destination mesh visibility
     else if(args.key == Input::Key::KEY_O && args.action == Input::KeyState::PRESSED)
@@ -117,21 +117,21 @@ void keyCallback(Window::KeyEventArgs const& args)
     else if (args.key == Input::Key::KEY_R && args.action == Input::KeyState::PRESSED && args.mods.isSet(Input::Modifier::KEY_CONTROL))
     {
 	double rotation = pSourceModel->rotateRandom(properties.getFloatValue("maxRandomRotation"));
-	LOG->info("Rotated source mesh by %.", rotation);
+	LOG.info("Rotated source mesh by %.", rotation);
 	pca_icp.reset();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
     else if (args.key == Input::Key::KEY_T && args.action == Input::KeyState::PRESSED && args.mods.isSet(Input::Modifier::KEY_CONTROL))
     {
 	double translation = pSourceModel->translateRandom(properties.getFloatValue("maxRandomTranslation"));
-	LOG->info("Translated source mesh by %", translation);
+	LOG.info("Translated source mesh by %", translation);
 	pca_icp.reset();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
     // Reload meshes
     else if (args.key == Input::Key::KEY_R && args.action == Input::KeyState::PRESSED)
     {
-	LOG->info("Reloading meshes...");
+	LOG.info("Reloading meshes...");
 	delete pSourceModel;
 	delete pDestModel;
 	pSourceModel = new Model(properties.getStringValue("src"));
@@ -144,72 +144,72 @@ void keyCallback(Window::KeyEventArgs const& args)
     else if(args.key == Input::Key::KEY_L && args.action == Input::KeyState::PRESSED)
     {
 	auto error = nn.computeError(*pSourceModel, *pDestModel);
-	LOG->info("Matching error: %{20}", error);
+	LOG.info("Matching error: %{20}", error);
     }
     // Modify point selection
     Bitmask<> selectionMethod(icp->selectionMethod());
     if(args.key == Input::Key::KEY_F1 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod = 0;
-	LOG->info("Using all points.");
+	LOG.info("Using all points.");
     }
     else if(args.key == Input::Key::KEY_F2 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_SECOND);
 	if(selectionMethod.isSet(ICP::EVERY_SECOND))
-	    LOG->info("Adding filter \"Every second\".");
+	    LOG.info("Adding filter \"Every second\".");
 	else
-	    LOG->info("Removing filter \"Every second\".");
+	    LOG.info("Removing filter \"Every second\".");
     }
     else if(args.key == Input::Key::KEY_F3 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_THIRD);
 	if(selectionMethod.isSet(ICP::EVERY_THIRD))
-	    LOG->info("Adding filter \"Every third\".");
+	    LOG.info("Adding filter \"Every third\".");
 	else
-	    LOG->info("Removing filter \"Every third\".");
+	    LOG.info("Removing filter \"Every third\".");
     }
     else if(args.key == Input::Key::KEY_F4 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_FOURTH);
 	if(selectionMethod.isSet(ICP::EVERY_FOURTH))
-	    LOG->info("Adding filter \"Every fourth\".");
+	    LOG.info("Adding filter \"Every fourth\".");
 	else
-	    LOG->info("Removing filter \"Every fourth\".");
+	    LOG.info("Removing filter \"Every fourth\".");
     }
     else if(args.key == Input::Key::KEY_F5 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::EVERY_FIFTH);
 	if(selectionMethod.isSet(ICP::EVERY_FIFTH))
-	    LOG->info("Adding filter \"Every fifth\".");
+	    LOG.info("Adding filter \"Every fifth\".");
 	else
-	    LOG->info("Removing filter \"Every fifth\".");
+	    LOG.info("Removing filter \"Every fifth\".");
     }
     else if(args.key == Input::Key::KEY_F6 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::NO_EDGES);
 	if(selectionMethod.isSet(ICP::NO_EDGES))
-	    LOG->info("Adding filter \"No edges\".");
+	    LOG.info("Adding filter \"No edges\".");
 	else
-	    LOG->info("Removing filter \"No edges\".");
+	    LOG.info("Removing filter \"No edges\".");
     }
     else if(args.key == Input::Key::KEY_F7 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(ICP::RANDOM);
 	if(selectionMethod.isSet(ICP::RANDOM))
-	    LOG->info("Adding filter \"Random\".");
+	    LOG.info("Adding filter \"Random\".");
 	else
-	    LOG->info("Removing filter \"Random\".");
+	    LOG.info("Removing filter \"Random\".");
     }
     else if(args.key == Input::Key::KEY_N && args.action == Input::KeyState::PRESSED)
     {
-	LOG->info("Adding random noise to source model.");
+	LOG.info("Adding random noise to source model.");
 	pSourceModel->addNoise();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
     else if(args.key == Input::Key::KEY_M && args.action == Input::KeyState::PRESSED)
     {
-	LOG->info("Adding a random hole to source model.");
+	LOG.info("Adding a random hole to source model.");
 	pSourceModel->addHole();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
@@ -217,7 +217,7 @@ void keyCallback(Window::KeyEventArgs const& args)
     // Swap src and dest?
     if(args.key == Input::Key::KEY_GRAVE_ACCENT && args.action == Input::KeyState::PRESSED)
     {
-	LOG->info("Swapping models.");
+	LOG.info("Swapping models.");
 	std::swap(pSourceModel, pDestModel);
 	pSourceModel->refresh();
 	pDestModel->refresh();
@@ -228,18 +228,18 @@ void keyCallback(Window::KeyEventArgs const& args)
 	if(typeid(*icp) == typeid(RigidPlaneICP))
 	{
 	    icp = &rigidPoint_icp;
-	    LOG->info("Using rigid-body point-to-point ICP.");
+	    LOG.info("Using rigid-body point-to-point ICP.");
 	}
 	else
 	{
 	    icp = &rigidPlane_icp;
-	    LOG->info("Using rigid-body point-to-plane ICP.");
+	    LOG.info("Using rigid-body point-to-plane ICP.");
 	}
     }
     // DEBUG!
     if(args.key == Input::Key::KEY_H && args.action == Input::KeyState::PRESSED)
     {
-	LOG->info("DEBUG!");
+	LOG.info("DEBUG!");
 	for(unsigned int i = 0; i < pDestModel->getAmountOfVertices(); i++)
 	{
 	    auto vertex = pDestModel->getVertex(i);
@@ -317,8 +317,8 @@ bool checkProperties()
 
 int main(int argc, char** argv)
 {
-    LOG->setLogLevel(dbgl::Log::Level::DBG);
-    LOG->info("Starting...");
+    LOG.setLogLevel(dbgl::Log::Level::DBG);
+    LOG.info("Starting...");
 
     // Load properties file from disk
     properties.load("Properties.txt");
@@ -328,8 +328,8 @@ int main(int argc, char** argv)
 
     if(!checkProperties())
     {
-	LOG->info("Usage: -src Path/To/Source/Mesh");
-	LOG->info("       -dest Path/To/Destination/Mesh");
+	LOG.info("Usage: -src Path/To/Source/Mesh");
+	LOG.info("       -dest Path/To/Destination/Mesh");
 	return -1;
     }
     if(properties.getStringValue("defaultCamDistance") != "")
@@ -376,7 +376,7 @@ int main(int argc, char** argv)
     delete pShader;
     delete pCam;
 
-    LOG->info("That's it!");
+    LOG.info("That's it!");
 
     // delete pWnd; // No need for this as windows will delete themselves when closed
     // Free remaining internal resources

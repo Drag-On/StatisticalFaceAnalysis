@@ -65,11 +65,11 @@ void testNN(NearestNeighbor& nn)
     }
     catch (std::invalid_argument& e)
     {
-	LOG->info(e.what());
+	LOG.info(e.what());
     }
     catch (std::out_of_range& e)
     {
-	LOG->info(e.what());
+	LOG.info(e.what());
     }
 
     // Clear cache again
@@ -106,11 +106,11 @@ void testNN(NearestNeighbor& nn)
 
 void testNearestNeighbor()
 {
-    LOG->info("Starting SimpleNearestNeighbor test suite...");
+    LOG.info("Starting SimpleNearestNeighbor test suite...");
     SimpleNearestNeighbor snn;
     testNN(snn);
 
-    LOG->info("Starting KdTreeNearestNeighbor test suite...");
+    LOG.info("Starting KdTreeNearestNeighbor test suite...");
     KdTreeNearestNeighbor kdnn;
     testNN(kdnn);
 

@@ -18,14 +18,14 @@ void testRigidPlaneICP();
 
 int main()
 {
-    LOG->setLogLevel(dbgl::Log::Level::DBG);
-    LOG->info("Starting tests...");
+    LOG.setLogLevel(dbgl::Log::Level::DBG);
+    LOG.info("Starting tests...");
 
     testNearestNeighbor();
     testRigidPointICP();
     testRigidPlaneICP();
 
-    LOG->info("Done!");
+    LOG.info("Done!");
     dbgl::WindowManager::get()->terminate();
 
     return 0;

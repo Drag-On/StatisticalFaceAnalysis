@@ -20,7 +20,7 @@ using namespace sfa;
 
 void testRigidPlaneICP()
 {
-    LOG->info("Starting RigidPlaneICP test suite...");
+    LOG.info("Starting RigidPlaneICP test suite...");
 
     // Load models
 //    Model src("Resources/Cube_Transformed.obj");
@@ -34,7 +34,7 @@ void testRigidPlaneICP()
     KdTreeNearestNeighbor nn;
     auto startError = nn.computeError(src, dest);
     auto error = startError;
-    LOG->info("Matching error: %{20}", startError);
+    LOG.info("Matching error: %{20}", startError);
 
     // Do ICP
     RigidPlaneICP icp(nn);
@@ -45,7 +45,7 @@ void testRigidPlaneICP()
 
 	// Check error
 	error = nn.computeError(src, dest);
-	LOG->info("Matching error: %{20}", error);
+	LOG.info("Matching error: %{20}", error);
     }
     assert(error < startError);
 }

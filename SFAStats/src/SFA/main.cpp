@@ -37,17 +37,17 @@ NearestNeighbor* selectNN()
 {
     if (properties.getStringValue("NearestNeighbor") == "KdTree")
     {
-	LOG->info("Using K-d tree for nearest neighbor search.");
+	LOG.info("Using K-d tree for nearest neighbor search.");
 	return new KdTreeNearestNeighbor;
     }
     else if(properties.getStringValue("NearestNeighbor") == "Simple")
     {
-	LOG->info("Using simple nearest neighbor search.");
+	LOG.info("Using simple nearest neighbor search.");
 	return new SimpleNearestNeighbor;
     }
     else
     {
-	LOG->info("No nearest neighbor search specified. Falling back to K-d tree nearest neighbor search.");
+	LOG.info("No nearest neighbor search specified. Falling back to K-d tree nearest neighbor search.");
 	return new KdTreeNearestNeighbor;
     }
 }
@@ -56,22 +56,22 @@ ICP* selectICP(NearestNeighbor& nn)
 {
     if (properties.getStringValue("ICP") == "RigidPoint2Point")
     {
-	LOG->info("Using rigid body point-to-point ICP.");
+	LOG.info("Using rigid body point-to-point ICP.");
 	return new RigidPointICP(nn);
     }
     else if(properties.getStringValue("ICP") == "RigidPoint2Plane")
     {
-	LOG->info("Using rigid body point-to-plane ICP.");
+	LOG.info("Using rigid body point-to-plane ICP.");
 	return new RigidPlaneICP(nn);
     }
     else if(properties.getStringValue("ICP") == "PCA")
     {
-	LOG->info("Using PCA ICP.");
+	LOG.info("Using PCA ICP.");
 	return new PCA_ICP;
     }
     else
     {
-	LOG->info("No ICP specified. Falling back to rigid body point-to-point ICP.");
+	LOG.info("No ICP specified. Falling back to rigid body point-to-point ICP.");
 	return new RigidPointICP(nn);
     }
 }
@@ -80,30 +80,30 @@ StatRunner* selectStatRunner()
 {
     if (properties.getStringValue("StatRunner") == "AverageMatchingError")
     {
-	LOG->info("Using AverageMatchingError StatRunner.");
+	LOG.info("Using AverageMatchingError StatRunner.");
 	return new AverageMatchingError;
     }
     else if(properties.getStringValue("StatRunner") == "PCAMatchingError")
     {
-	LOG->info("Using PCAMatchingError StatRunner.");
+	LOG.info("Using PCAMatchingError StatRunner.");
 	return new PCAMatchingError;
     }
     else if(properties.getStringValue("StatRunner") == "PerformanceBenchmark")
     {
-	LOG->info("Using PerformanceBenchmark StatRunner.");
+	LOG.info("Using PerformanceBenchmark StatRunner.");
 	return new PerformanceBenchmark;
     }
     else
     {
-	LOG->info("No StatRunner specified. Falling back to AverageMatchingError.");
+	LOG.info("No StatRunner specified. Falling back to AverageMatchingError.");
 	return new AverageMatchingError;
     }
 }
 
 int main(int argc, char** argv)
 {
-    LOG->setLogLevel(dbgl::Log::Level::DBG);
-    LOG->info("Starting...");
+    LOG.setLogLevel(dbgl::Log::Level::DBG);
+    LOG.info("Starting...");
 
     // Load properties file from disk
     properties.load("Properties.txt");
@@ -113,8 +113,8 @@ int main(int argc, char** argv)
 
     if(!checkProperties())
     {
-	LOG->info("Usage: -src Path/To/Source/Mesh");
-	LOG->info("       -dest Path/To/Destination/Mesh");
+	LOG.info("Usage: -src Path/To/Source/Mesh");
+	LOG.info("       -dest Path/To/Destination/Mesh");
 	return -1;
     }
 
@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     delete pSourceModel;
     delete pDestModel;
 
-    LOG->info("That's it!");
+    LOG.info("That's it!");
 
     // Free remaining internal resources
     WindowManager::get()->terminate();

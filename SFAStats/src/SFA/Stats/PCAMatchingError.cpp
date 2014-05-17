@@ -14,7 +14,7 @@ namespace sfa
 {
     void PCAMatchingError::run(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp, dbgl::Properties& props)
     {
-	LOG->info("Starting PCAMatchingError test suite...");
+	LOG.info("Starting PCAMatchingError test suite...");
 
 	this->props = &props;
 
@@ -69,7 +69,7 @@ namespace sfa
 	{
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
 	    // Log
-	    LOG->info("%...", rotCycle);
+	    LOG.info("%...", rotCycle);
 	    double curNNMatching = 0;
 	    double curRealMatching = 0;
 	    unsigned int curAmountOfMatches = 0;
@@ -132,20 +132,20 @@ namespace sfa
 	// Revert back to original vertex positions
 	icp.setSelectionMethod(selectionMethod);
 	src = std::move(original);
-	LOG->info("Initialization done.");
+	LOG.info("Initialization done.");
     }
 
     void PCAMatchingError::printResults(dbgl::Properties& props)
     {
-	LOG->info("RESULTS (rotation in % steps from % to %, noise level: %, holes: %, % source vertices, % destination vertices):", rotSteps, fromRot, toRot, noiseLevel, holes, srcVertices, destVertices);
-	LOG->info("Source: %", props.getStringValue("src").c_str());
-	LOG->info("Destination: %", props.getStringValue("dest").c_str());
+	LOG.info("RESULTS (rotation in % steps from % to %, noise level: %, holes: %, % source vertices, % destination vertices):", rotSteps, fromRot, toRot, noiseLevel, holes, srcVertices, destVertices);
+	LOG.info("Source: %", props.getStringValue("src").c_str());
+	LOG.info("Destination: %", props.getStringValue("dest").c_str());
 	for(unsigned int rotCycle = 0; rotCycle < rotSteps; rotCycle++)
 	{
 	    double curRotation = rotCycle * ((toRot - fromRot) / rotSteps + fromRot);
-	    LOG->info("Rotation step % (%f rad): %f NN error. Std deviation: %.", rotCycle, curRotation, avrgAlgoResults[rotCycle], algoStdDeviation[rotCycle]);
-	    LOG->info("Rotation step % (%f rad): %f real error. Std deviation: %.", rotCycle, curRotation, avrgRealResults[rotCycle], realStdDeviation[rotCycle]);
-	    LOG->info("Rotation step % (%f rad): %f matches. Std deviation: %.", rotCycle, curRotation, avrgAmountOfMatches[rotCycle], pairsStdDeviation[rotCycle]);
+	    LOG.info("Rotation step % (%f rad): %f NN error. Std deviation: %.", rotCycle, curRotation, avrgAlgoResults[rotCycle], algoStdDeviation[rotCycle]);
+	    LOG.info("Rotation step % (%f rad): %f real error. Std deviation: %.", rotCycle, curRotation, avrgRealResults[rotCycle], realStdDeviation[rotCycle]);
+	    LOG.info("Rotation step % (%f rad): %f matches. Std deviation: %.", rotCycle, curRotation, avrgAmountOfMatches[rotCycle], pairsStdDeviation[rotCycle]);
 	}
     }
 
@@ -178,7 +178,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %.", fileNameNNError.c_str());
+	    LOG.warning("Unable to write %.", fileNameNNError.c_str());
 	// Write real error
 	std::string fileNameRealError(fileName);
 	fileNameRealError += "_Real";
@@ -201,7 +201,7 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %.", fileNameRealError.c_str());
+	    LOG.warning("Unable to write %.", fileNameRealError.c_str());
 	// Write amount of matching pairs
 	std::string fileNamePairs(fileName);
 	fileNamePairs += "_Pairs";
@@ -224,6 +224,6 @@ namespace sfa
 	    file.close();
 	}
 	else
-	    LOG->warning("Unable to write %.", fileNamePairs.c_str());
+	    LOG.warning("Unable to write %.", fileNamePairs.c_str());
     }
 }
