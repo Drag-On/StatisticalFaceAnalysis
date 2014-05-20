@@ -106,7 +106,7 @@ int main(int argc, char** argv)
     LOG.info("Starting...");
 
     // Load properties file from disk
-    properties.load("Properties.txt");
+    properties.read("Properties.txt");
     // Interpret arguments
     // Skip first argument as it's the executable's path
     properties.interpret(argc-1, argv+1);

@@ -286,7 +286,7 @@ void renderCallback(Window::RenderEventArgs const& args)
     GLint mvpId = pShader->getDefaultUniformHandle(ShaderProgram::Uniform::MVP);
     if (mvpId >= 0)
     {
-	pShader->setUniformFloatMatrix4Array(mvpId, 1, GL_FALSE, mvp.getDataPointer());
+	pShader->setUniformFloatMatrix4Array(mvpId, 1, false, mvp.getDataPointer());
     }
     // ITMV matrix
     GLint itmvId = pShader->getDefaultUniformHandle(
@@ -294,7 +294,7 @@ void renderCallback(Window::RenderEventArgs const& args)
     if (itmvId >= 0)
     {
 	// In this case inverse transpose of view equals view
-	pShader->setUniformFloatMatrix4Array(itmvId, 1, GL_FALSE, view.getDataPointer());
+	pShader->setUniformFloatMatrix4Array(itmvId, 1, false, view.getDataPointer());
     }
 
     // Draw
@@ -321,7 +321,7 @@ int main(int argc, char** argv)
     LOG.info("Starting...");
 
     // Load properties file from disk
-    properties.load("Properties.txt");
+    properties.read("Properties.txt");
     // Interpret arguments
     // Skip first argument as it's the executables path
     properties.interpret(argc-1, argv+1);
