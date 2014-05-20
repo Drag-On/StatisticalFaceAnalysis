@@ -124,6 +124,10 @@ namespace sfa
 	auto vertex = getVertex(n);
 
 	// Get normal rotation
+	// TODO: This is not correct. While it works for small rotations, it certainly does give
+	// wrong results for bigger ones and will cause normals used by the internal mesh to be noticeably
+	// off. This applies to visual (OpenGL) display, however, the normals used by the ICP implementation
+	// are not affected.
 	auto rot = Eigen::Quaterniond::FromTwoVectors(vertex.normal, normal);
 	rot.normalize();
 
