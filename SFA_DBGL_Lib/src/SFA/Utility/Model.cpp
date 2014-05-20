@@ -257,7 +257,6 @@ namespace sfa
 	    {
 		// Average normals
 		m_vertices[*pVertId].normal += Eigen::Vector3d(normal.x(), normal.y(), normal.z());
-		m_vertices[*pVertId].normal.normalize();
 		// Add base vertex id
 		m_vertices[*pVertId].baseVertices.insert(i);
 		// Create a list base index -> this index
@@ -276,6 +275,9 @@ namespace sfa
 		m_baseIndex2ModelIndex.push_back(vert.id);
 	    }
 	}
+	// Normalize all normals
+	for(auto& vert : m_vertices)
+	    vert.normal.normalize();
 
 	// Balance the tree for maximum performance
 	m_vertexTree.balance();
