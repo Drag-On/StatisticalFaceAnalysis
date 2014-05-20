@@ -49,7 +49,7 @@ namespace sfa
     	testWithModel(src, dest, nn, icp);
     }
 
-    void PerformanceBenchmark::testWithModel(Model& src, Model& dest, NearestNeighbor& nn, ICP& icp)
+    void PerformanceBenchmark::testWithModel(Model& src, Model& dest, NearestNeighbor& /* nn */, ICP& icp)
     {
 	// Store original model
 	Model original(src);
