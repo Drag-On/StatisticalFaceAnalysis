@@ -17,29 +17,15 @@ project (SFA_Tests C CXX)
 ######################################################################
 ### Project code files
 ######################################################################
-file(GLOB_RECURSE SFA_TEST_SRC_ONLY
+file(GLOB_RECURSE SFA_TEST_SRC
 	"*.cpp"
-)
-file(GLOB_RECURSE SFA_TEST_SRC_MAIN
-    "../SFAViewer/include/*.h"
-	"../SFAViewer/src/*.cpp"
-)
-# Remove main.cpp
-foreach(item ${SFA_TEST_SRC_MAIN})
-  if(${item} MATCHES "../SFAViewer/src/SFA/main.cpp")
-    list(REMOVE_ITEM SFA_TEST_SRC_MAIN ${item})
-  endif(${item} MATCHES "../SFAViewer/src/SFA/main.cpp")
-endforeach(item)
-
-set (SFA_TEST_SRC
-	${SFA_TEST_SRC_MAIN}
-	${SFA_TEST_SRC_ONLY}
 )
 
 ######################################################################
 ### Include directories
 ######################################################################
 include_directories(${SFALIB_INCLUDE_DIR})
+include_directories(${SFA_DBGL_LIB_INCLUDE_DIR})
 include_directories(${SFAVIEWER_INCLUDE_DIR})
 include_directories(${EIGEN_INCLUDE_DIR})
 include_directories(${DBGL_BASE_INCLUDE_DIR})
@@ -56,6 +42,7 @@ set_target_properties(SFA_Tests PROPERTIES LINKER_LANGUAGE CXX)
 ### Link libraries
 ######################################################################
 target_link_libraries(SFA_Tests "${SFALIB_LIB_DIR}/${SFALIB_LIB_NAME}")
+target_link_libraries(SFA_Tests "${SFA_DBGL_LIB_LIB_DIR}/${SFA_DBGL_LIB_LIB_NAME}")
 target_link_libraries(SFA_Tests "${DBGL_BASE_LIB_DIR}/${DBGL_BASE_DLL_NAME}")
 
 ######################################################################
@@ -63,6 +50,7 @@ target_link_libraries(SFA_Tests "${DBGL_BASE_LIB_DIR}/${DBGL_BASE_DLL_NAME}")
 ######################################################################
 set(LIBRARIES2COPY
    "${SFALIB_LIB_DIR}/${SFALIB_DLL_NAME}"
+   "${SFA_DBGL_LIB_LIB_DIR}/${SFA_DBGL_LIB_DLL_NAME}"
    "${DBGL_BASE_LIB_DIR}/${DBGL_BASE_DLL_NAME}"
    "${GLEW_LIB_DIR}/${GLEW_DLL_NAME}"
    "${GLFW_LIB_DIR}/${GLFW_DLL_NAME}"

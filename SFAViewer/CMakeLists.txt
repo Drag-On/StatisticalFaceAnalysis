@@ -26,6 +26,7 @@ file(GLOB_RECURSE SFAVIEWER_SRC
 ### Include directories
 ######################################################################
 include_directories(${SFALIB_INCLUDE_DIR})
+include_directories(${SFA_DBGL_LIB_INCLUDE_DIR})
 include_directories(${SFAVIEWER_INCLUDE_DIR})
 include_directories(${EIGEN_INCLUDE_DIR})
 include_directories(${DBGL_BASE_INCLUDE_DIR})
@@ -42,6 +43,7 @@ set_target_properties(SFAVIEWER PROPERTIES LINKER_LANGUAGE CXX)
 ### Link libraries
 ######################################################################
 target_link_libraries(SFAVIEWER "${SFALIB_LIB_DIR}/${SFALIB_LIB_NAME}")
+target_link_libraries(SFAVIEWER "${SFA_DBGL_LIB_LIB_DIR}/${SFA_DBGL_LIB_LIB_NAME}")
 target_link_libraries(SFAVIEWER "${DBGL_BASE_LIB_DIR}/${DBGL_BASE_DLL_NAME}")
 
 ######################################################################
@@ -49,6 +51,7 @@ target_link_libraries(SFAVIEWER "${DBGL_BASE_LIB_DIR}/${DBGL_BASE_DLL_NAME}")
 ######################################################################
 set(LIBRARIES2COPY
    "${SFALIB_LIB_DIR}/${SFALIB_DLL_NAME}"
+   "${SFA_DBGL_LIB_LIB_DIR}/${SFA_DBGL_LIB_DLL_NAME}"
    "${DBGL_BASE_LIB_DIR}/${DBGL_BASE_DLL_NAME}"
    "${GLEW_LIB_DIR}/${GLEW_DLL_NAME}"
    "${GLFW_LIB_DIR}/${GLFW_DLL_NAME}"
