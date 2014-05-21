@@ -1,0 +1,108 @@
+//////////////////////////////////////////////////////////////////////
+/// Statistical Face Analysis
+///
+/// Copyright (c) 2014 by Jan Moeller
+///
+/// This software is provided "as-is" and does not claim to be
+/// complete or free of bugs in any way. It should work, but
+/// it might also begin to hurt your kittens.
+//////////////////////////////////////////////////////////////////////
+
+namespace sfa
+{
+    template<class RandomAccessIterator> auto PoissonDiskSampler::sample(RandomAccessIterator begin,
+	    RandomAccessIterator end, double r,
+	    unsigned int k) -> std::vector<typename dbgl::KdTree<typename std::remove_reference<decltype((*begin).data)>::type, typename std::remove_reference<decltype((*begin).point)>::type>::Container>
+    {
+	// Some shortcuts
+	using DataType = typename std::remove_reference<decltype((*begin).data)>::type;
+	using PointType = typename std::remove_reference<decltype((*begin).point)>::type;
+	using ContainerType = typename dbgl::KdTree<DataType, PointType>::Container;
+
+	// Initialize KdTrees for acceleration
+	dbgl::KdTree<DataType, PointType> sampleTree;
+	dbgl::KdTree<DataType, PointType> originalTree(begin, end);
+
+	// Active list
+	std::vector<ContainerType> activeList;
+
+	// Generate random start sample
+	std::uniform_int_distribution<unsigned int> rand_0_amount(0, std::distance(begin, end) - 1);
+	unsigned int randIndex = rand_0_amount(m_random);
+	ContainerType container = *(begin + randIndex);
+	sampleTree.insert(container.point, container.data);
+
+	activeList.push_back(container);
+
+	// Main loop
+	while(!activeList.empty())
+	{
+	    // Select a random index
+	    std::uniform_int_distribution<unsigned int> rand_0_size(0, activeList.size() - 1);
+	    randIndex = rand_0_size(m_random);
+	    auto activeIter = activeList.begin() + randIndex;
+	    auto activePoint = (*activeIter).point;
+
+	    // Get points from the original Tree around the active point within r and 2r distance
+	    std::vector<ContainerType> closePoints;
+	    pointsInRange(originalTree, activePoint, r, 2 * r, closePoints);
+
+	    // For each of these points check if it is within distance r of any other, already chosen sample. Break if more than k.
+	    for(unsigned int i = 0; i < closePoints.size() && i < k; i++)
+	    {
+		auto curContainer = closePoints[i];
+		auto curPoint = curContainer.point;
+		std::vector<ContainerType> found;
+		sampleTree.findKNearestNeighbors(curPoint, 2, found);
+		// Take the nearest neighbor not equal to the active point
+		PointType nn = found[0].point;
+		if ((nn == activePoint && found.size() > 1) || (found.size() > 1 && found[1].point != activePoint
+			&& (curPoint - nn).getSquaredLength() > (curPoint - found[1].point).getSquaredLength()))
+		    nn = found[1].point;
+		bool valid = found.size() < 2 || (curPoint - nn).getSquaredLength() >= r * r;
+		if(valid)
+		{
+		    // The nearest neighbor is not closer than r, thus we can add it to the active list and
+		    // to the tree of used samples
+		    sampleTree.insert(curContainer.point, curContainer.data);
+		    activeList.push_back(curContainer);
+		}
+	    }
+	    // Remove active point from the list. Either there was no point found in k tries or all of its neighbors
+	    // have already been processed
+	    activeIter = activeList.begin() + randIndex;
+	    activeList.erase(activeIter);
+	}
+	return sampleTree.getAll();
+    }
+
+    template<class KdTree> void PoissonDiskSampler::pointsInRange(KdTree& tree, decltype(tree.getAll()[0].point) pos,
+	    double inner, double outer, std::vector<typename KdTree::Container>& out)
+    {
+	// Shortcuts
+	using PointType = typename std::remove_reference<decltype(pos)>::type;
+	using PrecisionType = typename std::remove_reference<decltype(pos.x())>::type;
+	const unsigned int dim = PointType::getDimension();
+
+	// Create bounding rectangle
+	PointType rectPos(pos);
+	decltype(rectPos) rectExtent;
+	for (unsigned int i = 0; i < dim; i++)
+	{
+	    rectPos[i] -= outer;
+	    rectExtent[i] = 2 * outer;
+	}
+	dbgl::Hyperrectangle<PrecisionType, dim> hrect(rectPos, rectExtent);
+	tree.findRange(hrect, out);
+	// Sort out any points that are not within inner and outer
+	for (auto it = out.begin(); it != out.end();)
+	{
+	    auto sqLen = (it->point - pos).getSquaredLength();
+	    if (sqLen < inner * inner || sqLen > outer * outer)
+		out.erase(it);
+	    else
+		++it;
+	}
+    }
+}
+

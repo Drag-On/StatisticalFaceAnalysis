@@ -14,6 +14,7 @@
 // Prototypes
 void testModel();
 void testNearestNeighbor();
+void testPoissonDiskSampler();
 void testRigidPointICP();
 void testRigidPlaneICP();
 
@@ -24,6 +25,7 @@ int main()
 
     testModel();
     testNearestNeighbor();
+    testPoissonDiskSampler();
     testRigidPointICP();
     testRigidPlaneICP();
 
