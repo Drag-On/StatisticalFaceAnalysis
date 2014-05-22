@@ -12,7 +12,7 @@
 
 namespace sfa
 {
-    RigidPointICP::RigidPointICP(NearestNeighbor& nn, AbstractLog* pLog) : ICP(pLog), m_nearestNeighbor(nn)
+    RigidPointICP::RigidPointICP(NearestNeighbor& nn, AbstractPointSelector* pointSelector, AbstractLog* pLog) : ICP(pointSelector, pLog), m_nearestNeighbor(nn)
     {
     }
 
@@ -75,6 +75,8 @@ namespace sfa
 	}
 	// Clear nearest neighbor cache
 	m_nearestNeighbor.clearCache();
+
+	source.refresh();
 
 	return sourcePoints.size();
     }

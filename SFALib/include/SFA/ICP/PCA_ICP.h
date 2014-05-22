@@ -33,6 +33,7 @@ namespace sfa
     class PCA_ICP: public ICP
     {
 	public:
+	    PCA_ICP();
 	    virtual ~PCA_ICP();
 	    /**
 	     * @brief Aligns one principal component after the other

@@ -24,6 +24,7 @@
 #include <DBGL/Math/Quaternion.h>
 #include "SFA/Utility/Model.h"
 #include "SFA/Utility/Log.h"
+#include "SFA/Utility/PoissonDiskPointSelector.h"
 #include "SFA/NearestNeighbor/KdTreeNearestNeighbor.h"
 #include "SFA/ICP/RigidPointICP.h"
 #include "SFA/ICP/RigidPlaneICP.h"
@@ -47,9 +48,10 @@ bool showSource = true, showDest = true;
 
 sfa::Log logfile;
 
+PoissonDiskPointSelector pointSelector;
 KdTreeNearestNeighbor nn;
-RigidPointICP rigidPoint_icp(nn, &logfile);
-RigidPlaneICP rigidPlane_icp(nn, &logfile);
+RigidPointICP rigidPoint_icp(nn, &pointSelector, &logfile);
+RigidPlaneICP rigidPlane_icp(nn, &pointSelector, &logfile);
 ICP* icp = &rigidPoint_icp;
 PCA_ICP pca_icp;
 

@@ -37,7 +37,7 @@ void testRigidPlaneICP()
     LOG.info("Matching error: %{20}", startError);
 
     // Do ICP
-    RigidPlaneICP icp(nn);
+    RigidPlaneICP icp(nn, nullptr);
     for(unsigned int i = 0; i < 3; i++)
     {
 	// Calculate next step

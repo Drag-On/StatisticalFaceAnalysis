@@ -12,11 +12,12 @@
 
 namespace sfa
 {
-    ICP::ICP(AbstractLog* pLog)
+    ICP::ICP(AbstractPointSelector* pointSelector, AbstractLog* pLog)
     {
 	std::random_device rd;
 	m_random.seed(rd());
 	m_pLog = pLog;
+	m_pPointSelector = pointSelector;
     }
 
     ICP::~ICP()
@@ -25,6 +26,13 @@ namespace sfa
 
     std::vector<Vertex> ICP::selectPoints(AbstractMesh& source)
     {
+	// In case we've got a proper point selector use it
+	if(m_pPointSelector != nullptr)
+	    return m_pPointSelector->select(source);
+
+	// Otherwise we'll just pick some points randomly. Note that the chosen points won't be
+	// distributed evenly across the mesh, making data acquired with that method less reliable.
+
 	// Copy all vertices
 	std::vector<Vertex> vertices;
 	// Initialize random number generator

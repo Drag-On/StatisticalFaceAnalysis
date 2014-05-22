@@ -10,6 +10,12 @@
 
 namespace sfa
 {
+    PoissonDiskSampler::PoissonDiskSampler()
+    {
+	std::random_device rd;
+	m_random.seed(rd());
+    }
+
     template<class RandomAccessIterator> auto PoissonDiskSampler::sample(RandomAccessIterator begin,
 	    RandomAccessIterator end, double r,
 	    unsigned int k) -> std::vector<typename dbgl::KdTree<typename std::remove_reference<decltype((*begin).data)>::type, typename std::remove_reference<decltype((*begin).point)>::type>::Container>

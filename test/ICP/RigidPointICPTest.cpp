@@ -37,7 +37,7 @@ void testRigidPointICP()
     LOG.info("Matching error: %{20}", startError);
 
     // Do ICP
-    RigidPointICP icp(nn);
+    RigidPointICP icp(nn, nullptr);
     for(unsigned int i = 0; i < 3; i++)
     {
 	// Calculate next step

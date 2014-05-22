@@ -22,11 +22,13 @@
 #include "SFA/Stats/AverageMatchingError.h"
 #include "SFA/Stats/PCAMatchingError.h"
 #include "SFA/Stats/PerformanceBenchmark.h"
+#include "SFA/Utility/PoissonDiskPointSelector.h"
 
 using namespace dbgl;
 using namespace sfa;
 
 Properties properties;
+PoissonDiskPointSelector pointSelector;
 
 bool checkProperties()
 {
@@ -57,12 +59,12 @@ ICP* selectICP(NearestNeighbor& nn)
     if (properties.getStringValue("ICP") == "RigidPoint2Point")
     {
 	LOG.info("Using rigid body point-to-point ICP.");
-	return new RigidPointICP(nn);
+	return new RigidPointICP(nn, &pointSelector);
     }
     else if(properties.getStringValue("ICP") == "RigidPoint2Plane")
     {
 	LOG.info("Using rigid body point-to-plane ICP.");
-	return new RigidPlaneICP(nn);
+	return new RigidPlaneICP(nn, &pointSelector);
     }
     else if(properties.getStringValue("ICP") == "PCA")
     {
@@ -72,7 +74,7 @@ ICP* selectICP(NearestNeighbor& nn)
     else
     {
 	LOG.info("No ICP specified. Falling back to rigid body point-to-point ICP.");
-	return new RigidPointICP(nn);
+	return new RigidPointICP(nn, &pointSelector);
     }
 }
 

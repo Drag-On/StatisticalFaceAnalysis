@@ -27,6 +27,10 @@ namespace sfa
     {
 	public:
 	    /**
+	     * @brief Constructor
+	     */
+	    PoissonDiskSampler();
+	    /**
 	     * @brief Samples points from the list defined by \p begin and \p end such that every
 	     * 	      sample has a minimum distance of \p r to each other.
 	     * @param begin Start of the range of points to use. Supposed to be a iterator of dbgl::KdTree::Container

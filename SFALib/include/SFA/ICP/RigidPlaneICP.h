@@ -29,7 +29,7 @@ namespace sfa
 	     * @param nn Nearest neighbor implementation to use
 	     * @param pLog Log to use or nullptr to disable logging
 	     */
-	    RigidPlaneICP(NearestNeighbor& nn, AbstractLog* pLog = nullptr);
+	    RigidPlaneICP(NearestNeighbor& nn, AbstractPointSelector* pointSelector, AbstractLog* pLog = nullptr);
 	    virtual ~RigidPlaneICP();
 	    virtual unsigned int calcNextStep(AbstractMesh& source, AbstractMesh const& dest);
 	private:

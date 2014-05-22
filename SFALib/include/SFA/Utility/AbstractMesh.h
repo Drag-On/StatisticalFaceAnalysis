@@ -53,6 +53,10 @@ namespace sfa
 	     * @return Average vector of the mesh
 	     */
 	    virtual Eigen::Vector3d getAverage() const = 0;
+	    /**
+	     * @brief Updates the mesh after some of its vertices have been modified
+	     */
+	    virtual void refresh() = 0;
     };
 }
 

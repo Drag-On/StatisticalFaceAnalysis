@@ -12,6 +12,10 @@
 
 namespace sfa
 {
+    PCA_ICP::PCA_ICP() : ICP(nullptr)
+    {
+    }
+
     PCA_ICP::~PCA_ICP()
     {
     }

@@ -17,6 +17,7 @@
 #include "SFA/Utility/AbstractMesh.h"
 #include "SFA/Utility/Vertex.h"
 #include "SFA/Utility/AbstractLog.h"
+#include "SFA/Utility/AbstractPointSelector.h"
 
 namespace sfa
 {
@@ -43,7 +44,7 @@ namespace sfa
 	     * @brief Constructor
 	     * @param pLog Pointer to a log object in case logging is wanted
 	     */
-	    ICP(AbstractLog* pLog = nullptr);
+	    ICP(AbstractPointSelector* pointSelector, AbstractLog* pLog = nullptr);
 	    /**
 	     * @brief Destructor
 	     */
@@ -103,6 +104,10 @@ namespace sfa
 	     * @brief Plug-in possibility for library users to have some logfile output
 	     */
 	    AbstractLog* m_pLog = nullptr;
+	    /**
+	     * @brief Point selection algorithm
+	     */
+	    AbstractPointSelector* m_pPointSelector;
     };
 }
 
