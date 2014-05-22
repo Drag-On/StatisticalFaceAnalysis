@@ -51,7 +51,8 @@ namespace sfa
 
 	    // Get points from the original Tree around the active point within r and 2r distance
 	    std::vector<ContainerType> closePoints;
-	    pointsInRange(originalTree, activePoint, r, 2 * r, closePoints);
+//	    pointsInRange(originalTree, activePoint, r, 2 * r, closePoints);
+	    generatePointsAround(activePoint, r, k, originalTree, closePoints);
 
 	    // For each of these points check if it is within distance r of any other, already chosen sample. Break if more than k.
 	    for(unsigned int i = 0; i < closePoints.size() && i < k; i++)
@@ -80,6 +81,51 @@ namespace sfa
 	    activeList.erase(activeIter);
 	}
 	return sampleTree.getAll();
+    }
+
+    template<class KdTree> void PoissonDiskSampler::generatePointsAround(
+	    decltype(((typename KdTree::Container*)0)->point) point, double r, unsigned int k,
+	    KdTree& tree, std::vector<typename KdTree::Container>& out)
+    {
+	using PointType = typename std::remove_reference<decltype(point)>::type;
+	using DataType = typename std::remove_reference<decltype(out[0].data)>::type;
+	using PrecisionType = typename std::remove_reference<decltype(point.x())>::type;
+	const unsigned int dim = PointType::getDimension();
+
+	std::uniform_real_distribution<PrecisionType> rand_n1_1(-1, 1);
+	for (unsigned int i = 0; i < k; i++)
+	{
+	    // Generate random point between r and 2 r
+	    PointType randPoint;
+	    for(unsigned int d = 0; d < dim; d++)
+		randPoint[d] = rand_n1_1(m_random);
+	    randPoint.normalize();
+	    std::uniform_real_distribution<PrecisionType> rand_r_2r(r, 2 * r);
+	    randPoint *= rand_r_2r(m_random);
+	    randPoint += point;
+
+	    // Get nearest neighbor to that point
+	    PointType nn;
+	    DataType data;
+	    tree.findNearestNeighbor(randPoint, nn, data);
+
+	    // Check if its too close now
+	    if((nn-point).getSquaredLength() < r * r)
+		continue;
+
+	    // Check if the same point has already been added
+	    bool addit = true;
+	    for(auto it = out.begin(); it != out.end(); ++it)
+	    {
+		if(it->point == nn)
+		{
+		    addit = false;
+		    break;
+		}
+	    }
+	    if(addit)
+		out.push_back({nn, data});
+	}
     }
 
     template<class KdTree> void PoissonDiskSampler::pointsInRange(KdTree& tree, decltype(tree.getAll()[0].point) pos,

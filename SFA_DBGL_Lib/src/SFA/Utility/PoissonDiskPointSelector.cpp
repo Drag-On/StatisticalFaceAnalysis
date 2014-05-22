@@ -39,6 +39,7 @@ namespace sfa
 	    all.reserve(pointList.size());
 	    for (auto it = pointList.begin(); it != pointList.end(); ++it)
 		all.push_back(source.getVertex((*it).data));
+	    LOG.info("Selected points: %, targeted %.", all.size(), pointList.size());
 	    return all;
 	}
 
@@ -61,7 +62,7 @@ namespace sfa
 	avrgDist /= pointList.size();
 
 	// Guess a distance to acquire the right amount of points
-	double r = (3.0 / 4.0) * avrgDist + (avrgDist * ((1.0 / percentage) - 1.0));
+	double r = (1.65 / 4.0) * avrgDist + (avrgDist * ((1.0 / percentage) - 1.0));
 
 	// Sample
 	auto selected = m_sampler.sample(pointList.begin(), pointList.end(), r, 30);

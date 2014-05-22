@@ -44,6 +44,17 @@ namespace sfa
 		    unsigned int k = 30) -> std::vector<typename dbgl::KdTree<typename std::remove_reference<decltype((*begin).data)>::type, typename std::remove_reference<decltype((*begin).point)>::type>::Container>;
 	private:
 	    /**
+	     * @brief Generates up to \p k points around \p point in a distance from \p r and 2 * \p r and
+	     * 	      gets the nearest neighbors to those generated points in \p tree.
+	     * @param point Point to generate points around
+	     * @param r Minimum distance
+	     * @param k Max amount of points
+	     * @param tree Tree to get nearest neighbors from
+	     * @param[out] out Found points will be appended here
+	     */
+	    template<class KdTree> void generatePointsAround(decltype(((typename KdTree::Container*)0)->point) point,
+		    double r, unsigned int k, KdTree& tree, std::vector<typename KdTree::Container>& out);
+	    /**
 	     * @brief Copies all points in \p tree around \p pos that are within \p inner and \p outer
 	     * @param tree Tree to get points from
 	     * @param pos Position to get points around
