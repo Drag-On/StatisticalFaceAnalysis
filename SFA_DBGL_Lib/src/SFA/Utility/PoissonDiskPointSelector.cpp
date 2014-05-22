@@ -62,7 +62,7 @@ namespace sfa
 	avrgDist /= pointList.size();
 
 	// Guess a distance to acquire the right amount of points
-	double r = (1.65 / 4.0) * avrgDist + (avrgDist * ((1.0 / percentage) - 1.0));
+	double r = (3.0 / 4.0) * avrgDist + (avrgDist * ((1.0 / percentage) - 1.0));
 
 	// Sample
 	auto selected = m_sampler.sample(pointList.begin(), pointList.end(), r, 30);

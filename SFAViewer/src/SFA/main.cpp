@@ -155,7 +155,52 @@ void keyCallback(Window::KeyEventArgs const& args)
 	selectionMethod = 0;
 	LOG.info("Using all points.");
     }
+    else if(args.key == Input::Key::KEY_F2 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.9);
+	LOG.info("Using 90%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F3 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.8);
+	LOG.info("Using 80%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F4 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.7);
+	LOG.info("Using 70%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F5 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.6);
+	LOG.info("Using 60%% of points.");
+    }
     else if(args.key == Input::Key::KEY_F6 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.5);
+	LOG.info("Using 50%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F7 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.4);
+	LOG.info("Using 40%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F8 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.3);
+	LOG.info("Using 30%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F9 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.2);
+	LOG.info("Using 20%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F10 && args.action == Input::KeyState::PRESSED)
+    {
+	icp->setSelectionPercentage(0.1);
+	LOG.info("Using 10%% of points.");
+    }
+    else if(args.key == Input::Key::KEY_F12 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod.toggle(AbstractPointSelector::SelectionFlags::NO_EDGES);
 	if(selectionMethod.isSet(AbstractPointSelector::SelectionFlags::NO_EDGES))
