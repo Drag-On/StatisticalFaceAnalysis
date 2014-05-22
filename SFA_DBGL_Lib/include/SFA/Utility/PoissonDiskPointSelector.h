@@ -20,7 +20,7 @@ namespace sfa
     class PoissonDiskPointSelector: public AbstractPointSelector
     {
 	public:
-	    virtual std::vector<Vertex> select(AbstractMesh& source);
+	    virtual std::vector<Vertex> select(AbstractMesh& source, float percentage = 1.0f, int flags = 0);
 	private:
 	    PoissonDiskSampler m_sampler;
     };

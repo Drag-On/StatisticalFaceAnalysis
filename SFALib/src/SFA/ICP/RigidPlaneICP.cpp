@@ -26,7 +26,7 @@ namespace sfa
 	auto sourcePoints = selectPoints(source);
 	auto nearestPoints = m_nearestNeighbor.getAllNearest(sourcePoints, source, dest);
 	// Sort out edge points on dest
-	if((m_selectionMethod & NO_EDGES))
+	if((m_pointSelectionFlags & AbstractPointSelector::SelectionFlags::NO_EDGES))
 	{
 	    for (unsigned int i = 0; i < nearestPoints.size(); i++)
 	    {

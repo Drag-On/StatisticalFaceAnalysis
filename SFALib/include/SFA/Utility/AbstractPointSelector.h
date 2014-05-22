@@ -17,11 +17,32 @@
 
 namespace sfa
 {
+    /**
+     * @brief Abstract interface class for point selection algorithms
+     */
     class AbstractPointSelector
     {
 	public:
+	    /**
+	     * @brief Parameters to consider for point selection algorithm
+	     */
+	    enum SelectionFlags
+	    {
+		NO_EDGES = 1 << 0,    //!< NO_EDGES
+	    };
+
+	    /**
+	     * @brief Destructor
+	     */
 	    virtual ~AbstractPointSelector();
-	    virtual std::vector<Vertex> select(AbstractMesh& source) = 0;
+	    /**
+	     * @brief Selects \p percentage % of points from \p source considering \p flags
+	     * @param source Source model to select from
+	     * @param percentage Percentage of points to select in range [0, 1]
+	     * @param flags Flags to consider
+	     * @return List of selected vertices
+	     */
+	    virtual std::vector<Vertex> select(AbstractMesh& source, float percentage = 1.0f, int flags = 0) = 0;
     };
 }
 

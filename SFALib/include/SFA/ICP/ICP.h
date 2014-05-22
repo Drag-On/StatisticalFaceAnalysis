@@ -28,19 +28,6 @@ namespace sfa
     {
 	public:
 	    /**
-	     * @brief Parameters to consider for point selection algorithm
-	     */
-	    enum PointSelection
-	    {
-		NO_EDGES = 1 << 0,    //!< NO_EDGES
-		RANDOM = 1 << 1,      //!< RANDOM
-		EVERY_SECOND = 1 << 2,//!< EVERY_SECOND
-		EVERY_THIRD = 1 << 3, //!< EVERY_THIRD
-		EVERY_FOURTH = 1 << 4,//!< EVERY_FOURTH
-		EVERY_FIFTH = 1 << 5, //!< EVERY_FIFTH
-	    };
-
-	    /**
 	     * @brief Constructor
 	     * @param pLog Pointer to a log object in case logging is wanted
 	     */
@@ -57,45 +44,35 @@ namespace sfa
 	     */
 	    virtual unsigned int calcNextStep(AbstractMesh& source, AbstractMesh const& dest) = 0;
 	    /**
-	     * @brief Selects a certain amount of points on the source mesh
-	     * @param source Source model
-	     * @return List with all points to use for ICP
-	     */
-	    std::vector<Vertex> selectPoints(AbstractMesh& source);
-	    /**
 	     * @brief Calculates the average of the passed points
 	     * @param points Points to calculate average from
 	     * @return The Average of the passed points
 	     */
 	    Eigen::Vector3d getAverage(std::vector<Vertex> const& points) const;
 	    /**
-	     * @return Selection method flags
+	     * @param flags New flags
 	     */
-	    unsigned int& selectionMethod();
+	    void setSelectionFlags(int flags);
 	    /**
-	     * @return Selection method flags
+	     * @return Current flags
 	     */
-	    unsigned int const& getSelectionMethod() const;
+	    int getSelectionFlags() const;
 	    /**
-	     * @brief Modifies the selection method
-	     * @param flags Determines which points are filtered out
+	     * @param percentage New percentage
 	     */
-	    void setSelectionMethod(unsigned int flags);
+	    void setSelectionPercentage(float percentage);
 	    /**
-	     * @return Percentage (range of [0,1])
+	     * @return Current percentage
 	     */
-	    double const& getSelectionPercentage() const;
-	    /**
-	     * @brief Modifies the selection percentage
-	     * @param percentage Percentage in the range of [0,1]
-	     */
-	    void setSelectionPercentage(double percentage);
+	    float getSelectionPercentage() const;
 	protected:
 	    /**
-	     * @brief Bitwise OR-ed parameters from PointSelection
+	     * @brief Selects a certain amount of points on the source mesh
+	     * @param source Source model
+	     * @return List with all points to use for ICP
 	     */
-	    unsigned int m_selectionMethod = 0;
-	    double m_selectionPercentage = 1;
+	    std::vector<Vertex> selectPoints(AbstractMesh& source);
+
 	    /**
 	     * @brief Random number generator
 	     */
@@ -108,6 +85,14 @@ namespace sfa
 	     * @brief Point selection algorithm
 	     */
 	    AbstractPointSelector* m_pPointSelector;
+	    /**
+	     * @brief Flags to request for point selection
+	     */
+	    int m_pointSelectionFlags = 0;
+	    /**
+	     * @brief Percentage of points to select from mesh
+	     */
+	    float m_pointSelectionPercentage = 1.0;
     };
 }
 

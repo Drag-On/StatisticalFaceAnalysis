@@ -149,59 +149,19 @@ void keyCallback(Window::KeyEventArgs const& args)
 	LOG.info("Matching error: %{20}", error);
     }
     // Modify point selection
-    Bitmask<> selectionMethod(icp->selectionMethod());
+    Bitmask<> selectionMethod(icp->getSelectionFlags());
     if(args.key == Input::Key::KEY_F1 && args.action == Input::KeyState::PRESSED)
     {
 	selectionMethod = 0;
 	LOG.info("Using all points.");
     }
-    else if(args.key == Input::Key::KEY_F2 && args.action == Input::KeyState::PRESSED)
-    {
-	selectionMethod.toggle(ICP::EVERY_SECOND);
-	if(selectionMethod.isSet(ICP::EVERY_SECOND))
-	    LOG.info("Adding filter \"Every second\".");
-	else
-	    LOG.info("Removing filter \"Every second\".");
-    }
-    else if(args.key == Input::Key::KEY_F3 && args.action == Input::KeyState::PRESSED)
-    {
-	selectionMethod.toggle(ICP::EVERY_THIRD);
-	if(selectionMethod.isSet(ICP::EVERY_THIRD))
-	    LOG.info("Adding filter \"Every third\".");
-	else
-	    LOG.info("Removing filter \"Every third\".");
-    }
-    else if(args.key == Input::Key::KEY_F4 && args.action == Input::KeyState::PRESSED)
-    {
-	selectionMethod.toggle(ICP::EVERY_FOURTH);
-	if(selectionMethod.isSet(ICP::EVERY_FOURTH))
-	    LOG.info("Adding filter \"Every fourth\".");
-	else
-	    LOG.info("Removing filter \"Every fourth\".");
-    }
-    else if(args.key == Input::Key::KEY_F5 && args.action == Input::KeyState::PRESSED)
-    {
-	selectionMethod.toggle(ICP::EVERY_FIFTH);
-	if(selectionMethod.isSet(ICP::EVERY_FIFTH))
-	    LOG.info("Adding filter \"Every fifth\".");
-	else
-	    LOG.info("Removing filter \"Every fifth\".");
-    }
     else if(args.key == Input::Key::KEY_F6 && args.action == Input::KeyState::PRESSED)
     {
-	selectionMethod.toggle(ICP::NO_EDGES);
-	if(selectionMethod.isSet(ICP::NO_EDGES))
+	selectionMethod.toggle(AbstractPointSelector::SelectionFlags::NO_EDGES);
+	if(selectionMethod.isSet(AbstractPointSelector::SelectionFlags::NO_EDGES))
 	    LOG.info("Adding filter \"No edges\".");
 	else
 	    LOG.info("Removing filter \"No edges\".");
-    }
-    else if(args.key == Input::Key::KEY_F7 && args.action == Input::KeyState::PRESSED)
-    {
-	selectionMethod.toggle(ICP::RANDOM);
-	if(selectionMethod.isSet(ICP::RANDOM))
-	    LOG.info("Adding filter \"Random\".");
-	else
-	    LOG.info("Removing filter \"Random\".");
     }
     else if(args.key == Input::Key::KEY_N && args.action == Input::KeyState::PRESSED)
     {
@@ -215,7 +175,7 @@ void keyCallback(Window::KeyEventArgs const& args)
 	pSourceModel->addHole();
 	pSourceModel->getBasePointer()->updateBuffers();
     }
-    icp->setSelectionMethod(selectionMethod);
+    icp->setSelectionFlags(selectionMethod);
     // Swap src and dest?
     if(args.key == Input::Key::KEY_GRAVE_ACCENT && args.action == Input::KeyState::PRESSED)
     {

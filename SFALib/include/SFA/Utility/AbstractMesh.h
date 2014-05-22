@@ -23,6 +23,9 @@ namespace sfa
     class AbstractMesh
     {
 	public:
+	    /**
+	     * @brief Destructor
+	     */
 	    virtual ~AbstractMesh() = 0;
 	    /**
 	     * @brief Provides a unique ID

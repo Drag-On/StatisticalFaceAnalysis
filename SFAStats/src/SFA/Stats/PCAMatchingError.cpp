@@ -115,8 +115,8 @@ namespace sfa
     {
 	// Store original vertex positions
 	Model original(src);
-	unsigned int selectionMethod = icp.getSelectionMethod();
-	icp.setSelectionMethod(ICP::NO_EDGES);
+	unsigned int selectionMethod = icp.getSelectionFlags();
+	icp.setSelectionFlags(AbstractPointSelector::SelectionFlags::NO_EDGES);
 	// Calculate a lot if icp steps to make sure we have the correct pairs
 	for (unsigned int i = 0; i < 30; i++)
 	{
@@ -130,7 +130,7 @@ namespace sfa
 	    correctPairs[i] = nn.getNearest(i, src, dest);
 	}
 	// Revert back to original vertex positions
-	icp.setSelectionMethod(selectionMethod);
+	icp.setSelectionFlags(selectionMethod);
 	src = std::move(original);
 	LOG.info("Initialization done.");
     }

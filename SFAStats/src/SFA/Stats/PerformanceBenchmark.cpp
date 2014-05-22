@@ -37,8 +37,8 @@ namespace sfa
     	    pointSelection = props.getIntValue(Prop_PairSelection);
 	if(props.getStringValue(Prop_PairSelectionPercent) != "")
 	    pairSelectionPercent = props.getFloatValue(Prop_PairSelectionPercent);
-    	icp.setSelectionMethod(pointSelection);
-    	pairSelection = getPairSelectionFlags(icp.getSelectionMethod());
+    	icp.setSelectionFlags(pointSelection);
+    	pairSelection = getPairSelectionFlags(icp.getSelectionFlags());
     	icp.setSelectionPercentage(pairSelectionPercent);
 
     	srcVertices = src.getAmountOfVertices();
@@ -136,18 +136,8 @@ namespace sfa
     std::string PerformanceBenchmark::getPairSelectionFlags(dbgl::Bitmask<> flags)
     {
 	std::string flagString;
-	if(flags.isSet(ICP::NO_EDGES))
+	if(flags.isSet(AbstractPointSelector::SelectionFlags::NO_EDGES))
 	    flagString += "NO_EDGES___";
-	if(flags.isSet(ICP::RANDOM))
-	    flagString += "RANDOM_";
-	if(flags.isSet(ICP::EVERY_SECOND))
-	    flagString += "EVERY_SECOND___";
-	if(flags.isSet(ICP::EVERY_THIRD))
-	    flagString += "EVERY_THIRD___";
-	if(flags.isSet(ICP::EVERY_FOURTH))
-	    flagString += "EVERY_FOURTH___";
-	if(flags.isSet(ICP::EVERY_FIFTH))
-	    flagString += "EVERY_FIFTH___";
 	std::ostringstream s;
 	s << pairSelectionPercent * 100;
 	flagString += s.str();
