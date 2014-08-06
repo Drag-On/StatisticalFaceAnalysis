@@ -12,12 +12,13 @@
 #include <iostream>
 #include <DBGL/System/Log/Log.h>
 #include <DBGL/System/Properties/Properties.h>
+#include <DBGL/System/System.h>
 #include <DBGL/Window/WindowManager.h>
 #include <DBGL/Window/SimpleWindow.h>
 #include <DBGL/Rendering/RenderContext.h>
 #include <DBGL/Rendering/Mesh/Mesh.h>
 #include <DBGL/Rendering/ShaderProgram.h>
-#include <DBGL/Rendering/Camera.h>
+#include <DBGL/Rendering/Environment/Camera.h>
 #include <DBGL/Math/Utility.h>
 #include <DBGL/Math/Matrix3x3.h>
 #include <DBGL/Math/Matrix4x4.h>
@@ -201,6 +202,19 @@ void keyCallback(Window::KeyEventArgs const& args)
 	else
 	    LOG.info("Removing filter \"Random\".");
     }
+    else if(args.key == Input::Key::KEY_F12 && args.action == Input::KeyState::PRESSED)
+    {
+	if(icp->getSelectionPercentage() >= 1.0)
+	{
+	    icp->setSelectionPercentage(0.05);
+	    LOG.info("Using 5%% of all points.");
+	}
+	else
+	{
+	    icp->setSelectionPercentage(1);
+	    LOG.info("Using 100%% of all points.");
+	}
+    }
     else if(args.key == Input::Key::KEY_N && args.action == Input::KeyState::PRESSED)
     {
 	LOG.info("Adding random noise to source model.");
@@ -320,6 +334,9 @@ int main(int argc, char** argv)
     LOG.setLogLevel(dbgl::Log::Level::DBG);
     LOG.info("Starting...");
 
+    // Init
+    dbgl::initialize();
+
     // Load properties file from disk
     properties.read("Properties.txt");
     // Interpret arguments
@@ -380,7 +397,7 @@ int main(int argc, char** argv)
 
     // delete pWnd; // No need for this as windows will delete themselves when closed
     // Free remaining internal resources
-    WindowManager::get()->terminate();
+    dbgl::terminate();
     return 0;
 }
 
