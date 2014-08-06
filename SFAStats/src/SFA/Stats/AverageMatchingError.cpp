@@ -55,6 +55,9 @@ namespace sfa
 	srcVertices = src.getAmountOfVertices();
 	destVertices = dest.getAmountOfVertices();
 
+	// Initialize correct pairings
+	initCorrectPairs(src, dest, nn, icp);
+
 	// Add noise?
 	noiseLevel = 0;
 	if(props.getStringValue(Prop_NoiseLevel) != "")
@@ -69,7 +72,6 @@ namespace sfa
 	for(unsigned int i = 0; i < holes; i++)
 	    src.addHole();
 
-	initCorrectPairs(src, dest, nn, icp);
 	testWithModel(src, dest, nn, icp);
     }
 

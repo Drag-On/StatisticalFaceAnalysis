@@ -52,6 +52,12 @@ namespace sfa
 	// Pick n% of those already selected
 	if(m_selectionPercentage < 1)
 	{
+	    if(m_selectionPercentage <= 0)
+	    {
+		vertices.clear();
+		return vertices;
+	    }
+
 	    double elementsToPick = vertices.size() * m_selectionPercentage;
 	    for(auto it = vertices.begin(); it != vertices.end(); ++it)
 	    {
